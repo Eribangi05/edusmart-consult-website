@@ -25,6 +25,7 @@ ICON = {
  "globe": '<circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c3 3 3 15 0 18M12 3c-3 3-3 15 0 18"/>',
  "heart": '<path d="M12 20s-7-4.4-7-10a4 4 0 0 1 7-2.6A4 4 0 0 1 19 10c0 5.6-7 10-7 10z"/>',
  "phone": '<rect x="7" y="2" width="10" height="20" rx="2.5"/><path d="M11 18h2"/>',
+ "school": '<path d="M3 10l9-5 9 5-9 5z"/><path d="M7 12.5V17c0 1.4 2.2 2.5 5 2.5s5-1.1 5-2.5v-4.5"/><path d="M21 10v5"/>',
  "download": '<path d="M12 3v12M7 11l5 5 5-5M4 21h16"/>',
 }
 def ico(name, cls=""):
@@ -228,56 +229,102 @@ for i, (slug, ic, title, short, *_r) in enumerate(DEPTS):
 
 home = f'''
 <section class="hero"><div class="container hero-grid">
-<div>
+<div class="rv">
 <div class="eyebrow"><i></i> Better Research | Stronger Education | Brighter Futures</div>
 <h1>Education, research and digital solutions for <em>Rwanda</em>.</h1>
 <p class="lead">EduSmart Consult LTD is a Kigali based company working in education and training, inclusive education, research, e-learning, software development, data services and ICT support. We help schools and organisations learn better, decide with evidence and work with reliable technology.</p>
-<div class="actions"><a class="btn btn-primary" href="#departments">Explore our departments</a><a class="btn btn-sky" href="contact.html#form">Talk to us</a></div>
+<div class="actions"><a class="btn btn-primary" href="#departments">Explore our departments</a><a class="btn btn-sky" href="products.html">See our software</a></div>
+<ul class="badges"><li>{ico("globe")} English, French and Kinyarwanda</li><li>{ico("wifi")} Offline first tools</li><li>{ico("shield")} Your data stays yours</li></ul>
 </div>
-<div class="hero-panel"><h3>What we do</h3>
+<div class="hero-panel rv"><h3>What we do</h3>
 {"".join(f'<a href="{d[0]}.html"><i></i>{d[2]}</a>' for d in DEPTS)}
 </div>
 </div></section>
 
 <section class="section"><div class="container">
-<div class="stats">
-<div class="tile navy"><b>9</b><span>Departments under one company</span></div>
-<div class="tile sky"><b>P1 to P6</b><span>Complete primary curriculum in our own app</span></div>
-<div class="tile gold"><b>3</b><span>Working languages: English, French, Kinyarwanda</span></div>
-<div class="tile navy"><b>Offline first</b><span>Tools built for low connectivity</span></div>
+<div class="stats stats-big">
+<div class="tile navy rv"><b>9</b><span>Departments under one company</span></div>
+<div class="tile sky rv"><b>{len(PRODUCTS)}</b><span>Software products we build and maintain</span></div>
+<div class="tile gold rv"><b>P1 to P6</b><span>Full primary curriculum in our Smart School App</span></div>
+<div class="tile navy rv"><b>3</b><span>Working languages: English, French and Kinyarwanda</span></div>
 </div></div></section>
 
 <section class="section sky" id="departments"><div class="container">
 <div class="section-head"><div><div class="kicker">Our departments</div><h2>Nine areas of expertise</h2></div>
-<p>Each department is led by its own focus but shares one standard: clear scope, honest reporting and results that your team can keep using.</p></div>
+<p>Each department has its own focus but shares one standard: clear scope, honest reporting and results your team can keep using.</p></div>
 <div class="grid g3">{dept_cards}</div>
 </div></section>
 
+<section class="section dark showcase" id="featured"><div class="container split">
+<div class="rv"><div class="kicker">Featured product</div>
+<div class="prod-head"><img src="assets/ssa-logo-96.png" alt="Smart School App logo" width="84" height="84"><div><span class="badge">Made by EduSmart Consult</span><h2 style="margin:.3rem 0 0;color:#fff">Smart School App</h2></div></div>
+<p>An offline learning and school management suite for Primary 1 to 6. Learners read the curriculum, practise and sit past papers. Teachers plan lessons, mark, build timetables and print reports. It runs on Windows computers and Android phones, and can sync online when there is a connection.</p>
+<ul class="checklist">
+<li>Full REB pupil books for every class, with read aloud</li>
+<li>62 P6 national exam papers with automatic marking</li>
+<li>Lesson plans in English, French and Kinyarwanda</li>
+<li>Whole school timetable generator</li>
+<li>Gradebook, report cards and parent reports</li>
+<li>Works with no internet, and online with Smart School Cloud</li>
+</ul>
+<div class="actions"><a class="btn btn-gold" href="smart-school-app.html">Explore Smart School App</a><a class="btn btn-ghost-light" href="smart-school-cloud.html">Online access and sync</a></div></div>
+<div class="shots rv">{win("assets/app-overview.webp", "Smart School App teacher overview on Windows")}<div class="shot-phone">{phone("assets/phone-learner.webp", "Learner home", "")}</div></div>
+</div></section>
+
 <section class="section"><div class="container">
+<div class="section-head"><div><div class="kicker">Who we serve</div><h2>Solutions for every kind of client</h2></div>
+<p>Whether you run one school or a national programme, we start from what you need and build the smallest solution that works.</p></div>
+<div class="grid g3">
+<div class="card aud c1 rv">{ico("school")}<h3>Schools and teachers</h3><p>Curriculum tools, lesson planning, timetables, training and computer lab support that work in real classrooms.</p><a href="education-training.html">Education and training</a></div>
+<div class="card aud c2 rv">{ico("users")}<h3>Education projects and NGOs</h3><p>Research, monitoring and evaluation, e-learning delivery and proposal writing for programmes that must show results.</p><a href="research-consulting.html">Research and consulting</a></div>
+<div class="card aud c3 rv">{ico("globe")}<h3>Local government and public offices</h3><p>Data digitisation, information systems, reports and dashboards that turn paper records into decisions.</p><a href="data-information.html">Data and information</a></div>
+<div class="card aud c2 rv">{ico("code")}<h3>Businesses and entrepreneurs</h3><p>Websites, custom apps, business finance tools and job or shift management software built around your workflow.</p><a href="software-development.html">Software development</a></div>
+<div class="card aud c3 rv">{ico("heart")}<h3>Inclusive education providers</h3><p>Support planning, adapted materials and accessible learning tools for learners with different needs.</p><a href="inclusive-education.html">Inclusive education</a></div>
+<div class="card aud c1 rv">{ico("book")}<h3>Families and learners</h3><p>Reading, maths, pre-primary and road code apps that work offline on a family phone.</p><a href="products.html">Browse our apps</a></div>
+</div></div></section>
+
+<section class="section soft"><div class="container">
 <div class="section-head"><div><div class="kicker">Our products</div><h2>Software we build ourselves</h2></div>
-<p>Alongside consulting, our development team builds and maintains {len(PRODUCTS)} software products for schools, families, savings groups and businesses. Most work offline and are made for Rwanda.</p></div>
+<p>Our development team builds and maintains {len(PRODUCTS)} software products for schools, families, savings groups and businesses. Most work offline and are made for Rwanda.</p></div>
 <div class="ptiles">{prod_tiles()}</div>
 <p style="margin-top:1.6rem"><a class="btn btn-primary" href="products.html">See all products</a> &nbsp; <a class="btn btn-sky" href="smart-school-app.html">Featured: Smart School App</a></p>
 </div></section>
 
-<section class="section sunny"><div class="container split">
-<div><div class="kicker">Why EduSmart Consult</div><h2>A partner that stays after delivery</h2>
-<p>We are a small, focused team that you can reach directly. We agree scope in writing, deliver in stages and train your people so the result keeps working after we leave.</p></div>
-<ul class="checklist">
-<li>Registered Rwandan company with a local office in Kigali</li>
-<li>Services in English, French and Kinyarwanda</li>
-<li>Tools that work offline and respect the school's data</li>
-<li>Written scope, clear pricing and regular progress updates</li>
-<li>Training and support included in every project</li>
-</ul></div></section>
+<section class="section sunny"><div class="container">
+<div class="section-head"><div><div class="kicker">Why EduSmart Consult</div><h2>A partner that stays after delivery</h2></div>
+<p>We are a small, focused team you can reach directly. We agree scope in writing, deliver in stages and train your people so the result keeps working.</p></div>
+<div class="grid g3">
+<div class="card rv">{ico("target")}<h3>Local and reachable</h3><p>Registered in Rwanda with an office in Kigali. Call, message on WhatsApp or visit.</p></div>
+<div class="card rv">{ico("wifi")}<h3>Built for low connectivity</h3><p>Our tools work offline first and sync when a connection is available.</p></div>
+<div class="card rv">{ico("globe")}<h3>Three languages</h3><p>Services and content in English, French and Kinyarwanda.</p></div>
+<div class="card rv">{ico("shield")}<h3>Your data stays yours</h3><p>Records live on your devices. Online features are optional and explained plainly.</p></div>
+<div class="card rv">{ico("users")}<h3>Training included</h3><p>Every project ends with handover, training and support for your team.</p></div>
+<div class="card rv">{ico("file")}<h3>Clear scope and pricing</h3><p>You get written deliverables, a timeline and a cost before work begins.</p></div>
+</div></div></section>
 
 <section class="section"><div class="container">
 <div class="section-head"><div><div class="kicker">How we work</div><h2>A simple, clear process</h2></div><p>Every engagement follows the same four steps, whichever department you work with.</p></div>
 <div class="steps">
-<div class="step"><h3>Listen</h3><p>We learn how your school or organisation works and what needs to change.</p></div>
-<div class="step"><h3>Scope</h3><p>We agree deliverables, timeline and cost in writing before work starts.</p></div>
-<div class="step"><h3>Deliver</h3><p>We build and deliver in stages so you can review progress as we go.</p></div>
-<div class="step"><h3>Support</h3><p>We train your staff and stay available for questions and updates.</p></div>
+<div class="step rv"><h3>Listen</h3><p>We learn how your school or organisation works and what needs to change.</p></div>
+<div class="step rv"><h3>Scope</h3><p>We agree deliverables, timeline and cost in writing before work starts.</p></div>
+<div class="step rv"><h3>Deliver</h3><p>We build and deliver in stages so you can review progress as we go.</p></div>
+<div class="step rv"><h3>Support</h3><p>We train your staff and stay available for questions and updates.</p></div>
+</div></div></section>
+
+<section class="section sky"><div class="container" style="max-width:860px">
+<div class="kicker">Questions</div><h2>Frequently asked</h2>
+<details><summary>What does EduSmart Consult do?</summary><p>We provide education and training, inclusive education support, research and consulting, e-learning, web and software development, data services, ICT support, environmental and technical consulting, and administrative, fundraising and equipment support.</p></details>
+<details><summary>Do your apps need the internet?</summary><p>No. Smart School App and most of our other apps work fully offline. Smart School Cloud adds optional online access and syncing between devices.</p></details>
+<details><summary>Can you build something for our organisation?</summary><p>Yes. Tell us what you need on the <a href="contact.html#form">contact page</a>. We reply within two working days with questions and, when ready, a written scope and quote.</p></details>
+<details><summary>Where are you based?</summary><p>Itetero, Nyagatovu, Kimironko, Gasabo, Kigali, Rwanda. We work with clients across the country and remotely.</p></details>
+<details><summary>How do I get Smart School App?</summary><p>See the <a href="smart-school-app.html#download">download section</a>. The app is licensed per school, and we can train your teachers.</p></details>
+</div></section>
+
+<section class="section"><div class="container">
+<div class="grid g3">
+<a class="card contact-card rv" data-wa="Hello EduSmart Consult, I would like to know more." href="#" rel="noopener">{ico("phone")}<h3>WhatsApp</h3><p>Chat with us for a quick answer.</p></a>
+<a class="card contact-card rv" data-phone href="#">{ico("phone")}<h3>Call us</h3><p>+250 782 368 555</p></a>
+<a class="card contact-card rv" href="contact.html#form">{ico("file")}<h3>Send an enquiry</h3><p>Tell us about your project.</p></a>
 </div></div></section>
 '''
 page("index.html", "EduSmart Consult | Education, research and digital solutions in Rwanda",

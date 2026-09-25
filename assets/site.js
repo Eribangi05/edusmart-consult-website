@@ -103,3 +103,13 @@
     });
   });
 })();
+
+
+// gentle reveal on scroll (content stays visible if scripts or IntersectionObserver are unavailable)
+(function () {
+  var els = document.querySelectorAll('.rv');
+  if (!('IntersectionObserver' in window)) { els.forEach(function (e) { e.classList.add('in'); }); return; }
+  var io = new IntersectionObserver(function (entries) { entries.forEach(function (en) { if (en.isIntersecting) { en.target.classList.add('in'); io.unobserve(en.target); } }); }, { threshold: 0.12 });
+  els.forEach(function (e) { io.observe(e); });
+  setTimeout(function () { els.forEach(function (e) { e.classList.add('in'); }); }, 2500);
+})();
