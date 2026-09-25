@@ -26,5 +26,5 @@ window.EDUSMART = {
     embed: false      // true only if the server allows framing (needs frame-ancestors + cross-site cookies). Default: open in a new tab
   },
 
-  formEndpoint: ""
+  formEndpoint: "https://formspree.io/f/moevnprb"
 };
