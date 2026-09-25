@@ -252,3 +252,8 @@ table.cmp th{background:var(--soft);color:var(--navy-900)}
 .pfoot{margin-top:auto;display:flex;justify-content:space-between;align-items:center;gap:.6rem;flex-wrap:wrap}
 .pplat{font-size:.85rem;color:var(--muted);font-weight:600}
 .filters{margin-bottom:.4rem}.chip{cursor:pointer;font-family:inherit}.chip.on{background:var(--navy);color:#fff;border-color:var(--navy)}
+/* mobile overflow fixes */
+.split>*,.grid>*,.row>*{min-width:0}
+.form input,.form select,.form textarea{max-width:100%;box-sizing:border-box}
+table.cmp{display:block;overflow-x:auto;max-width:100%}
+@media(max-width:640px){.form .row{grid-template-columns:1fr!important}table.cmp td,table.cmp th{word-break:break-word}}
