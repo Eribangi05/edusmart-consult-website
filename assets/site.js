@@ -42,12 +42,14 @@
     else a.href = 'contact.html?topic=' + encodeURIComponent('Smart School Cloud access') + '#form';
   });
   document.querySelectorAll('[data-cloud-frame]').forEach(function (fr) {
-    if (!appUrl) return;
+    if (!appUrl || !cl.embed) return;
     fr.src = appUrl; fr.hidden = false;
     var fb = document.querySelector('[data-cloud-fallback]'); if (fb) fb.hidden = true;
   });
 
   // screenshot lightbox
+  var note = document.querySelector('[data-cloud-note]');
+  if (note && appUrl && !cl.embed) note.innerHTML = '<b>The online app opens in its own tab.</b> <a href="' + appUrl + '" target="_blank" rel="noopener">Open Smart School App online</a> <small style="display:block;opacity:.8">Sign in with your school code, your learner code or staff ID, and your PIN. The first load can take a minute.</small>';
   var lb = document.getElementById('lb');
   if (lb) {
     document.querySelectorAll('img.shot, .phone img').forEach(function (im) {

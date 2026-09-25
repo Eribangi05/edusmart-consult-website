@@ -21,8 +21,9 @@ window.EDUSMART = {
   /* Smart School Cloud (the Cloud Sync Server). Paste the server address, for example https://sync.edusmartconsult.com
      The online app is opened at baseUrl + "/app". Leave empty until the server is live. */
   cloud: {
-    baseUrl: "",
-    appPath: "/app"
+    baseUrl: "https://smart-school-cloud-sync.onrender.com",   // Smart School Cloud server (free Render plan: the first visit after a quiet period can take about a minute)
+    appPath: "/app",
+    embed: false      // true only if the server allows framing (needs frame-ancestors + cross-site cookies). Default: open in a new tab
   },
 
   formEndpoint: ""
