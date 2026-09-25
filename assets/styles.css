@@ -257,3 +257,4 @@ table.cmp th{background:var(--soft);color:var(--navy-900)}
 .form input,.form select,.form textarea{max-width:100%;box-sizing:border-box}
 table.cmp{display:block;overflow-x:auto;max-width:100%}
 @media(max-width:640px){.form .row{grid-template-columns:1fr!important}table.cmp td,table.cmp th{word-break:break-word}}
+.form select{width:100%;min-width:0;text-overflow:ellipsis}.form label{min-width:0}
