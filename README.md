@@ -37,3 +37,6 @@ Then open http://localhost:8793
 ## Later: integrating the online school platform
 The Smart School App cloud sync server (repo "Cloud Sync Server") and a browser version can be linked from the
 "Web" card on the product page by filling `webAppUrl` in `config.js`.
+
+## Icons
+Duotone icons in assets/icons are from Phosphor Icons (https://phosphoricons.com), MIT licence, copyright 2023 Phosphor Icons.

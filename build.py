@@ -6,30 +6,22 @@ import os, re
 ROOT = os.path.dirname(os.path.abspath(__file__))
 SITE_URL = "https://www.edusmartconsult.com"   # change if the final domain differs
 
-ICON = {
- "book": '<path d="M4 5.5A2.5 2.5 0 0 1 6.5 3H20v16H6.5A2.5 2.5 0 0 0 4 21.5z"/><path d="M4 21.5A2.5 2.5 0 0 1 6.5 19H20"/>',
- "clock": '<circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/>',
- "chart": '<path d="M4 20V10M10 20V4M16 20v-7M22 20H2"/>',
- "users": '<circle cx="9" cy="8" r="3.5"/><path d="M2.5 20a6.5 6.5 0 0 1 13 0"/><path d="M16 4.6a3.5 3.5 0 0 1 0 6.8M18 14a6.5 6.5 0 0 1 3.5 6"/>',
- "shield": '<path d="M12 3l8 3v6c0 4.5-3.2 8-8 9-4.8-1-8-4.5-8-9V6z"/><path d="M9 12l2 2 4-4"/>',
- "device": '<rect x="3" y="4" width="18" height="12" rx="2"/><path d="M8 20h8M12 16v4"/>',
- "wifi": '<path d="M2 9a15 15 0 0 1 20 0M5 12.5a10 10 0 0 1 14 0M8.5 16a5 5 0 0 1 7 0"/><circle cx="12" cy="19" r="1"/>',
- "file": '<path d="M14 3H6a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"/><path d="M14 3v6h6M8 13h8M8 17h5"/>',
- "calendar": '<rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4"/>',
- "print": '<path d="M6 9V3h12v6M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="7"/>',
- "target": '<circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="5"/><circle cx="12" cy="12" r="1"/>',
- "edit": '<path d="M4 20h4L19 9l-4-4L4 16z"/><path d="M14 6l4 4"/>',
- "search": '<circle cx="11" cy="11" r="7"/><path d="M20 20l-4-4"/>',
- "database": '<ellipse cx="12" cy="5" rx="8" ry="3"/><path d="M4 5v14c0 1.7 3.6 3 8 3s8-1.3 8-3V5M4 12c0 1.7 3.6 3 8 3s8-1.3 8-3"/>',
- "code": '<path d="M8 8l-5 4 5 4M16 8l5 4-5 4M14 5l-4 14"/>',
- "globe": '<circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c3 3 3 15 0 18M12 3c-3 3-3 15 0 18"/>',
- "heart": '<path d="M12 20s-7-4.4-7-10a4 4 0 0 1 7-2.6A4 4 0 0 1 19 10c0 5.6-7 10-7 10z"/>',
- "phone": '<rect x="7" y="2" width="10" height="20" rx="2.5"/><path d="M11 18h2"/>',
- "school": '<path d="M3 10l9-5 9 5-9 5z"/><path d="M7 12.5V17c0 1.4 2.2 2.5 5 2.5s5-1.1 5-2.5v-4.5"/><path d="M21 10v5"/>',
- "download": '<path d="M12 3v12M7 11l5 5 5-5M4 21h16"/>',
+PH = {
+ "book": "book-open", "clock": "clock", "chart": "chart-bar", "users": "users-three", "shield": "shield-check", "device": "desktop",
+ "wifi": "wifi-high", "file": "file-text", "calendar": "calendar-check", "print": "printer", "target": "target", "edit": "pencil-simple-line",
+ "search": "magnifying-glass", "database": "database", "code": "code", "globe": "globe-hemisphere-east", "heart": "heart", "phone": "device-mobile",
+ "download": "download-simple", "school": "graduation-cap", "whatsapp": "whatsapp-logo", "call": "phone-call", "mail": "envelope-simple",
+ "handshake": "handshake", "translate": "translate", "lock": "lock-key", "cloud": "cloud", "briefcase": "briefcase", "buildings": "buildings",
+ "chalkboard": "chalkboard-teacher", "bulb": "lightbulb", "rocket": "rocket", "pin": "map-pin", "handheart": "hand-heart", "books": "books",
 }
+_ICON_CACHE = {}
+def _icon_inner(name):
+    if name not in _ICON_CACHE:
+        raw = open(os.path.join(ROOT, "assets", "icons", "ph-" + PH[name] + ".svg"), encoding="utf-8").read()
+        _ICON_CACHE[name] = re.sub(r"^<svg[^>]*>|</svg>\s*$", "", raw.strip())
+    return _ICON_CACHE[name]
 def ico(name, cls=""):
-    return f'<span class="ico {cls}"><svg viewBox="0 0 24 24" aria-hidden="true">{ICON[name]}</svg></span>'
+    return f'<span class="ico {cls}"><svg viewBox="0 0 256 256" aria-hidden="true" fill="currentColor">{_icon_inner(name)}</svg></span>'
 
 DEPT_LIST = [
  ("education-training", "Education and Training"), ("inclusive-education", "Inclusive and Special Needs Education"),
@@ -38,6 +30,21 @@ DEPT_LIST = [
  ("ict-support", "ICT and Computer Systems Support"), ("environmental-technical", "Environmental and Technical Consulting"),
  ("admin-support", "Administrative, Fundraising and Equipment Support")]
 
+TICKER = [
+ ("New", "Smart School Cloud: use Smart School App in a browser and sync Windows and Android devices", "smart-school-cloud.html"),
+ ("Smart School App", "62 P6 national exam papers, lesson plans in three languages and a whole school timetable generator", "smart-school-app.html"),
+ ("Products", "23 software products for schools, families, savings groups and businesses", "products.html"),
+ ("Free demo", "Ask us to show Smart School App at your school", "contact.html?topic=Smart%20School%20App%20demo#form"),
+ ("Services", "Education, research, e-learning, software, data and ICT support from Kigali", "index.html#departments"),
+]
+def topbar():
+    items = "".join(f'<a class="tk" href="{h}"><b>{t}</b> {x}</a>' for t, x, h in TICKER)
+    return f'''<div class="topbar" role="region" aria-label="Announcements and Kigali time"><div class="container tb-in">
+<div class="tb-clock" title="Time in Kigali, Rwanda (Central Africa Time, UTC+2)">{ico("clock")}<span><b data-kigali-time>--:--:--</b><small data-kigali-date>Kigali, Rwanda</small></span></div>
+<div class="ticker" aria-live="off"><div class="ticker-track">{items}{items}</div></div>
+<a class="tb-call" href="tel:+250782368555">{ico("call")}<span data-phone>+250 782 368 555</span></a>
+</div></div>'''
+
 def header(active):
     cur = lambda k: ' aria-current="page"' if active == k else ""
     dd = "".join(f'<a href="{s}.html">{t}</a>' for s, t in DEPT_LIST)
@@ -45,6 +52,7 @@ def header(active):
             '<a href="smart-school-cloud.html">Smart School Cloud<small>Online access and device sync</small></a>'
             '<a href="products.html">All products<small>Every app we build</small></a>')
     return f'''<a class="skip" href="#main">Skip to content</a>
+{topbar()}
 <header class="site-header"><div class="container nav-wrap">
 <a class="brand" href="index.html" aria-label="EduSmart Consult home"><img src="assets/logo-horizontal.webp" alt="EduSmart Consult" width="186" height="62"></a>
 <button class="menu-toggle" aria-label="Menu" aria-expanded="false">&#9776;</button>
@@ -165,6 +173,9 @@ def prod_card(p):
     return f'''<article class="pcard" data-cat="{cat}"><img class="plogo" src="assets/{logo}" alt="{name} logo" width="72" height="72" loading="lazy">
 <div class="pbody"><span class="pcat">{cat}</span><h3>{name}</h3><p>{desc}</p><div class="pfoot"><span class="pplat">{plat}</span>{tag}</div></div></article>'''
 
+def logo_strip():
+    return "".join(f'<a class="lm" tabindex="-1" href="{p[4] or "products.html#" + p[0]}"><img src="assets/{p[3]}" alt="" width="64" height="64" loading="lazy"><span>{p[1]}</span></a>' for p in PRODUCTS)
+
 def prod_tiles():
     return "".join(f'<a class="ptile" href="{p[4] or "products.html#" + p[0]}"><img src="assets/{p[3]}" alt="" width="56" height="56" loading="lazy"><span>{p[1]}</span></a>' for p in PRODUCTS)
 
@@ -231,22 +242,27 @@ home = f'''
 <section class="hero"><div class="container hero-grid">
 <div class="rv">
 <div class="eyebrow"><i></i> Better Research | Stronger Education | Brighter Futures</div>
-<h1>Education, research and digital solutions for <em>Rwanda</em>.</h1>
+<h1>Education, research and digital solutions for <em class="rot" data-words="Rwanda|schools|organisations|communities">Rwanda</em>.</h1>
 <p class="lead">EduSmart Consult LTD is a Kigali based company working in education and training, inclusive education, research, e-learning, software development, data services and ICT support. We help schools and organisations learn better, decide with evidence and work with reliable technology.</p>
 <div class="actions"><a class="btn btn-primary" href="#departments">Explore our departments</a><a class="btn btn-sky" href="products.html">See our software</a></div>
-<ul class="badges"><li>{ico("globe")} English, French and Kinyarwanda</li><li>{ico("wifi")} Offline first tools</li><li>{ico("shield")} Your data stays yours</li></ul>
+
 </div>
 <div class="hero-panel rv"><h3>What we do</h3>
 {"".join(f'<a href="{d[0]}.html"><i></i>{d[2]}</a>' for d in DEPTS)}
 </div>
-</div></section>
+</div>
+<div class="container glance-row"><div class="glance">
+<div class="gl"><span class="ico c2">{ico("translate")}</span><div><b>Languages we work in</b><span>English, French and Kinyarwanda</span></div></div>
+<div class="gl"><span class="ico c3">{ico("wifi")}</span><div><b>Apps that work offline</b><span>No internet needed in the classroom</span></div></div>
+<div class="gl"><span class="ico">{ico("lock")}</span><div><b>Private by design</b><span>School records stay on the school's own devices</span></div></div>
+</div></div></section>
 
 <section class="section"><div class="container">
 <div class="stats stats-big">
-<div class="tile navy rv"><b>9</b><span>Departments under one company</span></div>
-<div class="tile sky rv"><b>{len(PRODUCTS)}</b><span>Software products we build and maintain</span></div>
+<div class="tile navy rv"><b data-count="9">9</b><span>Departments under one company</span></div>
+<div class="tile sky rv"><b data-count="{len(PRODUCTS)}">{len(PRODUCTS)}</b><span>Software products we build and maintain</span></div>
 <div class="tile gold rv"><b>P1 to P6</b><span>Full primary curriculum in our Smart School App</span></div>
-<div class="tile navy rv"><b>3</b><span>Working languages: English, French and Kinyarwanda</span></div>
+<div class="tile navy rv"><b data-count="2">2</b><span>Platforms for our school app: Windows and Android</span></div>
 </div></div></section>
 
 <section class="section sky" id="departments"><div class="container">
@@ -286,6 +302,7 @@ home = f'''
 <section class="section soft"><div class="container">
 <div class="section-head"><div><div class="kicker">Our products</div><h2>Software we build ourselves</h2></div>
 <p>Our development team builds and maintains {len(PRODUCTS)} software products for schools, families, savings groups and businesses. Most work offline and are made for Rwanda.</p></div>
+<div class="logo-marquee" aria-hidden="true"><div class="lm-track">{logo_strip()}{logo_strip()}</div></div>
 <div class="ptiles">{prod_tiles()}</div>
 <p style="margin-top:1.6rem"><a class="btn btn-primary" href="products.html">See all products</a> &nbsp; <a class="btn btn-sky" href="smart-school-app.html">Featured: Smart School App</a></p>
 </div></section>
@@ -320,12 +337,13 @@ home = f'''
 <details><summary>How do I get Smart School App?</summary><p>See the <a href="smart-school-app.html#download">download section</a>. The app is licensed per school, and we can train your teachers.</p></details>
 </div></section>
 
-<section class="section"><div class="container">
-<div class="grid g3">
-<a class="card contact-card rv" data-wa="Hello EduSmart Consult, I would like to know more." href="#" rel="noopener">{ico("phone")}<h3>WhatsApp</h3><p>Chat with us for a quick answer.</p></a>
-<a class="card contact-card rv" data-phone href="#">{ico("phone")}<h3>Call us</h3><p>+250 782 368 555</p></a>
-<a class="card contact-card rv" href="contact.html#form">{ico("file")}<h3>Send an enquiry</h3><p>Tell us about your project.</p></a>
-</div></div></section>
+<section class="section tight"><div class="container">
+<div class="reach rv"><div class="reach-text"><div class="kicker">Get in touch</div><h2>Let's talk about your school or project</h2><p>Tell us what you need. We reply within two working days.</p><p class="kg">{ico("clock")} <span>Kigali time now: <b data-kigali-time>--:--</b> (CAT)</span></p></div>
+<div class="reach-actions">
+<a class="ra wa" data-wa="Hello EduSmart Consult, I would like to know more." href="#" rel="noopener"><span class="rai">{ico("whatsapp")}</span><span><b>WhatsApp</b><small>Chat with us</small></span></a>
+<a class="ra call" href="tel:+250782368555"><span class="rai">{ico("call")}</span><span><b>Call us</b><small data-phone>+250 782 368 555</small></span></a>
+<a class="ra mail" href="contact.html#form"><span class="rai">{ico("mail")}</span><span><b>Send an enquiry</b><small>Use the contact form</small></span></a>
+</div></div></div></section>
 '''
 page("index.html", "EduSmart Consult | Education, research and digital solutions in Rwanda",
      "EduSmart Consult LTD in Kigali: education and training, inclusive education, research, e-learning, software development, data services, ICT support, and the Smart School App product.",
@@ -509,13 +527,13 @@ cloud = f'''
 
 
 <section class="section" id="online"><div class="container">
-<div class="section-head"><div><div class="kicker">Online app</div><h2>Smart School App, inside your browser</h2></div><p>This is the real app running online. Sign in with your school account to use it right here, or open it full screen.</p></div>
+<div class="section-head"><div><div class="kicker">Online app</div><h2>Smart School App, inside your browser</h2></div><p>This is how Smart School App looks online. Press the button to open the real app in its own tab and sign in with your school code.</p></div>
 <div class="win embed"><div class="win-bar"><img src="assets/ssa-logo-96.png" alt=""><span class="t">Smart School App | Online</span>
 <span class="c"><i><svg viewBox="0 0 10 10"><path d="M0 5h10"/></svg></i><i><svg viewBox="0 0 10 10"><rect x=".5" y=".5" width="9" height="9"/></svg></i><i><svg viewBox="0 0 10 10"><path d="M0 0l10 10M10 0L0 10"/></svg></i></span></div>
 <div class="embed-body"><iframe data-cloud-frame title="Smart School App online" loading="lazy" hidden></iframe>
 <div class="embed-fallback" data-cloud-fallback><img class="shot" src="assets/app-overview.webp" alt="Smart School App online preview" width="1440" height="900" loading="lazy">
 <div class="embed-note" data-cloud-note><b>Online access opens soon for your school.</b> <a href="contact.html?topic=Smart%20School%20Cloud%20access#form">Request access</a></div></div></div></div>
-<p style="margin-top:1rem"><a class="btn btn-gold" data-cloud="app" href="#">Open full screen</a></p>
+<p style="margin-top:1rem"><a class="btn btn-gold" data-cloud="app" href="#">Open the online app</a></p>
 </div></section>
 
 <section class="section sky" id="connect"><div class="container">
@@ -606,10 +624,14 @@ contact = hero_page("Contact", "Contact us", "Ask about any of our services, req
 <div class="msg" id="formMsg" role="status"></div>
 <p class="form-note">We use your details only to reply to this enquiry.</p>
 </form>
-<div class="grid" style="gap:1rem">
-<div class="card dept c1"><h3>Phone and WhatsApp</h3><p><a data-phone href="#">+250 782 368 555</a></p><p style="margin-top:.6rem"><a class="btn btn-outline btn-sm" data-wa="Hello EduSmart Consult" href="#" rel="noopener">Message on WhatsApp</a></p></div>
-<div class="card dept c2"><h3>Email</h3><p><a data-email href="#">email</a></p></div>
-<div class="card dept c3"><h3>Office</h3><p>Itetero, Nyagatovu, Kimironko<br>Gasabo, Kigali, Rwanda</p></div>
+<div class="cinfo">
+<div class="cbox c1"><span class="ico">{ico("call")}</span><div><h3>Phone and WhatsApp</h3><p><span data-phone>+250 782 368 555</span></p>
+<div class="cact"><a class="btn btn-primary btn-sm" href="tel:+250782368555">Call now</a><a class="btn btn-wa btn-sm" data-wa="Hello EduSmart Consult" href="#" rel="noopener">WhatsApp</a></div></div></div>
+<div class="cbox c2"><span class="ico c2">{ico("mail")}</span><div><h3>Email</h3><p><span data-email>email</span></p>
+<div class="cact"><a class="btn btn-sky btn-sm" data-email-link href="#">Write an email</a></div></div></div>
+<div class="cbox c3"><span class="ico c3">{ico("pin")}</span><div><h3>Office</h3><p>Itetero, Nyagatovu, Kimironko<br>Gasabo, Kigali, Rwanda</p>
+<div class="cact"><a class="btn btn-outline btn-sm" href="https://www.google.com/maps/search/?api=1&query=Itetero+Nyagatovu+Kimironko+Gasabo+Kigali+Rwanda" target="_blank" rel="noopener">Open in Maps</a></div></div></div>
+<div class="cnote">{ico("clock")}<span>We reply to every enquiry within two working days.</span></div>
 </div></div></section>'''
 page("contact.html", "Contact | EduSmart Consult",
      "Contact EduSmart Consult in Kigali about education, research, e-learning, software, data and ICT services or Smart School App.",

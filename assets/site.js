@@ -64,6 +64,7 @@
   document.querySelectorAll('[data-phone]').forEach(function (e) { e.textContent = C.phone; if (e.tagName === 'A') e.href = 'tel:+' + C.phoneIntl; });
   document.querySelectorAll('[data-email]').forEach(function (e) { e.textContent = C.email; if (e.tagName === 'A') e.href = 'mailto:' + C.email; });
   document.querySelectorAll('[data-wa]').forEach(function (e) { e.href = 'https://wa.me/' + C.phoneIntl + '?text=' + encodeURIComponent(e.getAttribute('data-wa') || 'Hello EduSmart Consult'); });
+  document.querySelectorAll('[data-email-link]').forEach(function (e) { e.href = 'mailto:' + C.email; });
   document.querySelectorAll('[data-year]').forEach(function (e) { e.textContent = new Date().getFullYear(); });
 
   // contact form
@@ -112,4 +113,44 @@
   var io = new IntersectionObserver(function (entries) { entries.forEach(function (en) { if (en.isIntersecting) { en.target.classList.add('in'); io.unobserve(en.target); } }); }, { threshold: 0.12 });
   els.forEach(function (e) { io.observe(e); });
   setTimeout(function () { els.forEach(function (e) { e.classList.add('in'); }); }, 2500);
+})();
+
+
+// Kigali clock (Central Africa Time, UTC+2), rotating headline word, count-up numbers
+(function () {
+  var tz = 'Africa/Kigali';
+  var tf, tfs, df;
+  try {
+    tfs = new Intl.DateTimeFormat('en-GB', { timeZone: tz, hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: false });
+    tf = new Intl.DateTimeFormat('en-GB', { timeZone: tz, hour: '2-digit', minute: '2-digit', hour12: false });
+    df = new Intl.DateTimeFormat('en-GB', { timeZone: tz, weekday: 'short', day: '2-digit', month: 'short', year: 'numeric' });
+  } catch (e) { return; }
+  function tick() {
+    var now = new Date();
+    document.querySelectorAll('[data-kigali-time]').forEach(function (el) { el.textContent = (el.closest('.tb-clock') ? tfs : tf).format(now); });
+    document.querySelectorAll('[data-kigali-date]').forEach(function (el) { el.textContent = 'Kigali, ' + df.format(now); });
+  }
+  tick(); setInterval(tick, 1000);
+
+  var rot = document.querySelector('.rot');
+  if (rot && !window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+    var words = (rot.getAttribute('data-words') || '').split('|'), i = 0;
+    setInterval(function () {
+      rot.classList.add('out');
+      setTimeout(function () { i = (i + 1) % words.length; rot.textContent = words[i]; rot.classList.remove('out'); }, 350);
+    }, 2600);
+  }
+
+  var nums = document.querySelectorAll('[data-count]');
+  if (nums.length && 'IntersectionObserver' in window && !window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+    var io = new IntersectionObserver(function (es) {
+      es.forEach(function (en) {
+        if (!en.isIntersecting) return; io.unobserve(en.target);
+        var el = en.target, to = parseInt(el.getAttribute('data-count'), 10), t0 = null;
+        function step(t) { if (!t0) t0 = t; var p = Math.min(1, (t - t0) / 1100); el.textContent = Math.round(to * (1 - Math.pow(1 - p, 3))); if (p < 1) requestAnimationFrame(step); }
+        requestAnimationFrame(step);
+      });
+    }, { threshold: 0.5 });
+    nums.forEach(function (n) { io.observe(n); });
+  }
 })();
