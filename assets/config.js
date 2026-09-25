@@ -13,7 +13,8 @@ window.EDUSMART = {
     version: "2.22.0",
     windowsUrl: "",   // e.g. https://github.com/Eribangi05/smart-school-app/releases/download/v2.22.0/Smart-School-App-Setup-2.22.0.exe
     androidUrl: "",   // e.g. https://github.com/Eribangi05/smart-school-app-android/releases/download/v2.22.0/Smart-School-App-release-signed.apk
-    webAppUrl: ""     // browser version, when it is published
+    webAppUrl: "",    // browser version, when it is published
+    sha256Windows: "" // optional checksum shown on the Downloads page
   },
 
   /* Contact form. Paste a Formspree (or similar) endpoint to receive submissions by email,
@@ -25,6 +26,12 @@ window.EDUSMART = {
     appPath: "/app",
     embed: false      // true only if the server allows framing (needs frame-ancestors + cross-site cookies). Default: open in a new tab
   },
+
+  /* Prices shown on the pricing page. Leave empty to show "Quote on request". Example: "from 500,000 RWF per school per year" */
+  pricing: { school: "", training: "" },
+
+  /* Optional, privacy friendly statistics (Plausible). Leave domain empty for no statistics at all. Visitors must opt in. */
+  analytics: { domain: "", src: "https://plausible.io/js/script.js" },
 
   formEndpoint: "https://formspree.io/f/moevnprb"
 };

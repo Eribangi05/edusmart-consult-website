@@ -1,11 +1,15 @@
 #!/usr/bin/env python3
 """Generates the static pages so the header, footer and meta tags stay identical everywhere.
 Run:  python build.py      (edit copy in this file, then rebuild)"""
-import os, re
+import os, re, json
 
 ROOT = os.path.dirname(os.path.abspath(__file__))
+import datetime
+TODAY = datetime.date.today().isoformat()
 SITE_URL = "https://www.edusmartconsult.com"   # change if the final domain differs
+GOOGLE_VERIFICATION = ""   # paste the token from Google Search Console here (see SEO-SETUP.md)
 
+exec(open(os.path.join(ROOT, "make_og.py"), encoding="utf-8").read())
 PH = {
  "book": "book-open", "clock": "clock", "chart": "chart-bar", "users": "users-three", "shield": "shield-check", "device": "desktop",
  "wifi": "wifi-high", "file": "file-text", "calendar": "calendar-check", "print": "printer", "target": "target", "edit": "pencil-simple-line",
@@ -30,13 +34,14 @@ DEPT_LIST = [
  ("ict-support", "ICT and Computer Systems Support"), ("environmental-technical", "Environmental and Technical Consulting"),
  ("admin-support", "Administrative, Fundraising and Equipment Support")]
 
-TICKER = [
- ("New", "Smart School Cloud: use Smart School App in a browser and sync Windows and Android devices", "smart-school-cloud.html"),
- ("Smart School App", "62 P6 national exam papers, lesson plans in three languages and a whole school timetable generator", "smart-school-app.html"),
- ("Products", "23 software products for schools, families, savings groups and businesses", "products.html"),
- ("Free demo", "Ask us to show Smart School App at your school", "contact.html?topic=Smart%20School%20App%20demo#form"),
- ("Services", "Education, research, e-learning, software, data and ICT support from Kigali", "index.html#departments"),
-]
+import json
+def load_json(name, default):
+    try:
+        with open(os.path.join(ROOT, "content", name), encoding="utf-8") as f:
+            return json.load(f)
+    except Exception:
+        return default
+TICKER = [(x.get("tag", ""), x.get("text", ""), x.get("href", "#")) for x in load_json("announcements.json", [])]
 def topbar():
     items = "".join(f'<a class="tk" href="{h}"><b>{t}</b> {x}</a>' for t, x, h in TICKER)
     return f'''<div class="topbar" role="region" aria-label="Announcements and Kigali time"><div class="container tb-in">
@@ -50,7 +55,17 @@ def header(active):
     dd = "".join(f'<a href="{s}.html">{t}</a>' for s, t in DEPT_LIST)
     prod = ('<a href="smart-school-app.html">Smart School App<small>Offline learning suite for Windows and Android</small></a>'
             '<a href="smart-school-cloud.html">Smart School Cloud<small>Online access and device sync</small></a>'
+            '<a href="tour.html">Take the tour<small>Screen by screen walkthrough</small></a>'
+            '<a href="pricing.html">Pricing and licences<small>Plans and comparison</small></a>'
+            '<a href="downloads.html">Downloads<small>Windows, Android and online</small></a>'
             '<a href="products.html">All products<small>Every app we build</small></a>')
+    res = ('<a href="news.html">News and tips<small>Updates and teaching guides</small></a>'
+           '<a href="stories.html">Success stories<small>What schools say</small></a>'
+           '<a href="request.html">Request a demo or quote<small>Tell us what you need</small></a>'
+           '<a href="search.html">Search the site<small>Find pages and products</small></a>')
+    about = ('<a href="about.html">About us<small>Who we are</small></a>'
+             '<a href="team.html">Our team<small>The people behind the work</small></a>'
+             '<a href="partners.html">Partners and careers<small>Work and grow with us</small></a>')
     return f'''<a class="skip" href="#main">Skip to content</a>
 {topbar()}
 <header class="site-header"><div class="container nav-wrap">
@@ -59,8 +74,11 @@ def header(active):
 <nav class="nav" aria-label="Main"><a href="index.html"{cur("index.html")}>Home</a>
 <div class="dd"><a href="index.html#departments"{cur("dept")}>Departments</a><div class="dd-menu">{dd}</div></div>
 <div class="dd"><a href="products.html"{cur("products")}>Products</a><div class="dd-menu">{prod}</div></div>
-<a href="about.html"{cur("about.html")}>About</a>
-<a href="contact.html"{cur("contact.html")} class="btn btn-primary btn-sm">Contact us</a></nav>
+<div class="dd"><a href="news.html"{cur("resources")}>Resources</a><div class="dd-menu">{res}</div></div>
+<div class="dd"><a href="about.html"{cur("about")}>About</a><div class="dd-menu">{about}</div></div>
+<a class="nav-search" href="search.html" data-search-open aria-label="Search the site" title="Search (press /)">{ico("search")}</a>
+<a href="contact.html"{cur("contact.html")}>Contact</a>
+<a href="request.html"{cur("request.html")} class="btn btn-primary btn-sm">Request a demo</a></nav>
 </div></header>'''
 
 FOOTER = '''<section class="cta"><div class="container"><h2>Talk to us about your school or organisation.</h2>
@@ -70,7 +88,8 @@ FOOTER = '''<section class="cta"><div class="container"><h2>Talk to us about you
 <div><div class="foot-logo"><img src="assets/logo-horizontal.webp" alt="EduSmart Consult" width="132" height="44"></div>
 <p>Better Research | Stronger Education | Brighter Futures</p></div>
 <div><h4>Departments</h4><a href="education-training.html">Education and Training</a><a href="inclusive-education.html">Inclusive Education</a><a href="research-consulting.html">Research and Consulting</a><a href="elearning.html">E-Learning</a><a href="software-development.html">Software Development</a><a href="index.html#departments">All departments</a></div>
-<div><h4>Products</h4><a href="smart-school-app.html">Smart School App</a><a href="smart-school-app.html#download">Download</a><a href="smart-school-cloud.html">Smart School Cloud</a><a href="products.html">All products</a><a href="about.html">About us</a><a href="privacy.html">Privacy</a></div>
+<div><h4>Products</h4><a href="smart-school-app.html">Smart School App</a><a href="smart-school-cloud.html">Smart School Cloud</a><a href="tour.html">Take the tour</a><a href="pricing.html">Pricing</a><a href="downloads.html">Downloads</a><a href="products.html">All products</a></div>
+<div><h4>Company</h4><a href="about.html">About us</a><a href="team.html">Our team</a><a href="news.html">News and tips</a><a href="stories.html">Success stories</a><a href="partners.html">Partners and careers</a><a href="request.html">Request a demo</a><a href="privacy.html">Privacy</a></div>
 <div><h4>Contact</h4><a data-phone href="#">+250 782 368 555</a><a data-email href="#">email</a><span>Itetero, Nyagatovu, Kimironko,<br>Gasabo, Kigali, Rwanda</span></div>
 </div>
 <div class="foot-bottom"><span>&copy; <span data-year></span> EduSmart Consult LTD. All rights reserved.</span>
@@ -79,14 +98,20 @@ FOOTER = '''<section class="cta"><div class="container"><h2>Talk to us about you
 </div></footer>
 <a class="wa" data-wa="Hello EduSmart Consult, I would like to know more." href="#" rel="noopener" aria-label="Chat on WhatsApp">WhatsApp</a>
 <div class="lightbox" id="lb" role="dialog" aria-label="Enlarged screenshot"><img alt=""></div>
-<script src="assets/config.js"></script><script src="assets/site.js"></script>'''
+<div class="consent hidden" id="consent" role="dialog" aria-label="Privacy notice"><p><b>Your privacy.</b> This site sets no tracking cookies. It only remembers this notice on your device. <a href="privacy.html">Read more</a></p><div><button class="btn btn-primary btn-sm" data-consent="essential">OK</button><button class="btn btn-outline btn-sm" data-consent="all" data-analytics-only hidden>Allow anonymous statistics</button></div></div>
+<button class="install hidden" id="installBtn" type="button">Install this site as an app</button>
+<script src="assets/config.js"></script><script src="assets/site.js"></script><script src="assets/extra.js" defer></script>'''
 
 
-def page(fname, title, desc, active, body, og="assets/og-image.png"):
+PAGE_REG = []
+def page(fname, title, desc, active, body, og=None, ld="", noindex=False):
+    if og is None:
+        og = "assets/og/" + fname.replace(".html", "") + ".png"
+        if not os.path.exists(os.path.join(ROOT, og)): og = "assets/og-image.png"
     url = f"{SITE_URL}/{fname if fname != 'index.html' else ''}"
     html = f'''<!doctype html>
 <html lang="en"><head>
-<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><script>document.documentElement.className+=" js"</script>
 <title>{title}</title>
 <meta name="description" content="{desc}">
 <meta name="theme-color" content="#06307a">
@@ -97,8 +122,10 @@ def page(fname, title, desc, active, body, og="assets/og-image.png"):
 <meta name="twitter:card" content="summary_large_image">
 <link rel="icon" href="favicon.ico" sizes="32x32"><link rel="icon" href="assets/favicon.png" type="image/png"><link rel="apple-touch-icon" href="assets/emblem-192.png">
 <link rel="manifest" href="site.webmanifest">
-<link rel="stylesheet" href="assets/styles.css">
-<script type="application/ld+json">{{"@context":"https://schema.org","@type":"Organization","name":"EduSmart Consult LTD","url":"{SITE_URL}","logo":"{SITE_URL}/assets/emblem-512.png","email":"hagenalexis2000@gmail.com","telephone":"+250782368555","address":{{"@type":"PostalAddress","streetAddress":"Itetero, Nyagatovu, Kimironko, Gasabo","addressLocality":"Kigali","addressCountry":"RW"}}}}</script>
+<link rel="stylesheet" href="assets/styles.css"><link rel="stylesheet" href="assets/extra.css">
+{"<meta name=\"robots\" content=\"noindex\">" if noindex else ""}<meta name="google-site-verification" content="{GOOGLE_VERIFICATION}">
+<link rel="alternate" type="application/rss+xml" title="EduSmart Consult news" href="feed.xml">
+<script type="application/ld+json">{{"@context":"https://schema.org","@type":"Organization","name":"EduSmart Consult LTD","url":"{SITE_URL}","logo":"{SITE_URL}/assets/emblem-512.png","email":"hagenalexis2000@gmail.com","telephone":"+250782368555","address":{{"@type":"PostalAddress","streetAddress":"Itetero, Nyagatovu, Kimironko, Gasabo","addressLocality":"Kigali","addressCountry":"RW"}}}}</script>{ld}
 </head><body>
 {header(active)}
 <main id="main">
@@ -107,6 +134,9 @@ def page(fname, title, desc, active, body, og="assets/og-image.png"):
 {FOOTER}
 </body></html>'''
     assert "\u2014" not in html and "\u2013" not in html, "dash character found in " + fname
+    if not noindex:
+        txt = re.sub(r"\s+", " ", re.sub(r"<[^>]+>", " ", re.sub(r"<(script|style)[^>]*>.*?</\1>", " ", body, flags=re.S))).strip()
+        PAGE_REG.append({"url": fname, "title": title.split(" | ")[0], "desc": desc, "text": txt[:900]})
     with open(os.path.join(ROOT, fname), "w", encoding="utf-8", newline="\n") as f:
         f.write(html)
 
@@ -170,7 +200,7 @@ def prod_card(p):
     slug, name, cat, logo, pg, desc, plat = p
     topic = (name.replace("|", "").replace("&", "and").replace("  ", " ") + " enquiry").replace(" ", "%20")
     tag = f'<a class="btn btn-outline btn-sm" href="{pg}">See the product</a>' if pg else f'<a class="btn btn-outline btn-sm" href="contact.html?topic={topic}#form">Ask about it</a>'
-    return f'''<article class="pcard" data-cat="{cat}"><img class="plogo" src="assets/{logo}" alt="{name} logo" width="72" height="72" loading="lazy">
+    return f'''<article class="pcard" id="{slug}" data-cat="{cat}"><img class="plogo" src="assets/{logo}" alt="{name} logo" width="72" height="72" loading="lazy">
 <div class="pbody"><span class="pcat">{cat}</span><h3>{name}</h3><p>{desc}</p><div class="pfoot"><span class="pplat">{plat}</span>{tag}</div></div></article>'''
 
 def logo_strip():
@@ -650,12 +680,17 @@ page("privacy.html", "Privacy | EduSmart Consult", "Privacy information for the 
 nf = hero_page("Page not found", "Page not found", "The page you asked for is not here.") + '<section class="section"><div class="container"><a class="btn btn-primary" href="index.html">Go to the home page</a></div></section>'
 page("404.html", "Page not found | EduSmart Consult", "Page not found.", "", nf)
 
-pages = ["", "products.html", "smart-school-app.html", "smart-school-cloud.html", "about.html", "contact.html", "privacy.html"] + [d[0] + ".html" for d in DEPTS]
+exec(open(os.path.join(ROOT, "build2.py"), encoding="utf-8").read())
+pages = ["", "products.html", "smart-school-app.html", "smart-school-cloud.html", "about.html", "contact.html", "privacy.html"] + [d[0] + ".html" for d in DEPTS] + EXTRA_PAGES
 with open(os.path.join(ROOT, "sitemap.xml"), "w", encoding="utf-8") as f:
     f.write('<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n' +
-            "".join(f"<url><loc>{SITE_URL}/{p}</loc></url>\n" for p in pages) + "</urlset>\n")
+            "".join(f"<url><loc>{SITE_URL}/{p}</loc><lastmod>{TODAY}</lastmod></url>\n" for p in pages) + "</urlset>\n")
 with open(os.path.join(ROOT, "robots.txt"), "w") as f:
-    f.write(f"User-agent: *\nAllow: /\nSitemap: {SITE_URL}/sitemap.xml\n")
+    f.write(f"User-agent: *\nAllow: /\nDisallow: /editor.html\nSitemap: {SITE_URL}/sitemap.xml\n")
+MANIFEST = {"name": "EduSmart Consult", "short_name": "EduSmart", "description": "Education, research and digital solutions in Rwanda", "start_url": "./index.html", "scope": "./", "display": "standalone",
+            "background_color": "#ffffff", "theme_color": "#06307a", "lang": "en",
+            "icons": [{"src": "assets/emblem-192.png", "sizes": "192x192", "type": "image/png"}, {"src": "assets/emblem-512.png", "sizes": "512x512", "type": "image/png"}, {"src": "assets/emblem-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable"}],
+            "shortcuts": [{"name": "Request a demo", "url": "request.html"}, {"name": "Smart School App", "url": "smart-school-app.html"}, {"name": "Products", "url": "products.html"}]}
 with open(os.path.join(ROOT, "site.webmanifest"), "w") as f:
-    f.write('{"name":"EduSmart Consult","short_name":"EduSmart","start_url":"/","display":"browser","background_color":"#ffffff","theme_color":"#06307a","icons":[{"src":"assets/emblem-192.png","sizes":"192x192","type":"image/png"},{"src":"assets/emblem-512.png","sizes":"512x512","type":"image/png"}]}')
+    json.dump(MANIFEST, f, indent=1)
 print("built", len(pages) + 1, "pages")

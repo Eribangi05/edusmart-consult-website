@@ -93,17 +93,7 @@
   }
 })();
 
-// product filters
-(function () {
-  var fs = document.querySelectorAll('[data-filter]');
-  fs.forEach(function (b) {
-    b.addEventListener('click', function () {
-      fs.forEach(function (x) { x.classList.toggle('on', x === b); });
-      var f = b.getAttribute('data-filter');
-      document.querySelectorAll('#all .pcard').forEach(function (c) { c.hidden = f !== 'all' && c.getAttribute('data-cat') !== f; });
-    });
-  });
-})();
+// (product filters now live in extra.js)
 
 
 // gentle reveal on scroll (content stays visible if scripts or IntersectionObserver are unavailable)

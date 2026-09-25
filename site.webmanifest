@@ -1,1 +1,43 @@
-{"name":"EduSmart Consult","short_name":"EduSmart","start_url":"/","display":"browser","background_color":"#ffffff","theme_color":"#06307a","icons":[{"src":"assets/emblem-192.png","sizes":"192x192","type":"image/png"},{"src":"assets/emblem-512.png","sizes":"512x512","type":"image/png"}]}
+{
+ "name": "EduSmart Consult",
+ "short_name": "EduSmart",
+ "description": "Education, research and digital solutions in Rwanda",
+ "start_url": "./index.html",
+ "scope": "./",
+ "display": "standalone",
+ "background_color": "#ffffff",
+ "theme_color": "#06307a",
+ "lang": "en",
+ "icons": [
+  {
+   "src": "assets/emblem-192.png",
+   "sizes": "192x192",
+   "type": "image/png"
+  },
+  {
+   "src": "assets/emblem-512.png",
+   "sizes": "512x512",
+   "type": "image/png"
+  },
+  {
+   "src": "assets/emblem-512.png",
+   "sizes": "512x512",
+   "type": "image/png",
+   "purpose": "maskable"
+  }
+ ],
+ "shortcuts": [
+  {
+   "name": "Request a demo",
+   "url": "request.html"
+  },
+  {
+   "name": "Smart School App",
+   "url": "smart-school-app.html"
+  },
+  {
+   "name": "Products",
+   "url": "products.html"
+  }
+ ]
+}

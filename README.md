@@ -40,3 +40,11 @@ The Smart School App cloud sync server (repo "Cloud Sync Server") and a browser 
 
 ## Icons
 Duotone icons in assets/icons are from Phosphor Icons (https://phosphoricons.com), MIT licence, copyright 2023 Phosphor Icons.
+
+## Content you can change without code
+* **Announcements bar** (top of every page): edit `content/announcements.json`. It updates for visitors without a rebuild. The page `editor.html` prepares the file for you.
+* **News articles**: edit `content/news.json` (or use `editor.html`), then run `python build.py` and upload.
+* **Team, partners, testimonials**: `content/team.json`, `content/partners.json`, `content/testimonials.json`. Empty lists show friendly "coming soon" messages. Only add real, agreed content.
+* **Prices**: `pricing` in `assets/config.js`.
+* **Statistics**: `analytics` in `assets/config.js` (Plausible, off by default, visitors must opt in).
+* **Domain and Google**: see DOMAIN-SETUP.md and SEO-SETUP.md.
