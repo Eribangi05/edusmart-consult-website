@@ -166,3 +166,5 @@ rc = hero_page("Road code", "Amategeko y'Umuhanda", "Practise for the Rwanda pro
 </div></div></div></section>'''
 add("road-code.html", "Amategeko y'Umuhanda | Road code theory practice in your browser", "Practise for the Rwanda provisional driving licence theory test in your browser: road signs, questions and timed mock exams in Kinyarwanda, English and French.", "products", rc,
     ld=ld_bc([("Home", ""), ("Products", "products.html"), ("Amategeko y'Umuhanda", "road-code.html")]))
+
+exec(open(os.path.join(os.path.dirname(os.path.abspath(__file__)), "build_ikimina.py"), encoding="utf-8").read())

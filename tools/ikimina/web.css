@@ -1,0 +1,39 @@
+/* Phone and tablet layout for the web version of Ikimina (the Windows app is desktop only). */
+.wb-menu{display:none}
+@media (max-width:900px){
+  html,body{overflow-x:hidden}
+  .shell{display:block;height:auto;min-height:100vh}
+  .main{height:auto;min-height:100vh}
+  .side{position:fixed;left:0;top:0;bottom:0;width:min(290px,84vw);z-index:60;transform:translateX(-105%);transition:transform .25s ease;overflow-y:auto}
+  body.wb-open .side{transform:none;box-shadow:0 0 60px rgba(0,0,0,.5)}
+  .wb-scrim{position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:55;display:none}
+  body.wb-open .wb-scrim{display:block}
+  .wb-menu{display:grid;place-items:center;width:40px;height:40px;flex:none;border:0;border-radius:12px;background:var(--card);color:var(--emerald);font-size:20px;cursor:pointer;box-shadow:0 1px 6px rgba(0,0,0,.12)}
+  .top{padding:12px 14px;gap:10px;flex-wrap:wrap;position:sticky}
+  .top h1{font-size:19px}
+  .top .sub{display:none}
+  .top .searchbox{display:none}
+  .view{padding:6px 14px 90px;overflow:visible}
+  .grid,.g2,.g3,.g4,.g21,.g12{grid-template-columns:1fr !important}
+  .g4.kp,.grid.g4{grid-template-columns:1fr 1fr !important}
+  .fg{grid-template-columns:1fr}
+  .hero{padding:20px 18px}
+  .hero .big{font-size:32px}
+  .hero .row,.hero .acts{flex-wrap:wrap}
+  .card{overflow-x:auto}
+  .card table{min-width:560px}
+  .modal{width:96vw;max-height:94vh}
+  .modal .bd{padding:6px 16px 8px}
+  .modal header{padding:16px 16px 10px}
+  .auth{grid-template-columns:1fr;height:auto;min-height:100vh}
+  .auth .left{padding:26px 20px}
+  .auth .left h1{font-size:32px}
+  .auth .left .feat{margin-top:18px}
+  .auth .right{padding:22px 16px}
+  .tabs{max-width:100%;overflow-x:auto}
+  .kpi .v{font-size:22px}
+}
+@media (max-width:480px){
+  .g4.kp,.grid.g4{grid-template-columns:1fr !important}
+  .auth .left .feat{grid-template-columns:1fr}
+}
