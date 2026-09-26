@@ -160,7 +160,7 @@
       var nav = document.getElementById('nav'); if (nav) nav.addEventListener('click', function () { document.body.classList.remove('amg-nav-open'); });
     }
   }
-  function refreshChip() { var c = document.getElementById('amgChip'); if (c && state.mode !== 'full') c.textContent = '🔓 ' + tt('unlock'); }
+  function refreshChip() { var c = document.getElementById('amgChip'), t = state.mode === 'full' ? '✓ ' + tt('full') : '🔓 ' + tt('unlock'); if (c && c.textContent !== t) c.textContent = t; }
 
   function showNotice() {
     var n = ls('amg_notice') || state.notice; if (!n) return;
@@ -169,8 +169,28 @@
     b.lastChild.onclick = function () { b.remove(); }; document.body.appendChild(b);
   }
 
+  // ---- errors are shown, not swallowed: a visitor (or we) can then see what went wrong
+  function showFail(msg) {
+    if (!msg || /ResizeObserver|Script error/i.test(String(msg))) return;
+    var b = document.getElementById('amgFail');
+    if (!b) { b = el('div', { id: 'amgFail', class: 'amg-notice amg-fail' }, '<span></span><button type="button" aria-label="x">×</button>'); b.lastChild.onclick = function () { b.remove(); }; document.body.appendChild(b); }
+    b.firstChild.textContent = 'Problem: ' + String(msg).slice(0, 200) + '. Reload the page. If it continues, tell EduSmart Consult what this message says.';
+  }
+  window.addEventListener('error', function (e) { showFail(e.message); });
+  window.addEventListener('unhandledrejection', function (e) { showFail(e.reason && e.reason.message ? e.reason.message : e.reason); });
+
   window.__amgAfterStart = function () {
-    decorate(); showNotice();
-    new MutationObserver(function () { decorate(); refreshChip(); }).observe(document.getElementById('app'), { childList: true, subtree: true });
+    var app = document.getElementById('app'); if (!app) return;
+    var busy = false, pending = false;
+    var obs = new MutationObserver(function () {
+      if (busy || pending) return; pending = true;               // one pass per frame, and our own edits are never observed
+      requestAnimationFrame(function () {
+        pending = false; busy = true; obs.disconnect();
+        try { decorate(); refreshChip(); } catch (e) { /* cosmetic only */ }
+        obs.observe(app, { childList: true, subtree: true }); busy = false;
+      });
+    });
+    try { decorate(); showNotice(); } catch (e) { /* cosmetic only */ }
+    obs.observe(app, { childList: true, subtree: true });
   };
 })();

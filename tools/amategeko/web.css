@@ -69,3 +69,5 @@ body { overscroll-behavior: none; }
 @media (max-width: 860px) { .opt-sign { width: 44px; height: 44px; } }
 
 @media (max-width: 860px) { .exam-bar { flex-wrap: wrap; gap: 6px 10px; padding: 10px 14px; } }
+
+.amg-fail { background: #8a1c1c; z-index: 400; }
