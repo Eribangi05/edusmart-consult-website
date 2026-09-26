@@ -1,0 +1,71 @@
+/* Web-only layer for the Amategeko app: small screens, the unlock button and dialog. The desktop stylesheet is left as it is. */
+html, body { height: 100%; }
+body { overscroll-behavior: none; }
+@supports (height: 100dvh) { #app { height: 100dvh; } }
+
+.amg-chip { border: 0; border-radius: 999px; padding: 7px 14px; font: inherit; font-size: 13px; font-weight: 700; cursor: pointer; margin-right: 10px; white-space: nowrap; }
+.amg-chip.is-sample { background: #ffb020; color: #3a2600; }
+.amg-chip.is-full { background: rgba(29, 185, 84, .15); color: #14803a; cursor: default; }
+[data-theme="dark"] .amg-chip.is-full { color: #6fe39a; }
+.topbar-right { display: flex; align-items: center; }
+.amg-menu-btn { display: none; }
+.amg-backdrop { display: none; }
+
+.amg-overlay { position: fixed; inset: 0; z-index: 200; background: rgba(9, 18, 48, .6); display: flex; align-items: center; justify-content: center; padding: 18px; }
+.amg-box { background: var(--surface, #fff); color: var(--text, #12213f); border-radius: 18px; max-width: 420px; width: 100%; padding: 24px; box-shadow: 0 30px 70px rgba(0, 0, 0, .4); }
+.amg-box h3 { font-size: 19px; margin-bottom: 8px; }
+.amg-box p { color: var(--muted, #5a6b8c); font-size: 14px; line-height: 1.5; margin-bottom: 14px; }
+.amg-box label { display: block; font-size: 13px; font-weight: 700; color: var(--muted, #5a6b8c); }
+.amg-box input { display: block; width: 100%; margin-top: 6px; padding: 13px 14px; font: 600 17px/1.2 ui-monospace, Consolas, monospace; letter-spacing: 2px; text-transform: uppercase; border: 2px solid var(--border, #e2e8f5); border-radius: 12px; background: var(--surface-2, #f0f4fb); color: inherit; }
+.amg-box input:focus { outline: none; border-color: #3a6bff; }
+.amg-err { min-height: 20px; color: #e5484d; font-size: 13px; margin: 8px 0 4px; }
+.amg-row { display: flex; gap: 10px; margin-top: 6px; }
+.amg-btn { flex: 1; border: 0; border-radius: 12px; padding: 13px 16px; font: inherit; font-weight: 700; font-size: 15px; cursor: pointer; background: #2453d6; color: #fff; }
+.amg-btn:disabled { opacity: .6; }
+.amg-btn.amg-ghost { flex: 0 0 auto; background: var(--surface-2, #f0f4fb); color: var(--text, #12213f); border: 1px solid var(--border, #e2e8f5); }
+.amg-link { display: block; margin-top: 14px; text-align: center; font-size: 14px; font-weight: 700; color: #2453d6; }
+
+.amg-notice { position: fixed; left: 50%; bottom: 18px; transform: translateX(-50%); z-index: 150; max-width: min(92vw, 520px); display: flex; gap: 12px; align-items: center; background: #0d1b3e; color: #fff; padding: 12px 16px; border-radius: 12px; font-size: 14px; box-shadow: 0 10px 30px rgba(0, 0, 0, .35); }
+.amg-notice button { background: none; border: 0; color: #fff; font-size: 20px; cursor: pointer; }
+
+@media (max-width: 860px) {
+  #app { display: block; position: relative; }
+  .sidebar { position: fixed; z-index: 120; left: 0; top: 0; bottom: 0; width: min(82vw, 300px); transform: translateX(-102%); transition: transform .22s ease; overflow-y: auto; }
+  body.amg-nav-open .sidebar { transform: none; box-shadow: 0 0 60px rgba(0, 0, 0, .5); }
+  .amg-backdrop { position: fixed; inset: 0; z-index: 110; background: rgba(9, 18, 48, .5); }
+  body.amg-nav-open .amg-backdrop { display: block; }
+  .main { height: 100vh; }
+  @supports (height: 100dvh) { .main { height: 100dvh; } }
+  .topbar { padding: 0 12px; gap: 8px; }
+  .topbar-title { font-size: 17px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; flex: 1; min-width: 0; }
+  .amg-menu-btn { display: grid; place-items: center; flex: 0 0 40px; width: 40px; height: 40px; border-radius: 10px; border: 1px solid var(--border); background: var(--surface-2); color: var(--text); font-size: 20px; cursor: pointer; margin-right: 8px; }
+  .content { padding: 16px 14px 60px; }
+  .candidate { display: none; }
+  .amg-chip { padding: 6px 10px; font-size: 12px; margin-right: 0; }
+  .hero { padding: 20px 18px; }
+  .hero h1 { font-size: 21px; }
+  .hero .hero-emoji { display: none; }
+  .hero-stats { gap: 18px; }
+  .tiles { grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 12px; }
+  .grid { gap: 12px; }
+  .signs-grid { grid-template-columns: repeat(auto-fill, minmax(112px, 1fr)); }
+  .stat-tiles { grid-template-columns: repeat(2, 1fr); }
+  .q-stem { font-size: 18px; }
+  .opt { padding: 13px 14px; gap: 12px; }
+  .exam-bar { padding: 12px 14px; }
+  .modal-root { padding: 12px; }
+  .modal { padding: 18px; }
+  .ready { flex-wrap: wrap; }
+  .q-actions { flex-wrap: wrap; }
+  table { display: block; overflow-x: auto; }
+}
+@media (max-width: 420px) {
+  .tiles { grid-template-columns: 1fr 1fr; }
+  .btn { padding: 11px 14px; }
+}
+
+/* sign pictures shown outside an answer button (study list) must keep a fixed size */
+.opt-sign { width: 56px; height: 56px; flex: 0 0 auto; object-fit: contain; background: #fff; border-radius: 8px; padding: 3px; }
+@media (max-width: 860px) { .opt-sign { width: 44px; height: 44px; } }
+
+@media (max-width: 860px) { .exam-bar { flex-wrap: wrap; gap: 6px 10px; padding: 10px 14px; } }

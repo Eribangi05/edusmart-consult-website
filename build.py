@@ -56,6 +56,7 @@ def header(active):
     prod = ('<a href="smart-school-app.html">Smart School App<small>Offline learning suite for Windows and Android</small></a>'
             '<a href="smart-school-cloud.html">Smart School Cloud<small>Online access and device sync</small></a>'
             '<a href="try.html">Try it live<small>Open the demo school in your browser</small></a>'
+            "<a href=\"road-code.html\">Amategeko y'Umuhanda<small>Road code practice in your browser</small></a>"
             '<a href="tour.html">Take the tour<small>Screen by screen walkthrough</small></a>'
             '<a href="pricing.html">Pricing and licences<small>Plans and comparison</small></a>'
             '<a href="downloads.html">Downloads<small>Windows, Android and online</small></a>'
@@ -89,7 +90,7 @@ FOOTER = '''<section class="cta"><div class="container"><h2>Talk to us about you
 <div><div class="foot-logo"><img src="assets/logo-horizontal.webp" alt="EduSmart Consult" width="132" height="44"></div>
 <p>Better Research | Stronger Education | Brighter Futures</p></div>
 <div><h4>Departments</h4><a href="education-training.html">Education and Training</a><a href="inclusive-education.html">Inclusive Education</a><a href="research-consulting.html">Research and Consulting</a><a href="elearning.html">E-Learning</a><a href="software-development.html">Software Development</a><a href="index.html#departments">All departments</a></div>
-<div><h4>Products</h4><a href="smart-school-app.html">Smart School App</a><a href="smart-school-cloud.html">Smart School Cloud</a><a href="tour.html">Take the tour</a><a href="pricing.html">Pricing</a><a href="downloads.html">Downloads</a><a href="products.html">All products</a></div>
+<div><h4>Products</h4><a href="smart-school-app.html">Smart School App</a><a href="smart-school-cloud.html">Smart School Cloud</a><a href="road-code.html">Amategeko y'Umuhanda</a><a href="tour.html">Take the tour</a><a href="pricing.html">Pricing</a><a href="downloads.html">Downloads</a><a href="products.html">All products</a></div>
 <div><h4>Company</h4><a href="about.html">About us</a><a href="team.html">Our team</a><a href="news.html">News and tips</a><a href="stories.html">Success stories</a><a href="partners.html">Partners and careers</a><a href="request.html">Request a demo</a></div>
 </div>
 <div class="foot-contact"><span>Itetero, Nyagatovu, Kimironko, Gasabo, Kigali, Rwanda</span><a data-phone href="#">+250 782 368 555</a><a data-email href="#">email</a></div>
@@ -190,8 +191,8 @@ PRODUCTS = [
   "Smart shopping lists with a pantry, recipes and meal planning to help households plan and spend well.", "Android"),
  ("ironlog", "IronLog", "Lifestyle", "products/ironlog.svg", None,
   "Workout log with routines, sets, personal records, body measurements and reminders.", "Android"),
- ("amategeko", "Amategeko y'Umuhanda", "Transport and driving", "products/amategeko.svg", None,
-  "Rwanda road code theory app with 190 practice questions, a glossary and mock exams, in Kinyarwanda first. Works offline.", "Android, Windows"),
+ ("amategeko", "Amategeko y'Umuhanda", "Transport and driving", "products/amategeko.svg", "road-code.html",
+  "Rwanda road code theory practice with 328 questions, 126 road signs, a glossary and timed mock exams, in Kinyarwanda, English and French. Try it in your browser.", "Web, Windows, Android"),
  ("rwanda-drive", "Rwanda Drive", "Transport and driving", "products/rwandadrive.svg", None,
   "Driving school training product: a theory academy plus a 3D driving simulator with a Kigali inspired city. In development.", "Windows (in development)"),
 ]

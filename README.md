@@ -48,3 +48,18 @@ Duotone icons in assets/icons are from Phosphor Icons (https://phosphoricons.com
 * **Prices**: `pricing` in `assets/config.js`.
 * **Statistics**: `analytics` in `assets/config.js` (Plausible, off by default, visitors must opt in).
 * **Domain and Google**: see DOMAIN-SETUP.md and SEO-SETUP.md.
+
+## Amategeko y'Umuhanda web app (/amategeko/)
+
+The browser version of the road code app is generated from the Windows app, not written by hand.
+
+```
+python tools/amategeko/build.py
+python build.py
+```
+
+- Reads `RwandaTheoryApp/AmategekoWindows` (override with the `AMG_SRC` environment variable) and writes `amategeko/`. Run it again after the app or its content changes.
+- The public site holds only a free sample (40 questions, 36 signs, 15 terms, 2 lessons). The full content is written to `Cloud Sync Server/content-theory/` and is handed out by the server only for an unlock code. Create codes in the Support Console under **Road code codes**.
+- `tools/amategeko/web-shim.js` replaces the Electron bridge (storage, files, unlock). `web.css` adds the phone layout. The Windows app is never modified.
+- The landing page is `road-code.html` (not `amategeko.html`, which would clash with the folder under clean URLs).
+- Deploy order: push the cloud server first (so unlock works), then deploy the site.

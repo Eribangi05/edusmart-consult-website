@@ -1,0 +1,54 @@
+<!doctype html>
+<html lang="rw">
+<head>
+  <meta charset="utf-8" />
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; img-src 'self' data:; style-src 'self' 'unsafe-inline'; script-src 'self' 'unsafe-inline'; frame-src 'self'; object-src 'self'; connect-src 'self' https://smart-school-cloud-sync.onrender.com;" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="theme-color" content="#12276b" />
+  <meta name="robots" content="noindex" />
+  <link rel="icon" href="assets/icons/appicon.png" />
+  <title>Amategeko y'Umuhanda | Road code theory practice</title>
+  <link rel="stylesheet" href="styles.css" />
+  <link rel="stylesheet" href="web.css?v=1f0f90e2" />
+</head>
+<body>
+  <div id="app">
+    <aside class="sidebar">
+      <div class="brand">
+        <div class="brand-badge">🚗</div>
+        <div class="brand-text">
+          <div class="brand-title">Amategeko</div>
+          <div class="brand-sub">y'Umuhanda</div>
+        </div>
+      </div>
+      <nav id="nav"></nav>
+      <div class="sidebar-foot">
+        <div class="lang-switch" id="langSwitch"></div>
+        <button class="theme-toggle" id="themeToggle" title="Theme">🌙</button>
+      </div>
+    </aside>
+    <main class="main">
+      <header class="topbar">
+        <div class="topbar-title" id="topTitle">Ahabanza</div>
+        <div class="topbar-right">
+          <div class="candidate" id="candidateChip"></div>
+        </div>
+      </header>
+      <section class="content" id="view"></section>
+    </main>
+  </div>
+
+  <div class="modal-root" id="modalRoot"></div>
+  <div class="toast" id="toast"></div>
+
+  <noscript><p style="padding:24px;font-family:sans-serif">This app needs JavaScript.</p></noscript>
+  <script src="web-shim.js?v=1f0f90e2"></script>
+  <script>
+  __amgReady.then(function () {
+    var s = document.createElement("script"); s.src = "app.js?v=1f0f90e2";
+    s.onload = function () { if (window.__amgAfterStart) window.__amgAfterStart(); };
+    document.body.appendChild(s);
+  }).catch(function () { document.body.innerHTML = "<p style=\"padding:24px;font-family:sans-serif\">The app could not load. Check your connection and reload the page.</p>"; });
+  </script>
+</body>
+</html>

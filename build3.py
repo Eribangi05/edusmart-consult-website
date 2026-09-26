@@ -77,3 +77,44 @@ var ctl=new AbortController();setTimeout(function(){ctl.abort();},70000);
 fetch(b+"/v1/public/status",{signal:ctl.signal,cache:"no-store"}).then(function(r){return r.json().then(function(j){show(r.ok&&j.ok,j);});}).catch(function(){show(false,null);});})();
 </script>''')
 add("status.html", "Service status | EduSmart Consult", "Live status of Smart School Cloud.", "", sb)
+
+# ---------------- Road code (Amategeko y'Umuhanda) web app landing page
+import urllib.parse as _up
+_topic = _up.quote("Amategeko y'Umuhanda unlock code enquiry")
+rc = hero_page("Road code", "Amategeko y'Umuhanda", "Practise for the Rwanda provisional driving licence theory test, in Kinyarwanda, English or French.") + f'''
+<section class="section"><div class="container split" style="align-items:start">
+<div><div class="kicker">Try it now</div><h2>Open it in your browser</h2>
+<p>No download and no sign up. Create a small profile with a name and a PIN, and start practising. Your results stay in your own browser.</p>
+<ol class="next"><li>Press <b>Open the web app</b>.</li><li>Create your profile and choose your language.</li><li>Practise questions, learn the road signs and take a timed mock exam.</li><li>Press <b>Unlock full version</b> and type your code to get everything.</li></ol>
+<p style="margin-top:1.2rem"><a class="btn btn-gold" href="amategeko/">Open the web app</a> <a class="btn btn-outline" href="contact.html?topic={_topic}#form">Ask for an unlock code</a></p></div>
+<div class="grid" style="gap:1rem">
+<div class="card">{ico("target")}<h3>Free sample</h3><p>40 practice questions, 36 road signs, 15 glossary terms and a mock exam. Enough to see how it works.</p></div>
+<div class="card">{ico("shield")}<h3>Full version</h3><p>All 328 questions, 126 road signs, 61 glossary terms, 8 lessons and the traffic law documents. Unlocked with a code from EduSmart Consult or your driving school.</p></div>
+</div></div></section>
+<section class="section sky"><div class="container"><div class="section-head"><div><div class="kicker">What is inside</div><h2>Everything a candidate needs to practise</h2></div><p>The same content as the Windows and Android apps.</p></div>
+<div class="grid g3">
+<div class="card">{ico("target")}<h3>Practice that finds your gaps</h3><p>Questions you get wrong come back first, with a short explanation after each answer.</p></div>
+<div class="card">{ico("clock")}<h3>Timed mock exam</h3><p>20 questions in 20 minutes, marked out of 20, with a review of every answer at the end.</p></div>
+<div class="card">{ico("pin")}<h3>Road signs</h3><p>Browse signs by family, search by name or code, and see what each one means.</p></div>
+<div class="card">{ico("book")}<h3>Markings, lights and signals</h3><p>Road markings, traffic lights and police signals shown as clear pictures.</p></div>
+<div class="card">{ico("edit")}<h3>Glossary and flashcards</h3><p>Learn the terms used in the road code and test yourself with flashcards.</p></div>
+<div class="card">{ico("chart")}<h3>Your progress</h3><p>See how ready you are, which topics are weak and how your exam scores change.</p></div>
+<div class="card">{ico("translate")}<h3>Three languages</h3><p>Kinyarwanda first, with English and French. Switch at any time.</p></div>
+<div class="card">{ico("phone")}<h3>Made for phones</h3><p>Works on a phone, a tablet or a computer. Large answer buttons and a menu that stays out of the way.</p></div>
+<div class="card">{ico("lock")}<h3>Your data stays with you</h3><p>Your profile and results are saved in your own browser. Nothing about your practice is sent to us.</p></div>
+</div></div></section>
+<section class="section"><div class="container"><div class="section-head"><div><div class="kicker">Free and full</div><h2>What each version includes</h2></div></div>
+<div class="scroll-x"><table class="cmp"><tr><th></th><th>Free sample</th><th>Full version</th></tr>
+<tr><td>Practice questions</td><td>40</td><td>328</td></tr><tr><td>Road signs</td><td>36</td><td>126</td></tr><tr><td>Glossary terms</td><td>15</td><td>61</td></tr>
+<tr><td>Lessons</td><td>2</td><td>8</td></tr><tr><td>Traffic law documents</td><td>Not included</td><td>Included</td></tr>
+<tr><td>Timed mock exam</td><td>Yes</td><td>Yes</td></tr><tr><td>Progress and exam history</td><td>Yes</td><td>Yes</td></tr><tr><td>Kinyarwanda, English, French</td><td>Yes</td><td>Yes</td></tr></table></div>
+<div class="callout-box"><b>Installed apps.</b> Amategeko y'Umuhanda is also available as a Windows program and an Android app that work fully offline, which suits driving schools with shared computers. <a href="contact.html?topic={_topic}#form">Ask about the installed apps</a>.</div></div></section>
+<section class="section soft"><div class="container" style="max-width:820px"><div class="section-head"><div><div class="kicker">Questions</div><h2>Good to know</h2></div></div>
+<details><summary>Do I need the internet?</summary><p>You need a connection to open the web app and to unlock the full version. After you unlock, the full content is kept in your browser and opens again without a connection.</p></details>
+<details><summary>Will I lose my progress?</summary><p>Your progress is saved in your browser on your device. It stays there unless you clear the browser data or use a private window. Use the backup option in Settings to keep a copy.</p></details>
+<details><summary>How many devices can use my code?</summary><p>Each code has a limit set when it was made, for example one phone for a learner or thirty for a driving school. If you reach the limit, contact whoever gave you the code.</p></details>
+<details><summary>Is this the official exam?</summary><p>No. It is a practice tool made by EduSmart Consult, and it is not an official Rwanda National Police or government product. Questions follow the published road code, so always check the current official texts too, and treat your score as a guide.</p></details>
+<details><summary>Where do I get a code?</summary><p>From your driving school, or from us. <a href="contact.html?topic={_topic}#form">Send an enquiry</a> or message us on WhatsApp.</p></details>
+</div></section>'''
+add("road-code.html", "Amategeko y'Umuhanda | Road code theory practice in your browser", "Practise for the Rwanda provisional driving licence theory test in your browser: road signs, questions and timed mock exams in Kinyarwanda, English and French.", "products", rc,
+    ld=ld_bc([("Home", ""), ("Products", "products.html"), ("Amategeko y'Umuhanda", "road-code.html")]))
