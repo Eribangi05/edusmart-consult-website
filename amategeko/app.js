@@ -375,8 +375,9 @@ async function persist(){
   await window.api.setStore({
     lang:S.lang, theme:S.theme, school:S.school, owner:S.owner, textScale:S.textScale,
     accounts:S.accounts, currentPhone:S.currentPhone, progress:S.progress,
-    reports:S.reports, lockouts:S.lockouts, onboarded:S.onboarded, listenMode:S.listenMode,
+    reports:S.reports, lockouts:S.lockouts, onboarded:S.onboarded, listenMode:S.listenMode, cloud:S.cloud,
   });
+  if(window.Cloud) Cloud.changed();   // send what changed to the cloud account, if this device is signed in
 }
 // The storage key for the current session's progress (candidate phone, or the owner namespace).
 function sessionKey(){ return isOwner() ? OWNER_KEY : S.currentPhone; }
@@ -480,6 +481,7 @@ async function bootAfterLicense(){
     S.textScale = saved.textScale || 1;
     S.onboarded = !!saved.onboarded;
     S.listenMode = !!saved.listenMode;
+    S.cloud = saved.cloud || null;
   }
   S.role='candidate';
   applyTextScale();
@@ -489,6 +491,7 @@ async function bootAfterLicense(){
   applyTheme();
   buildLang();
   document.getElementById('themeToggle').onclick = toggleTheme;
+  if(window.Cloud) Cloud.start();
   authGate();
 }
 
@@ -515,7 +518,9 @@ function onboardingGate(){
       <div class="row" style="justify-content:center;gap:6px;margin-bottom:16px">${slides.map((_,j)=>`<span style="width:8px;height:8px;border-radius:50%;background:${j===i?'var(--blue-600)':'var(--border)'}"></span>`).join('')}</div>
       <button class="btn wide" id="obNext">${i<slides.length-1?t('ob_next')+' →':'✓ '+t('ob_start')}</button>
       ${i<slides.length-1?`<button class="btn ghost wide" id="obSkip" style="margin-top:10px">${t('ob_skip')}</button>`:''}
+      ${window.Cloud?Cloud.gateLink():''}
     </div>`);
+    if(window.Cloud) Cloud.bindGateLink();
     document.getElementById('obNext').onclick=()=>{ if(i<slides.length-1){ i++; render(); } else finish(); };
     const sk=document.getElementById('obSkip'); if(sk) sk.onclick=finish;
   };
@@ -746,7 +751,9 @@ function schoolSetup(){
         <div class="field" style="flex:1"><label>${t('confirm_pin')}</label><input id="scPin2" type="password" inputmode="numeric" maxlength="8"/></div></div>
     </div>
     <div class="err" id="scErr"></div>
-    <button class="btn wide" id="scSave">${t('save_continue')} →</button>`);
+    <button class="btn wide" id="scSave">${t('save_continue')} →</button>
+    ${window.Cloud?Cloud.gateLink():''}`);
+  if(window.Cloud) Cloud.bindGateLink();
   document.getElementById('scSave').onclick=async()=>{
     const name=document.getElementById('scName').value.trim();
     if(!name) return gateErr('scErr', t('school_name'));
@@ -766,11 +773,13 @@ function loginScreen(){
       <div class="cand-list">${cands.map(a=>`<button class="cand-btn" data-p="${a.phone}"><span class="dot"></span><div><div style="font-weight:700">${a.name}</div><div class="muted" style="font-size:12px">${a.phone}</div></div></button>`).join('')}</div>`
       :`<p class="muted" style="margin:4px 0 12px">${loc({rw:'Nta konti irahari. Fungura iyawe.',en:'No accounts yet. Create yours.',fr:'Aucun compte. Créez le vôtre.'})}</p>`}
     <button class="btn ghost wide" id="toRegister" style="margin-top:12px">＋ ${t('create_account')}</button>
+    ${window.Cloud?Cloud.gateLink():''}
     <div style="border-top:1px solid var(--border);margin:14px 0 0;padding-top:12px">
       <button class="btn ghost wide" id="toOwner">🏫 ${t('owner_login')}</button></div>`);
   document.querySelectorAll('.cand-btn').forEach(b=>b.onclick=()=>pinPrompt(b.dataset.p));
   document.getElementById('toRegister').onclick=registerScreen;
   document.getElementById('toOwner').onclick=ownerLogin;
+  if(window.Cloud) Cloud.bindGateLink();
 }
 function ownerLogin(){
   if(!S.owner) return ownerSetup();   // legacy install without an owner yet
@@ -1815,6 +1824,7 @@ VIEWS.settings = function(){
     <div class="muted" style="margin-top:6px;font-size:13px">${[S.school.location,S.school.contact].filter(Boolean).join(' · ')}</div>
     <p class="muted" style="font-size:12px;margin-top:10px">${loc({rw:"Amakuru y'ishuri ahindurwa n'umwarimu/nyir'ishuri gusa.",en:'Only the school owner/teacher can edit school details.',fr:"Seul le propriétaire/enseignant peut modifier l'école."})}</p>
   </div>`}
+  ${(!isOwner()&&window.Cloud)?Cloud.settingsCard():''}
   <div class="card" style="max-width:560px;margin-top:16px">
     <b>Amategeko y'Umuhanda (Desktop) v1.0.0</b>
     <p class="muted" style="margin-top:8px;line-height:1.6">${loc({rw:"Porogaramu yo kwitegura ikizamini cy'uruhushya rw'agateganyo, ikora nta interineti. Amakuru yose abikwa kuri iyi mudasobwa gusa.",en:"Offline provisional driving-licence theory prep. All data stays on this computer.",fr:"Préparation hors ligne. Toutes les données restent sur cet ordinateur."})}</p>
@@ -1850,6 +1860,7 @@ VIEWS.settings = function(){
   const ps=document.getElementById('pickStamp'); if(ps) ps.onclick=()=>pickInto('stamp');
   const rl=document.getElementById('rmLogo'); if(rl) rl.onclick=()=>{ S.school.logo=null; persist(); go('settings'); };
   const rs=document.getElementById('rmStamp'); if(rs) rs.onclick=()=>{ S.school.stamp=null; persist(); go('settings'); };
+  if(!isOwner()&&window.Cloud) Cloud.bindCard();
   document.getElementById('stLogout').onclick=logout;
   document.getElementById('stPin').onclick=()=>{
     modal(`<h2>${t('change_pin')} 🔑</h2>

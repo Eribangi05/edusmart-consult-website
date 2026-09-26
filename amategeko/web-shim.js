@@ -4,6 +4,7 @@
 (function () {
   'use strict';
   var CLOUD = 'https://smart-school-cloud-sync.onrender.com';
+  window.AMG_PLATFORM = 'web';
   var SCRIPT = document.currentScript && document.currentScript.src;
   var BASE = SCRIPT ? new URL('.', SCRIPT).href : './';
   var NAMES = ['questions', 'signs', 'glossary', 'lessons', 'gazette'];
@@ -19,6 +20,7 @@
   }
   // for local testing only: on localhost the server address can be pointed at a local copy of the cloud server
   if (/^(localhost|127\.0\.0\.1)$/.test(location.hostname) && ls('amg_cloud')) CLOUD = ls('amg_cloud');
+  window.AMG_CLOUD_URL = CLOUD;
   function parse(s) { try { return s ? JSON.parse(s) : null; } catch (e) { return null; } }
   function deviceId() {
     var d = ls('amg_dev');
@@ -43,7 +45,11 @@
     NAMES.forEach(function (n, i) { state.data[n] = all[i]; });
     state.meta = all[NAMES.length];
     var code = ls('amg_code'); var full = parse(ls('amg_full'));
-    if (!code) return;
+    if (!code) {                                                                          // full content that came with a cloud account
+      var acct = parse(ls('amg_acct_full'));
+      if (acct && acct.bundle) { state.data = acct.bundle; state.mode = 'full'; state.label = acct.label || ''; state.expires = acct.expires; }
+      return;
+    }
     if (full && full.bundle) {
       state.data = full.bundle; state.mode = 'full'; state.label = full.label || ''; state.expires = full.expires;
       if (navigator.onLine) unlockCall(code, full.version).then(function (j) {          // quiet re-check: revoked codes stop working
@@ -92,6 +98,13 @@
     loadGazetteIndex: function (n) { return state.mode === 'full' ? readSync(BASE + 'assets/gazette/' + n + '.idx.json') : null; },
     gazettePath: function (n) { return BASE + 'assets/gazette/' + n + '.pdf'; },
     assetPath: function () { return BASE + 'assets'; },
+    // full content unlocked through a cloud account (no code needed on this device)
+    applyAccountContent: function (j) {
+      ls('amg_acct_full', JSON.stringify({ version: j.version, bundle: j.bundle, label: j.label, expires: j.expires_at }));
+      if (state.mode !== 'full') setTimeout(function () { location.reload(); }, 400);
+      return Promise.resolve(true);
+    },
+    clearAccountContent: function () { var had = !!ls('amg_acct_full'); ls('amg_acct_full', null); if (had && !ls('amg_code')) setTimeout(function () { location.reload(); }, 400); return Promise.resolve(true); },
     loadContentUpdate: function () { return Promise.resolve(null); },
     importContentUpdate: function () { return Promise.resolve({ ok: false }); },
     clearContentUpdate: function () { return Promise.resolve(true); },
