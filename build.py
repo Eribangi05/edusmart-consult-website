@@ -306,6 +306,7 @@ home = f'''
 <section class="section dark showcase" id="featured"><div class="container">
 <div class="kicker rv">Featured products</div>
 <div class="feat-carousel" data-feat>
+  <p class="sr-only" data-feat-status aria-live="polite"></p>
   <div class="feat-track">
 
     <article class="feat-slide is-active" data-slide="0">
@@ -723,6 +724,12 @@ page("404.html", "Page not found | EduSmart Consult", "Page not found.", "", nf)
 
 exec(open(os.path.join(ROOT, "build2.py"), encoding="utf-8").read())
 exec(open(os.path.join(ROOT, "build3.py"), encoding="utf-8").read())
+
+# Built last, once every page (including build3.py's) has registered itself, so nothing is missing from site search.
+_index = [{"u": p["url"], "t": p["title"], "d": p["desc"], "x": p["text"]} for p in PAGE_REG if p["url"] not in ("404.html",)]
+with open(os.path.join(ROOT, "search-index.json"), "w", encoding="utf-8") as f:
+    json.dump(_index, f, ensure_ascii=False, separators=(",", ":"))
+
 pages = ["", "products.html", "smart-school-app.html", "smart-school-cloud.html", "about.html", "contact.html", "privacy.html"] + [d[0] + ".html" for d in DEPTS] + EXTRA_PAGES
 with open(os.path.join(ROOT, "sitemap.xml"), "w", encoding="utf-8") as f:
     f.write('<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n' +

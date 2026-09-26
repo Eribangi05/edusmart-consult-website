@@ -164,6 +164,7 @@
   if (slides.length < 2) return;
   var i = 0, timer = null;
   var reduced = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var status = wrap.querySelector('[data-feat-status]');
 
   function show(next, back) {
     if (next === i) return;
@@ -174,6 +175,7 @@
     s.classList.toggle('dir-back', !!back);
     s.classList.add('is-active');
     dots[i] && dots[i].classList.add('is-active'); dots[i] && dots[i].setAttribute('aria-selected', 'true');
+    if (status) { var name = dots[i] && dots[i].getAttribute('aria-label'); status.textContent = name ? 'Showing ' + name + ', ' + (i + 1) + ' of ' + slides.length : ''; }
   }
   function restart() {
     if (reduced) return;

@@ -33,6 +33,14 @@ OG_PAGES = [
  ("ict-support", "ICT and Computer Systems Support", "Keeping systems and data facilities running"),
  ("environmental-technical", "Environmental and Technical Consulting", "Technical advice for people and places"),
  ("admin-support", "Administrative, Fundraising and Equipment Support", "Behind the scenes support that keeps a project moving"),
+ ("road-code", "Amategeko y'Umuhanda", "Road code theory practice, free in your browser"),
+ ("try", "Try Smart School App live", "Open the demo school in your browser, no sign up"),
+ ("terms", "Terms of use", "The terms for using this website and our products"),
+ ("licence-agreement", "Licence agreement", "What a school licence for Smart School App includes"),
+ ("security", "Security", "How Smart School Cloud protects school records"),
+ ("child-safety", "Child safety", "How our products protect the children who use them"),
+ ("help", "Help centre", "Answers to common questions about our apps"),
+ ("status", "Service status", "Live status of Smart School Cloud"),
 ]
 try:
     _news = json.load(open(os.path.join(ROOT, "content", "news.json"), encoding="utf-8"))

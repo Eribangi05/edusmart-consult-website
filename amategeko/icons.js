@@ -108,17 +108,19 @@
     });
   }
 
-  // keep the icons in step with the screens as the app redraws itself (one pass per frame, never watching its own edits)
+  // keep the icons in step with the screens as the app redraws itself (one pass per batch, never watching its own edits).
+  // Uses setTimeout rather than requestAnimationFrame: rAF is tied to painting and can stop firing while the tab or
+  // window is in the background, which would leave a mutation "pending" forever and silently stop all future upgrades.
   function start() {
     if (start.done || !document.body) return; start.done = true;
     var busy = false, pending = false;
     var obs = new MutationObserver(function () {
       if (busy || pending) return; pending = true;
-      requestAnimationFrame(function () {
+      setTimeout(function () {
         pending = false; busy = true; obs.disconnect();
         try { upgrade(document.body); } catch (e) { /* cosmetic only */ }
         obs.observe(document.body, { childList: true, subtree: true, characterData: true }); busy = false;
-      });
+      }, 0);
     });
     try { upgrade(document.body); } catch (e) { /* cosmetic only */ }
     obs.observe(document.body, { childList: true, subtree: true, characterData: true });

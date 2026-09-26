@@ -182,13 +182,16 @@
   window.__amgAfterStart = function () {
     var app = document.getElementById('app'); if (!app) return;
     var busy = false, pending = false;
+    // setTimeout, not requestAnimationFrame: rAF is tied to painting and can stop firing while the tab is in the
+    // background (a visitor switches apps, then comes back), which would leave "pending" stuck forever and silently
+    // stop the app's icons and top-bar chip from ever updating again.
     var obs = new MutationObserver(function () {
-      if (busy || pending) return; pending = true;               // one pass per frame, and our own edits are never observed
-      requestAnimationFrame(function () {
+      if (busy || pending) return; pending = true;               // one pass per batch, and our own edits are never observed
+      setTimeout(function () {
         pending = false; busy = true; obs.disconnect();
         try { decorate(); refreshChip(); if (window.__amgIcons) window.__amgIcons.upgrade(document.body); } catch (e) { /* cosmetic only */ }
         obs.observe(app, { childList: true, subtree: true }); busy = false;
-      });
+      }, 0);
     });
     try { decorate(); showNotice(); if (window.__amgIcons) window.__amgIcons.upgrade(document.body); } catch (e) { /* cosmetic only */ }
     obs.observe(app, { childList: true, subtree: true });

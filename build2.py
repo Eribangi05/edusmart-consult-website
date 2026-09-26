@@ -320,11 +320,6 @@ def _products(t):
     return t
 patch_file("products.html", _products)
 
-# ============================================================ SEARCH INDEX
-index = [{"u": p["url"], "t": p["title"], "d": p["desc"], "x": p["text"]} for p in PAGE_REG if p["url"] not in ("404.html",)]
-with open(os.path.join(ROOT, "search-index.json"), "w", encoding="utf-8") as f:
-    json.dump(index, f, ensure_ascii=False, separators=(",", ":"))
-
 # ============================================================ SERVICE WORKER (offline copy of the site)
 core = ["index.html", "products.html", "smart-school-app.html", "smart-school-cloud.html", "tour.html", "downloads.html", "pricing.html", "request.html", "contact.html", "about.html", "news.html", "offline.html",
         "assets/styles.css", "assets/extra.css", "assets/site.js", "assets/extra.js", "assets/config.js", "assets/logo-horizontal.webp", "assets/emblem-192.png", "content/announcements.json", "search-index.json"]
