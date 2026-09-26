@@ -15,7 +15,7 @@ IK_TOUR = [
  ("iki-d-finance", "Income and expenses", "Record fines, fees, donations and group costs so the cashbook always matches the cash.", ["Income by source", "Expenses by category", "Who recorded and approved each entry"]),
  ("iki-d-reports", "Reports and backup", "Group statements and member statements as PDF, a share-out calculator, Excel exports and a full backup file.", ["Group financial statement (PDF)", "Member statements (PDF)", "Backup and restore"]),
 ]
-_ik_slides = "".join(f'''<div class="slide" data-i="{i}" data-title="{esc(t)}"><div class="slide-shot">{win("assets/ikimina-shots/" + img + ".jpg", t, title="Ikimina", w=2160, h=1350, logo="assets/products/ikimina.svg")}</div><div class="slide-text"><span class="step-no">Screen {i + 1} of {len(IK_TOUR)}</span><h3>{esc(t)}</h3><p>{esc(d)}</p><ul class="checklist">{"".join(f"<li>{esc(x)}</li>" for x in pts)}</ul></div></div>''' for i, (img, t, d, pts) in enumerate(IK_TOUR))
+_ik_slides = "".join(f'''<div class="slide" data-i="{i}" data-title="{esc(t)}"><div class="slide-shot">{win("assets/ikimina-shots/" + img + ".jpg", t, title="Ikimina", w=2160, h=1350, logo="assets/products/ikimina.png")}</div><div class="slide-text"><span class="step-no">Screen {i + 1} of {len(IK_TOUR)}</span><h3>{esc(t)}</h3><p>{esc(d)}</p><ul class="checklist">{"".join(f"<li>{esc(x)}</li>" for x in pts)}</ul></div></div>''' for i, (img, t, d, pts) in enumerate(IK_TOUR))
 _ik_thumbs = "".join(f'<button class="tthumb" data-go="{i}"><span>{i + 1}</span>{esc(t)}</button>' for i, (img, t, d, pts) in enumerate(IK_TOUR))
 
 
@@ -37,7 +37,7 @@ ik = hero_page("Savings groups", "Ikimina", "Run your savings group with clear r
 <ol class="next"><li>Press <b>Open the web app</b>.</li><li>Choose <b>Explore with demo data</b> to see a full group, or <b>Create my group</b> to start yours.</li><li>In the demo, sign in as any member with the PIN <b>1234</b>.</li><li>Use <b>Reports</b> to save a backup of your data.</li></ol>
 <p style="margin-top:1.2rem"><a class="btn btn-gold" href="ikimina/">Open the web app</a> <a class="btn btn-outline" href="contact.html?topic={_ik_topic}#form">Ask about Windows or Android</a></p></div>
 <div class="grid" style="gap:1rem">
-<img src="assets/products/ikimina.svg" alt="Ikimina logo" width="140" height="140" style="width:min(140px,50%);height:auto;margin:0 auto .4rem;display:block">
+<img src="assets/products/ikimina.png" alt="Ikimina logo" width="140" height="140" style="width:min(140px,50%);height:auto;margin:0 auto .4rem;display:block">
 <div class="card">{ico("target")}<h3>Demo group</h3><p>Twisungane Ikimina, a sample group with 13 members, loans, meetings and months of history, so you can try every screen.</p></div>
 <div class="card">{ico("shield")}<h3>Your own group</h3><p>Create your group, add members and start recording. PIN sign in for each member, with a lock after too many wrong tries.</p></div>
 </div></div></section>

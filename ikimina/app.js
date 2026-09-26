@@ -54,7 +54,7 @@ function applyPrefs() { document.documentElement.dataset.theme = DB.prefs.theme 
 /* ---------- welcome / setup ---------- */
 function authLeft() {
   return `<div class="left"><div class="orb" style="width:260px;height:260px;top:-80px;right:-60px"></div><div class="orb" style="width:140px;height:140px;bottom:60px;left:-40px;animation-delay:-3s"></div>
-  <div class="row"><div class="logo">🤝</div><div><b style="font-size:20px">Ikimina</b><div style="opacity:.7;font-size:12px">Web Edition</div></div></div>
+  <div class="row"><img class="logo" src="assets/logo-96.png" alt="" width="46" height="46"><div><b style="font-size:20px">Ikimina</b><div style="opacity:.7;font-size:12px">Web Edition</div></div></div>
   <h1>Your group.<br>Your savings.<br><span style="color:var(--gold)">Your future.</span></h1>
   <p>The complete workspace for savings groups — contributions, loans, rotation and transparent reporting, with the right access for every role.</p>
   <div class="feat"><div>💰 Accountant records every payment</div><div>🏛️ President oversees & approves</div><div>👥 Members see their own savings</div><div>📄 PDF receipts & statements</div></div></div>`;
@@ -142,7 +142,7 @@ function shell() {
   const nav = NAV[SESSION.role].map(([sec, ...items]) => `<div class="sec">${sec}</div>` + items.map(([r, ic, k]) =>
     `<a data-act="go" data-r="${r}" class="${ROUTE === r ? 'on' : ''}"><span class="ic">${ic}</span>${t(k)}${r === 'requests' && can.admin() && pendingCount() ? `<span class="badge">${pendingCount()}</span>` : ''}</a>`).join('')).join('');
   const nn = notifications().length;
-  $('#app').innerHTML = `<div class="shell"><aside class="side"><div class="brand"><div class="logo">🤝</div><div><b>Ikimina</b><span>${esc(DB.group.name)}</span></div></div><nav class="nav">${nav}</nav>
+  $('#app').innerHTML = `<div class="shell"><aside class="side"><div class="brand"><img class="logo" src="assets/logo-96.png" alt="" width="46" height="46"><div><b>Ikimina</b><span>${esc(DB.group.name)}</span></div></div><nav class="nav">${nav}</nav>
     <div class="me"><span data-act="go" data-r="profile" style="cursor:pointer">${avatar(SESSION.name, 38)}</span><div data-act="go" data-r="profile" style="cursor:pointer;min-width:0"><b>${esc(SESSION.name.split(' ').slice(0, 2).join(' '))}</b><span>${ROLES[SESSION.role]}</span></div><button class="iconbtn" style="background:rgba(255,255,255,.1);border:0;color:#fff;width:34px;height:34px" title="${t('signout')}" data-act="signout">⎋</button></div></aside>
     <section class="main"><div class="top"><div><h1 id="ttl"></h1><div class="sub" id="sub"></div></div><span class="sp"></span>
     <div class="searchbox" data-act="palette">🔍 <span>Search…</span><kbd>Ctrl K</kbd></div>

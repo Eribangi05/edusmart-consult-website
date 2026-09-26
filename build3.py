@@ -168,3 +168,4 @@ add("road-code.html", "Amategeko y'Umuhanda | Road code theory practice in your 
     ld=ld_bc([("Home", ""), ("Products", "products.html"), ("Amategeko y'Umuhanda", "road-code.html")]))
 
 exec(open(os.path.join(os.path.dirname(os.path.abspath(__file__)), "build_ikimina.py"), encoding="utf-8").read())
+exec(open(os.path.join(os.path.dirname(os.path.abspath(__file__)), "build_fmis.py"), encoding="utf-8").read())

@@ -39,7 +39,7 @@ h = open(os.path.join(OUT, "index.html"), encoding="utf-8").read()
 
 h = h.replace("<title>Ikimina Desktop</title>", "<title>Ikimina | Savings group manager</title>")
 
-h = h.replace('<link rel="stylesheet" href="styles.css">', '<meta name="viewport" content="width=device-width, initial-scale=1">\n<meta name="robots" content="noindex">\n<link rel="icon" href="../assets/products/ikimina.svg">\n<link rel="stylesheet" href="styles.css">\n<link rel="stylesheet" href="web.css">')
+h = h.replace('<link rel="stylesheet" href="styles.css">', '<meta name="viewport" content="width=device-width, initial-scale=1">\n<meta name="robots" content="noindex">\n<link rel="icon" href="../assets/products/ikimina.png">\n<link rel="stylesheet" href="styles.css">\n<link rel="stylesheet" href="web.css">')
 
 h = h.replace('<script src="app.js"></script>', '<script src="app.js"></script>\n<script src="web.js"></script>')
 
