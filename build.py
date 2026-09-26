@@ -253,8 +253,8 @@ DEPTS = [
 
 NAV_ACTIVE = {}
 
-def win(src, alt, title="Smart School App", w=1440, h=900):
-    return f'''<div class="win"><div class="win-bar"><img src="assets/ssa-logo-96.png" alt=""><span class="t">{title}</span>
+def win(src, alt, title="Smart School App", w=1440, h=900, logo="assets/ssa-logo-96.png"):
+    return f'''<div class="win"><div class="win-bar"><img src="{logo}" alt=""><span class="t">{title}</span>
 <span class="c"><i><svg viewBox="0 0 10 10"><path d="M0 5h10"/></svg></i><i><svg viewBox="0 0 10 10"><rect x=".5" y=".5" width="9" height="9"/></svg></i><i><svg viewBox="0 0 10 10"><path d="M0 0l10 10M10 0L0 10"/></svg></i></span></div>
 <img class="shot" src="{src}" alt="{alt}" width="{w}" height="{h}" loading="lazy"></div>'''
 
@@ -303,20 +303,59 @@ home = f'''
 <div class="grid g3">{dept_cards}</div>
 </div></section>
 
-<section class="section dark showcase" id="featured"><div class="container split">
-<div class="rv"><div class="kicker">Featured product</div>
-<div class="prod-head"><img src="assets/ssa-logo-96.png" alt="Smart School App logo" width="84" height="84"><div><span class="badge">Made by EduSmart Consult</span><h2 style="margin:.3rem 0 0;color:#fff">Smart School App</h2></div></div>
-<p>An offline learning and school management suite for Primary 1 to 6. Learners read the curriculum, practise and sit past papers. Teachers plan lessons, mark, build timetables and print reports. It runs on Windows computers and Android phones, and can sync online when there is a connection.</p>
-<ul class="checklist">
-<li>Full REB pupil books for every class, with read aloud</li>
-<li>62 P6 national exam papers with automatic marking</li>
-<li>Lesson plans in English, French and Kinyarwanda</li>
-<li>Whole school timetable generator</li>
-<li>Gradebook, report cards and parent reports</li>
-<li>Works with no internet, and online with Smart School Cloud</li>
-</ul>
-<div class="actions"><a class="btn btn-gold" href="smart-school-app.html">Explore Smart School App</a><a class="btn btn-ghost-light" href="smart-school-cloud.html">Online access and sync</a></div></div>
-<div class="shots rv">{win("assets/app-overview.webp", "Smart School App teacher overview on Windows")}<div class="shot-phone">{phone("assets/phone-learner.webp", "Learner home", "")}</div></div>
+<section class="section dark showcase" id="featured"><div class="container">
+<div class="kicker rv">Featured products</div>
+<div class="feat-carousel" data-feat>
+  <div class="feat-track">
+
+    <article class="feat-slide is-active" data-slide="0">
+      <div class="split">
+        <div class="rv">
+          <div class="prod-head"><img src="assets/ssa-logo-96.png" alt="Smart School App logo" width="84" height="84"><div><span class="badge">Made by EduSmart Consult</span><h2 style="margin:.3rem 0 0;color:#fff">Smart School App</h2></div></div>
+          <p>An offline learning and school management suite for Primary 1 to 6. Learners read the curriculum, practise and sit past papers. Teachers plan lessons, mark, build timetables and print reports. It runs on Windows computers and Android phones, and can sync online when there is a connection.</p>
+          <ul class="checklist">
+          <li>Full REB pupil books for every class, with read aloud</li>
+          <li>62 P6 national exam papers with automatic marking</li>
+          <li>Lesson plans in English, French and Kinyarwanda</li>
+          <li>Whole school timetable generator</li>
+          <li>Gradebook, report cards and parent reports</li>
+          <li>Works with no internet, and online with Smart School Cloud</li>
+          </ul>
+          <div class="actions"><a class="btn btn-gold" href="smart-school-app.html">Explore Smart School App</a><a class="btn btn-ghost-light" href="smart-school-cloud.html">Online access and sync</a></div>
+        </div>
+        <div class="shots rv">{win("assets/app-overview.webp", "Smart School App teacher overview on Windows")}<div class="shot-phone">{phone("assets/phone-learner.webp", "Learner home", "")}</div></div>
+      </div>
+    </article>
+
+    <article class="feat-slide" data-slide="1">
+      <div class="split">
+        <div class="rv">
+          <div class="prod-head"><img src="assets/amategeko-192.png" alt="Amategeko y'Umuhanda logo" width="84" height="84"><div><span class="badge">Made by EduSmart Consult</span><h2 style="margin:.3rem 0 0;color:#fff">Amategeko y'Umuhanda</h2></div></div>
+          <p>Practice for the Rwanda provisional driving licence theory test, in Kinyarwanda, English or French. Try a free sample straight in your browser, then unlock the full question bank with a code from your driving school or from us. It also runs as a Windows program and an Android app that work fully offline.</p>
+          <ul class="checklist">
+          <li>328 practice questions and 126 road signs</li>
+          <li>Timed mock exam: 20 questions in 20 minutes</li>
+          <li>Road markings, traffic lights and police signals explained</li>
+          <li>Glossary and flashcards for the terms used in the road code</li>
+          <li>Try it free in your browser, no installation</li>
+          <li>Works with no internet on Windows and Android</li>
+          </ul>
+          <div class="actions"><a class="btn btn-gold" href="amategeko/">Try it free in your browser</a><a class="btn btn-ghost-light" href="road-code.html">Learn more</a></div>
+        </div>
+        <div class="shots rv">{win("assets/amategeko-shots/home-desktop.jpg", "Amategeko y'Umuhanda home screen", title="Amategeko y'Umuhanda", logo="assets/amategeko-192.png")}<div class="shot-phone">{phone("assets/amategeko-shots/home-phone.jpg", "Amategeko y'Umuhanda on a phone", "")}</div></div>
+      </div>
+    </article>
+
+  </div>
+  <div class="feat-controls">
+    <button class="feat-arrow feat-prev" type="button" aria-label="Previous featured product">&#8249;</button>
+    <div class="feat-dots" role="tablist" aria-label="Featured products">
+      <button class="feat-dot is-active" type="button" data-go="0" role="tab" aria-selected="true" aria-label="Smart School App"></button>
+      <button class="feat-dot" type="button" data-go="1" role="tab" aria-selected="false" aria-label="Amategeko y'Umuhanda"></button>
+    </div>
+    <button class="feat-arrow feat-next" type="button" aria-label="Next featured product">&#8250;</button>
+  </div>
+</div>
 </div></section>
 
 <section class="section"><div class="container">

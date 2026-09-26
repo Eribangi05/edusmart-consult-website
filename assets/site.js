@@ -144,3 +144,54 @@
     nums.forEach(function (n) { io.observe(n); });
   }
 })();
+
+// ---------------- featured products carousel: dots, arrows, swipe, gentle auto-advance
+(function () {
+  var wrap = document.querySelector('[data-feat]');
+  if (!wrap) return;
+  var slides = Array.prototype.slice.call(wrap.querySelectorAll('.feat-slide'));
+  var dots = Array.prototype.slice.call(wrap.querySelectorAll('.feat-dot'));
+  if (slides.length < 2) return;
+  var i = 0, timer = null;
+  var reduced = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  function show(next, back) {
+    if (next === i) return;
+    slides[i].classList.remove('is-active');
+    dots[i] && dots[i].classList.remove('is-active'); dots[i] && dots[i].setAttribute('aria-selected', 'false');
+    i = (next + slides.length) % slides.length;
+    var s = slides[i];
+    s.classList.toggle('dir-back', !!back);
+    s.classList.add('is-active');
+    dots[i] && dots[i].classList.add('is-active'); dots[i] && dots[i].setAttribute('aria-selected', 'true');
+  }
+  function restart() {
+    if (reduced) return;
+    clearInterval(timer);
+    timer = setInterval(function () { show(i + 1); }, 6500);
+  }
+
+  wrap.querySelector('.feat-next').addEventListener('click', function () { show(i + 1); restart(); });
+  wrap.querySelector('.feat-prev').addEventListener('click', function () { show(i - 1, true); restart(); });
+  dots.forEach(function (d, k) { d.addEventListener('click', function () { show(k, k < i); restart(); }); });
+
+  // swipe on touch and mouse drag
+  var startX = null;
+  var track = wrap.querySelector('.feat-track');
+  function dragStart(x) { startX = x; }
+  function dragEnd(x) {
+    if (startX == null) return;
+    var dx = x - startX; startX = null;
+    if (Math.abs(dx) < 40) return;
+    if (dx < 0) { show(i + 1); } else { show(i - 1, true); }
+    restart();
+  }
+  track.addEventListener('touchstart', function (e) { dragStart(e.touches[0].clientX); }, { passive: true });
+  track.addEventListener('touchend', function (e) { dragEnd(e.changedTouches[0].clientX); });
+  track.addEventListener('mousedown', function (e) { dragStart(e.clientX); e.preventDefault(); });
+  window.addEventListener('mouseup', function (e) { if (startX != null) dragEnd(e.clientX); });
+
+  wrap.addEventListener('mouseenter', function () { clearInterval(timer); });
+  wrap.addEventListener('mouseleave', restart);
+  restart();
+})();
