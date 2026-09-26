@@ -1,7 +1,7 @@
 """Turns the supplied Amategeko y'Umuhanda logo (a badge on a white square) into transparent PNGs at the sizes each place needs.
 
 Run from the website folder:   python tools/amategeko/make_logo.py
-Reads:   RwandaTheoryApp/New logo for this app/Logo for this app.png
+Reads:   the newest image in RwandaTheoryApp/New logo for this app (currently "Approved logo.png")
 Writes:  website assets, the Windows app, the Android app (launcher icons) and a Play Store icon. Nothing is deleted except the
          old launcher vector files that the new PNG icons replace."""
 import os, sys
@@ -10,7 +10,14 @@ from PIL import Image, ImageDraw, ImageFilter, ImageChops
 HERE = os.path.dirname(os.path.abspath(__file__))
 SITE = os.path.dirname(os.path.dirname(HERE))
 PROJ = os.environ.get("AMG_PROJ") or r"C:\Users\ingab\AndroidStudioProjects\RwandaTheoryApp"
-SRC = os.path.join(PROJ, "New logo for this app", "Logo for this app.png")
+def _latest_logo():
+    """the approved logo is whichever image was saved last in the logo folder"""
+    d = os.path.join(PROJ, "New logo for this app")
+    files = [os.path.join(d, f) for f in os.listdir(d) if f.lower().endswith((".png", ".jpg", ".jpeg", ".webp"))] if os.path.isdir(d) else []
+    return max(files, key=os.path.getmtime) if files else os.path.join(d, "Approved logo.png")
+
+
+SRC = _latest_logo()
 
 
 def transparent_logo():

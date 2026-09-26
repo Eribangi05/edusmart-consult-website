@@ -242,7 +242,3 @@ body {
   body { background:#fff !important; }
   @page { margin:12mm; }
 }
-
-/* new logo: full colour badge, no tile behind it */
-.brand-badge.brand-logo { background:none; box-shadow:none; padding:0; width:52px; height:52px; flex:0 0 52px; }
-.brand-badge.brand-logo img { width:100%; height:100%; object-fit:contain; filter:drop-shadow(0 4px 8px rgba(0,0,0,.35)); }
