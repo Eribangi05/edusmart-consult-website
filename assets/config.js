@@ -10,9 +10,9 @@ window.EDUSMART = {
   /* Smart School App downloads. Host the large files (about 2 GB each) on GitHub Releases,
      Google Drive, OneDrive or your own server, then paste the direct links here. */
   downloads: {
-    version: "2.22.0",
-    windowsUrl: "",   // e.g. https://github.com/Eribangi05/smart-school-app/releases/download/v2.22.0/Smart-School-App-Setup-2.22.0.exe
-    androidUrl: "",   // e.g. https://github.com/Eribangi05/smart-school-app-android/releases/download/v2.22.0/Smart-School-App-release-signed.apk
+    version: "2.23.0",
+    windowsUrl: "",   // e.g. https://github.com/Eribangi05/smart-school-app/releases/download/v2.23.0/Smart-School-App-Setup-2.23.0.exe
+    androidUrl: "",   // e.g. https://github.com/Eribangi05/smart-school-app-android/releases/download/v2.23.0/Smart-School-App-release-signed.apk
     webAppUrl: "",    // browser version, when it is published
     sha256Windows: "1aa17b6b30fc92347abde1d4586a5ad19dd4c68c927dd80cc5a03fe3b153324a" // optional checksum shown on the Downloads page
   },

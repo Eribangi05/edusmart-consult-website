@@ -129,3 +129,7 @@ html:not(.js) .tour-thumbs{display:none}
 .cmp-big{width:100%}
 .pcard{scroll-margin-top:120px}.pcard:target{box-shadow:0 0 0 3px var(--gold),0 14px 30px rgba(6,48,122,.15)}
 .big-code{font-size:1.6rem;letter-spacing:.12em;padding:.3rem .8rem}
+
+/* long hashes and codes must wrap on phones */
+code{overflow-wrap:anywhere;word-break:break-all}
+.callout-box code{display:block;margin-top:.3rem;font-size:.82rem}

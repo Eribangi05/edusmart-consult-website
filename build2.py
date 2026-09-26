@@ -62,7 +62,14 @@ add("request.html", "Request a demo or quote | EduSmart Consult", "Tell us what 
 
 # ============================================================ DOWNLOADS
 notes = [
- ("2.22.0", "Current version", [
+ ("2.23.0", "Current version", [
+  "Join your school's cloud with a short code instead of typing a server address and a long key",
+  "Each device gets its own access, and a school manager can remove a device at any time",
+  "Wrong clocks are corrected automatically, so a phone with the wrong date cannot overwrite newer work",
+  "Deleted staff profiles now stay deleted on every device",
+  "A clear sync status with plain language errors, automatic retry and licence or update notices",
+  "Open source licences are listed under What's new"]),
+ ("2.22.0", "Previous version", [
   "Answer keys for every past exam question, with a Teacher screen to review, edit and confirm each answer",
   "Written answers on past papers are marked automatically against the answer key",
   "Timetable generator: double periods and morning or afternoon preferences for teachers",
