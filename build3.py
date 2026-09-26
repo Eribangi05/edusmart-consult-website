@@ -81,7 +81,34 @@ add("status.html", "Service status | EduSmart Consult", "Live status of Smart Sc
 # ---------------- Road code (Amategeko y'Umuhanda) web app landing page
 import urllib.parse as _up
 _topic = _up.quote("Amategeko y'Umuhanda unlock code enquiry")
-rc = hero_page("Road code", "Amategeko y'Umuhanda", "Practise for the Rwanda provisional driving licence theory test, in Kinyarwanda, English or French.") + f'''
+
+_amg_facts = ["328 practice questions", "126 road signs explained", "Timed mock exam: 20 in 20 minutes",
+              "Kinyarwanda, English and French", "Free sample, no sign up needed", "Works on Windows, Android and the web"]
+_amg_ticker_items = "".join(f'<span class="tk"><b>{i + 1:02d}</b> {esc(t)}</span>' for i, t in enumerate(_amg_facts))
+_amg_ticker = f'<div class="ticker-strip"><div class="ticker" aria-hidden="true"><div class="ticker-track">{_amg_ticker_items}{_amg_ticker_items}</div></div></div>'
+
+AMG_TOUR = [
+ ("amg-d-home", "Your dashboard", "Questions, signs, terms and the pass mark, at a glance, with a readiness ring and a daily target.", ["328 questions, 126 signs, 61 terms in view", "A practice target for today", "Sign of the day to stay sharp"]),
+ ("amg-d-practice", "Practice by topic", "Filter by general rules, signs, lights, roads, speed and more, with an optional listen mode.", ["Nine topic filters", "Listen mode reads questions aloud", "English translations are still being reviewed"]),
+ ("amg-d-answered", "Instant feedback", "Every answer is marked straight away, in green or red, with a short explanation underneath.", ["Correct and wrong shown clearly", "A short explanation every time", "Missed questions come back first"]),
+ ("amg-d-signs", "126 road signs", "Every sign grouped by family, warning, priority, prohibitory, mandatory, information and direction, with search.", ["Search by name or code", "Grouped by family", "Tap a sign to see what it means"]),
+ ("amg-d-markings", "Markings, lights and signals", "Road markings, traffic lights and police signals shown as clear pictures with plain explanations.", ["Road markings tab", "Traffic lights tab", "Police signals tab"]),
+ ("amg-d-glossary", "Glossary", "Search the exact words used in the road code, each with the article it comes from.", ["Searchable terms", "Plain language definitions", "Source article for each term"]),
+]
+_amg_slides = "".join(f'''<div class="slide" data-i="{i}" data-title="{esc(t)}"><div class="slide-shot">{win("assets/amategeko-shots/" + img + ".jpg", t, title="Amategeko y'Umuhanda", w=2160, h=1350, logo="assets/amategeko-192.png")}</div><div class="slide-text"><span class="step-no">Screen {i + 1} of {len(AMG_TOUR)}</span><h3>{esc(t)}</h3><p>{esc(d)}</p><ul class="checklist">{"".join(f"<li>{esc(x)}</li>" for x in pts)}</ul></div></div>''' for i, (img, t, d, pts) in enumerate(AMG_TOUR))
+_amg_thumbs = "".join(f'<button class="tthumb" data-go="{i}"><span>{i + 1}</span>{esc(t)}</button>' for i, (img, t, d, pts) in enumerate(AMG_TOUR))
+
+def _amg_phone(img, alt):
+    return f'<div class="phone"><img src="assets/amategeko-shots/{img}.jpg" alt="{alt} on a phone" width="824" height="1720" loading="lazy"></div>'
+
+rc = hero_page("Road code", "Amategeko y'Umuhanda", "Practise for the Rwanda provisional driving licence theory test, in Kinyarwanda, English or French.") + _amg_ticker + f'''
+<section class="section"><div class="container">
+<div class="grid g4">
+<div class="tile navy rv"><b data-count="328">328</b><span>Practice questions</span></div>
+<div class="tile sky rv"><b data-count="126">126</b><span>Road signs explained</span></div>
+<div class="tile navy rv"><b data-count="61">61</b><span>Glossary terms</span></div>
+<div class="tile sky rv"><b data-count="3">3</b><span>Languages: Kinyarwanda, English, French</span></div>
+</div></div></section>
 <section class="section"><div class="container split" style="align-items:start">
 <div><div class="kicker">Try it now</div><h2>Open it in your browser</h2>
 <p>No download and no sign up. Create a small profile with a name and a PIN, and start practising. Your results stay in your own browser.</p>
@@ -92,7 +119,17 @@ rc = hero_page("Road code", "Amategeko y'Umuhanda", "Practise for the Rwanda pro
 <div class="card">{ico("target")}<h3>Free sample</h3><p>40 practice questions, 36 road signs, 15 glossary terms and a mock exam. Enough to see how it works.</p></div>
 <div class="card">{ico("shield")}<h3>Full version</h3><p>All 328 questions, 126 road signs, 61 glossary terms, 8 lessons and the traffic law documents. Unlocked with a code from EduSmart Consult or your driving school.</p></div>
 </div></div></section>
-<section class="section sky"><div class="container"><div class="section-head"><div><div class="kicker">What is inside</div><h2>Everything a candidate needs to practise</h2></div><p>The same content as the Windows and Android apps.</p></div>
+<section class="section sky"><div class="container tour" data-tour>
+<div class="section-head"><div><div class="kicker">See it for yourself</div><h2>Screen by screen</h2></div><p>Real screens from the web app. Click a screenshot to enlarge it.</p></div>
+<div class="tour-bar"><div class="tour-progress"><i></i></div><div class="tour-ctrl"><button class="btn btn-outline btn-sm" data-prev>&larr; Back</button><button class="btn btn-primary btn-sm" data-next>Next &rarr;</button><button class="btn btn-outline btn-sm" data-play aria-pressed="false">Play</button></div></div>
+<div class="tour-stage">{_amg_slides}</div>
+<div class="tour-thumbs">{_amg_thumbs}</div>
+<p class="tiny-note">Tip: use the left and right arrow keys.</p>
+</div></section>
+<section class="section"><div class="container"><div class="section-head"><div><div class="kicker">In your pocket</div><h2>The same app on your phone</h2></div><p>A phone layout with a slide out menu and large tap targets, so practising on the bus or between classes is easy.</p></div>
+<div class="phones" style="grid-template-columns:repeat(3,1fr);max-width:700px;margin:0 auto">{_amg_phone("amg-m-home", "Dashboard")}{_amg_phone("amg-m-practice", "Practice")}{_amg_phone("amg-m-signs", "Road signs")}</div>
+</div></section>
+<section class="section soft"><div class="container"><div class="section-head"><div><div class="kicker">What is inside</div><h2>Everything a candidate needs to practise</h2></div><p>The same content as the Windows and Android apps.</p></div>
 <div class="grid g3">
 <div class="card">{ico("target")}<h3>Practice that finds your gaps</h3><p>Questions you get wrong come back first, with a short explanation after each answer.</p></div>
 <div class="card">{ico("clock")}<h3>Timed mock exam</h3><p>20 questions in 20 minutes, marked out of 20, with a review of every answer at the end.</p></div>
@@ -105,7 +142,7 @@ rc = hero_page("Road code", "Amategeko y'Umuhanda", "Practise for the Rwanda pro
 <div class="card">{ico("lock")}<h3>Your data stays with you</h3><p>Your profile and results are saved in your own browser. Nothing about your practice is sent to us.</p></div>
 </div></div></section>
 <section class="section"><div class="container"><div class="section-head"><div><div class="kicker">Free and full</div><h2>What each version includes</h2></div></div>
-<div class="scroll-x"><table class="cmp"><tr><th></th><th>Free sample</th><th>Full version</th></tr>
+<div class="scroll-x"><table class="cmp" style="width:100%"><tr><th></th><th>Free sample</th><th>Full version</th></tr>
 <tr><td>Practice questions</td><td>40</td><td>328</td></tr><tr><td>Road signs</td><td>36</td><td>126</td></tr><tr><td>Glossary terms</td><td>15</td><td>61</td></tr>
 <tr><td>Lessons</td><td>2</td><td>8</td></tr><tr><td>Traffic law documents</td><td>Not included</td><td>Included</td></tr>
 <tr><td>Timed mock exam</td><td>Yes</td><td>Yes</td></tr><tr><td>Progress and exam history</td><td>Yes</td><td>Yes</td></tr><tr><td>Kinyarwanda, English, French</td><td>Yes</td><td>Yes</td></tr></table></div>
@@ -116,6 +153,16 @@ rc = hero_page("Road code", "Amategeko y'Umuhanda", "Practise for the Rwanda pro
 <details><summary>How many devices can use my code?</summary><p>Each code has a limit set when it was made, for example one phone for a learner or thirty for a driving school. If you reach the limit, contact whoever gave you the code.</p></details>
 <details><summary>Is this the official exam?</summary><p>No. It is a practice tool made by EduSmart Consult, and it is not an official Rwanda National Police or government product. Questions follow the published road code, so always check the current official texts too, and treat your score as a guide.</p></details>
 <details><summary>Where do I get a code?</summary><p>From your driving school, or from us. <a href="contact.html?topic={_topic}#form">Send an enquiry</a> or message us on WhatsApp.</p></details>
-</div></section>'''
+</div></section>
+<section class="section"><div class="container"><div class="reach"><div>
+<div class="kicker">Ready when you are</div><h2>Start practising in the next two minutes</h2>
+<p>No download, no sign up, no cost to try. Open the web app and see how ready you are for the theory test.</p>
+<div class="kg">{ico("shield")}<span>Free sample: <b>40 questions, 36 signs</b>, right now</span></div>
+</div>
+<div class="reach-actions">
+<a class="btn btn-gold" href="amategeko/">Open the web app</a>
+<a class="btn btn-ghost-light" href="contact.html?topic={_topic}#form">Ask for an unlock code</a>
+<a class="btn btn-ghost-light" href="assets/brochures/Amategeko-Umuhanda-guide.pdf" download>Download the guide (PDF)</a>
+</div></div></div></section>'''
 add("road-code.html", "Amategeko y'Umuhanda | Road code theory practice in your browser", "Practise for the Rwanda provisional driving licence theory test in your browser: road signs, questions and timed mock exams in Kinyarwanda, English and French.", "products", rc,
     ld=ld_bc([("Home", ""), ("Products", "products.html"), ("Amategeko y'Umuhanda", "road-code.html")]))
