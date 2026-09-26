@@ -14,7 +14,7 @@ window.EDUSMART = {
     windowsUrl: "",   // e.g. https://github.com/Eribangi05/smart-school-app/releases/download/v2.22.0/Smart-School-App-Setup-2.22.0.exe
     androidUrl: "",   // e.g. https://github.com/Eribangi05/smart-school-app-android/releases/download/v2.22.0/Smart-School-App-release-signed.apk
     webAppUrl: "",    // browser version, when it is published
-    sha256Windows: "" // optional checksum shown on the Downloads page
+    sha256Windows: "1aa17b6b30fc92347abde1d4586a5ad19dd4c68c927dd80cc5a03fe3b153324a" // optional checksum shown on the Downloads page
   },
 
   /* Contact form. Paste a Formspree (or similar) endpoint to receive submissions by email,
