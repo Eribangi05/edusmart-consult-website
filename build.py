@@ -55,6 +55,7 @@ def header(active):
     dd = "".join(f'<a href="{s}.html">{t}</a>' for s, t in DEPT_LIST)
     prod = ('<a href="smart-school-app.html">Smart School App<small>Offline learning suite for Windows and Android</small></a>'
             '<a href="smart-school-cloud.html">Smart School Cloud<small>Online access and device sync</small></a>'
+            '<a href="try.html">Try it live<small>Open the demo school in your browser</small></a>'
             '<a href="tour.html">Take the tour<small>Screen by screen walkthrough</small></a>'
             '<a href="pricing.html">Pricing and licences<small>Plans and comparison</small></a>'
             '<a href="downloads.html">Downloads<small>Windows, Android and online</small></a>'

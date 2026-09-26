@@ -249,6 +249,30 @@ editor_body = hero_page("Editor", "Site editor", "Change the moving announcement
 </div></section>'''
 add("editor.html", "Site editor | EduSmart Consult", "Private helper for updating site content.", "", editor_body, noindex=True)
 
+# ============================================================ TRY IT LIVE (demo school on the cloud)
+try_body = hero_page("Try it live", "Try Smart School App live", "Open a ready made demo school in your browser. No sign up, nothing to install. Everything you do is forgotten when you leave, so explore freely.") + f'''
+<section class="section"><div class="container split" style="align-items:start">
+<div><div class="kicker">Step by step</div><h2>Open the demo in three steps</h2>
+<ol class="next"><li>Press <b>Open the live demo</b>. The demo opens in its own tab. The first time it can take up to a minute to wake up.</li><li>Type the school code <code>DEMO2026</code>.</li><li>Sign in as a learner, a teacher or the school manager with one of the logins on this page.</li></ol>
+<p style="margin-top:1.2rem"><a class="btn btn-gold" data-cloud="app" href="#">Open the live demo</a> <a class="btn btn-outline" href="tour.html">Or take the tour</a></p>
+<div class="callout-box">This is the online version, so some tools that need a real computer, such as USB backups and device to device sync, are not part of the demo. The installed apps for Windows and Android have them.</div></div>
+<div class="grid" style="gap:1rem">
+<div class="card"><h3>School code</h3><p><code class="big-code">DEMO2026</code></p></div>
+<div class="card"><h3>Demo logins</h3><div class="scroll-x"><table class="cmp"><tr><th>Sign in as</th><th>ID</th><th>PIN</th></tr>
+<tr><td>Learner (Primary 6)</td><td><code>P6-01</code></td><td><code>1234</code></td></tr>
+<tr><td>Class teacher</td><td><code>STAFF-02</code></td><td><code>1111</code></td></tr>
+<tr><td>School manager</td><td><code>STAFF-01</code></td><td><code>0000</code></td></tr></table></div></div>
+</div></div></section>
+<section class="section sky"><div class="container"><div class="section-head"><div><div class="kicker">What to try</div><h2>Five things worth a look</h2></div></div>
+<div class="grid g3"><div class="card">{ico("book")}<h3>Read a lesson</h3><p>Open a subject as a learner and read a pupil book page with read aloud.</p></div>
+<div class="card">{ico("target")}<h3>Take a quiz</h3><p>Try practice questions and see instant feedback.</p></div>
+<div class="card">{ico("edit")}<h3>Make a lesson plan</h3><p>Sign in as the class teacher and generate a plan from the scheme of work.</p></div>
+<div class="card">{ico("calendar")}<h3>Build a timetable</h3><p>As the school manager, generate a conflict free timetable in one click.</p></div>
+<div class="card">{ico("chart")}<h3>See the reports</h3><p>Open the gradebook and the insights for the class.</p></div>
+<div class="card">{ico("handshake")}<h3>Want it at your school?</h3><p><a href="request.html">Request a demo or a quote</a> and we will set it up with you.</p></div></div></div></section>'''
+add("try.html", "Try Smart School App live | Demo school in your browser", "Open a ready made demo school of Smart School App in your browser, with logins for a learner, a teacher and a school manager. No sign up.", "products", try_body,
+    ld=ld_bc([("Home", ""), ("Try it live", "try.html")]))
+
 # ============================================================ POST-PROCESS EXISTING PAGES
 def patch_file(name, fn):
     p = os.path.join(ROOT, name)

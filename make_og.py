@@ -18,6 +18,7 @@ OG_PAGES = [
  ("downloads", "Downloads", "Smart School App for Windows, Android and online"),
  ("news", "News and teaching tips", "Updates, guides and ideas from EduSmart Consult"),
  ("tour", "Take the tour", "Smart School App, screen by screen"),
+ ("try", "Try Smart School App live", "Open the demo school in your browser, no sign up"),
  ("pricing", "Pricing and licences", "Licensed per school, with training included"),
  ("team", "Our team", "The people behind EduSmart Consult"),
  ("partners", "Partners and careers", "Work and grow with us"),
