@@ -144,9 +144,15 @@
 
   // ---------------- offline copy + install button
   if ('serviceWorker' in navigator && location.protocol.indexOf('http') === 0) { window.addEventListener('load', function () { navigator.serviceWorker.register('sw.js').catch(function () {}); }); }
-  var ib = $('#installBtn'), deferred = null;
-  window.addEventListener('beforeinstallprompt', function (e) { e.preventDefault(); deferred = e; if (ib && !store('edu_noinstall')) ib.classList.remove('hidden'); });
-  if (ib) ib.addEventListener('click', function () { if (!deferred) return; deferred.prompt(); deferred.userChoice.then(function () { ib.classList.add('hidden'); deferred = null; store('edu_noinstall', '1'); }); });
+  var ib = $('#installBtn'), ibox = $('#installBox'), ix = $('#installX'), deferred = null, itimer = null;
+  function hideInstall(remember) { if (!ibox) return; ibox.classList.add('fade'); setTimeout(function () { ibox.classList.add('hidden'); }, 450); if (remember) store('edu_noinstall', '1'); }
+  window.addEventListener('beforeinstallprompt', function (e) {
+    e.preventDefault(); deferred = e;
+    if (!ibox || store('edu_noinstall') || sessionStorage.getItem('edu_installshown')) return;
+    setTimeout(function () { ibox.classList.remove('hidden', 'fade'); try { sessionStorage.setItem('edu_installshown', '1'); } catch (x) {} itimer = setTimeout(function () { hideInstall(false); }, 12000); }, 6000);
+  });
+  if (ib) ib.addEventListener('click', function () { clearTimeout(itimer); if (!deferred) return; deferred.prompt(); deferred.userChoice.then(function () { hideInstall(true); deferred = null; }); });
+  if (ix) ix.addEventListener('click', function () { clearTimeout(itimer); hideInstall(true); });
 
   // ---------------- content editor (prepares files; nothing is saved online from here)
   var ed = $('#editorRoot');
