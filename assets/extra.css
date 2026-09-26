@@ -111,7 +111,7 @@ html:not(.js) .tour-thumbs{display:none}
 .consent{position:fixed;left:16px;bottom:16px;max-width:420px;background:var(--navy-900);color:#e9f0ff;border-radius:16px;padding:1rem 1.1rem;z-index:300;box-shadow:0 16px 40px rgba(0,0,0,.35);border-left:5px solid var(--gold)}
 .consent p{margin:0 0 .7rem;font-size:.9rem}.consent a{color:var(--gold)}.consent div{display:flex;gap:.5rem;flex-wrap:wrap}
 .consent .btn-outline{color:#fff;border-color:rgba(255,255,255,.4)}
-.install{position:fixed;left:16px;bottom:16px;z-index:290;display:flex;align-items:center;background:var(--gold);color:#221a00;border-radius:999px;box-shadow:0 6px 18px rgba(0,0,0,.22);font-size:.85rem;transition:opacity .4s}
+.install{position:fixed;left:16px;bottom:16px;z-index:290;display:flex;align-items:center;background:var(--navy-900);color:#fff;border:1px solid rgba(255,255,255,.35);border-radius:999px;box-shadow:0 6px 18px rgba(0,0,0,.3);font-size:.85rem;transition:opacity .4s}
 .install button{border:0;background:none;color:inherit;font:inherit;cursor:pointer}
 .install #installBtn{font-weight:800;padding:.5rem .4rem .5rem 1rem}.install #installX{padding:.5rem .8rem .5rem .4rem;font-size:1.2rem;line-height:1;opacity:.7}
 .install.fade{opacity:0;pointer-events:none}
