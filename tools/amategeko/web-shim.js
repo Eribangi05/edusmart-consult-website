@@ -186,11 +186,11 @@
       if (busy || pending) return; pending = true;               // one pass per frame, and our own edits are never observed
       requestAnimationFrame(function () {
         pending = false; busy = true; obs.disconnect();
-        try { decorate(); refreshChip(); } catch (e) { /* cosmetic only */ }
+        try { decorate(); refreshChip(); if (window.__amgIcons) window.__amgIcons.upgrade(document.body); } catch (e) { /* cosmetic only */ }
         obs.observe(app, { childList: true, subtree: true }); busy = false;
       });
     });
-    try { decorate(); showNotice(); } catch (e) { /* cosmetic only */ }
+    try { decorate(); showNotice(); if (window.__amgIcons) window.__amgIcons.upgrade(document.body); } catch (e) { /* cosmetic only */ }
     obs.observe(app, { childList: true, subtree: true });
   };
 })();

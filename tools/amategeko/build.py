@@ -98,12 +98,13 @@ def main():
     app = app.replace(a1, "  S.currentPhone = (saved && saved.currentPhone) || null;   // web: stay signed in on this device\n", 1)
     open(os.path.join(OUT, "app.js"), "w", encoding="utf-8").write(app)
     shutil.copy(os.path.join(HERE, "web.css"), os.path.join(OUT, "web.css"))
+    shutil.copy(os.path.join(HERE, "web-icons.js"), os.path.join(OUT, "web-icons.js"))
     shim = open(os.path.join(HERE, "web-shim.js"), encoding="utf-8").read().replace("__CLOUD_URL__", cloud_url())
     open(os.path.join(OUT, "web-shim.js"), "w", encoding="utf-8").write(shim)
 
     # cache-busting id changes whenever anything the browser loads changes
     hh = hashlib.sha1()
-    for fn in ("app.js", "web-shim.js", "web.css", "styles.css"):
+    for fn in ("app.js", "web-shim.js", "web-icons.js", "web.css", "styles.css"):
         hh.update(open(os.path.join(OUT, fn), "rb").read())
     build_id = hh.hexdigest()[:8]
     html = open(os.path.join(R, "index.html"), encoding="utf-8").read()
@@ -121,6 +122,7 @@ def main():
     html = html.replace('<link rel="stylesheet" href="styles.css" />', '<link rel="stylesheet" href="styles.css" />\n  <link rel="stylesheet" href="web.css?v=' + build_id + '" />')
     loader = ('<noscript><p style="padding:24px;font-family:sans-serif">This app needs JavaScript.</p></noscript>\n'
               '  <script src="web-shim.js?v=' + build_id + '"></script>\n'
+              '  <script src="web-icons.js?v=' + build_id + '"></script>\n'
               '  <script>\n  __amgReady.then(function () {\n    var s = document.createElement("script"); s.src = "app.js?v=' + build_id + '";\n'
               '    s.onload = function () { if (window.__amgAfterStart) window.__amgAfterStart(); };\n    document.body.appendChild(s);\n'
               '  }).catch(function () { document.body.innerHTML = "<p style=\\"padding:24px;font-family:sans-serif\\">The app could not load. Check your connection and reload the page.</p>"; });\n  </script>')

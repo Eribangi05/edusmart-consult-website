@@ -71,3 +71,22 @@ body { overscroll-behavior: none; }
 @media (max-width: 860px) { .exam-bar { flex-wrap: wrap; gap: 6px 10px; padding: 10px 14px; } }
 
 .amg-fail { background: #8a1c1c; z-index: 400; }
+
+/* ---- vector icons (web-icons.js) ---- */
+.amg-i { width: 1.2em; height: 1.2em; flex: none; }
+.amg-tile { display: inline-grid; place-items: center; width: 36px; height: 36px; border-radius: 11px; color: #fff; background: linear-gradient(135deg, var(--a), var(--b)); box-shadow: 0 4px 10px rgba(0, 0, 0, .28), inset 0 1px 0 rgba(255, 255, 255, .35); }
+.amg-tile .amg-i { width: 20px; height: 20px; }
+.navitem .ni-ico[data-amg] { width: 36px; height: 36px; font-size: 0; display: inline-grid; place-items: center; }
+.navitem { gap: 12px; }
+.navitem.active .amg-tile { box-shadow: 0 0 0 2px rgba(255, 255, 255, .85), 0 4px 12px rgba(0, 0, 0, .3); }
+.tile .t-ico[data-amg] { font-size: 0; margin-bottom: 14px; }
+.tile .t-ico .amg-tile { width: 56px; height: 56px; border-radius: 17px; }
+.tile .t-ico .amg-tile .amg-i { width: 29px; height: 29px; }
+.brand-badge .amg-plain { width: 26px; height: 26px; color: #fff; }
+.hero .hero-emoji[data-amg] { font-size: 0; }
+.hero .hero-emoji .amg-plain { width: 110px; height: 110px; color: #fff; stroke-width: 1.2; }
+.amg-inl { display: inline-flex; vertical-align: -.22em; }
+.amg-inl .amg-i.inl { width: 1.15em; height: 1.15em; stroke-width: 2.2; }
+.theme-toggle .amg-inl { vertical-align: middle; }
+.theme-toggle .amg-inl .amg-i { width: 18px; height: 18px; color: #fff; }
+.btn .amg-inl, .chip .amg-inl { color: currentColor !important; }
