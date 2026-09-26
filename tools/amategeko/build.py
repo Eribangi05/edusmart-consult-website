@@ -119,6 +119,7 @@ def main():
            '  <meta name="theme-color" content="#12276b" />\n  <meta name="robots" content="noindex" />\n'
            '  <link rel="icon" href="assets/icons/appicon.png" />')
     html = html.replace(csp_old.group(0), csp)
+    html = html.replace("../../assets/", "assets/")            # static pictures in the page itself (the sidebar logo)
     html = html.replace('<link rel="stylesheet" href="styles.css" />', '<link rel="stylesheet" href="styles.css" />\n  <link rel="stylesheet" href="web.css?v=' + build_id + '" />')
     loader = ('<noscript><p style="padding:24px;font-family:sans-serif">This app needs JavaScript.</p></noscript>\n'
               '  <script src="web-shim.js?v=' + build_id + '"></script>\n'

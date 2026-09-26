@@ -191,7 +191,7 @@ PRODUCTS = [
   "Smart shopping lists with a pantry, recipes and meal planning to help households plan and spend well.", "Android"),
  ("ironlog", "IronLog", "Lifestyle", "products/ironlog.svg", None,
   "Workout log with routines, sets, personal records, body measurements and reminders.", "Android"),
- ("amategeko", "Amategeko y'Umuhanda", "Transport and driving", "products/amategeko.svg", "road-code.html",
+ ("amategeko", "Amategeko y'Umuhanda", "Transport and driving", "products/amategeko.png", "road-code.html",
   "Rwanda road code theory practice with 328 questions, 126 road signs, a glossary and timed mock exams, in Kinyarwanda, English and French. Try it in your browser.", "Web, Windows, Android"),
  ("rwanda-drive", "Rwanda Drive", "Transport and driving", "products/rwandadrive.svg", None,
   "Driving school training product: a theory academy plus a 3D driving simulator with a Kigali inspired city. In development.", "Windows (in development)"),

@@ -86,8 +86,9 @@ rc = hero_page("Road code", "Amategeko y'Umuhanda", "Practise for the Rwanda pro
 <div><div class="kicker">Try it now</div><h2>Open it in your browser</h2>
 <p>No download and no sign up. Create a small profile with a name and a PIN, and start practising. Your results stay in your own browser.</p>
 <ol class="next"><li>Press <b>Open the web app</b>.</li><li>Create your profile and choose your language.</li><li>Practise questions, learn the road signs and take a timed mock exam.</li><li>Press <b>Unlock full version</b> and type your code to get everything.</li></ol>
-<p style="margin-top:1.2rem"><a class="btn btn-gold" href="amategeko/">Open the web app</a> <a class="btn btn-outline" href="contact.html?topic={_topic}#form">Ask for an unlock code</a></p></div>
+<p style="margin-top:1.2rem"><a class="btn btn-gold" href="amategeko/">Open the web app</a> <a class="btn btn-outline" href="contact.html?topic={_topic}#form">Ask for an unlock code</a> <a class="btn btn-outline" href="assets/brochures/Amategeko-Umuhanda-guide.pdf" download>Download the guide (PDF)</a></p></div>
 <div class="grid" style="gap:1rem">
+<img src="assets/amategeko-logo.png" alt="Amategeko y'Umuhanda logo" width="260" height="265" style="width:min(260px,70%);height:auto;margin:0 auto .4rem;display:block;filter:drop-shadow(0 12px 24px rgba(6,48,122,.25))">
 <div class="card">{ico("target")}<h3>Free sample</h3><p>40 practice questions, 36 road signs, 15 glossary terms and a mock exam. Enough to see how it works.</p></div>
 <div class="card">{ico("shield")}<h3>Full version</h3><p>All 328 questions, 126 road signs, 61 glossary terms, 8 lessons and the traffic law documents. Unlocked with a code from EduSmart Consult or your driving school.</p></div>
 </div></div></section>

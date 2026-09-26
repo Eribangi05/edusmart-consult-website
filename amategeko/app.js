@@ -501,7 +501,7 @@ function authGate(){
 }
 function onboardingGate(){
   const slides=[
-    {ic:'🚗',t:{rw:'Murakaza neza',en:'Welcome',fr:'Bienvenue'},b:{rw:"Iyi porogaramu igufasha kwitegura ikizamini cy'uruhushya rw'agateganyo, ikora nta interineti.",en:'This app prepares you for the provisional driving-licence theory test. It works fully offline.',fr:"Cette application vous prépare à l'examen théorique du permis provisoire. Fonctionne hors ligne."}},
+    {ic:'🚗',logo:true,t:{rw:'Murakaza neza',en:'Welcome',fr:'Bienvenue'},b:{rw:"Iyi porogaramu igufasha kwitegura ikizamini cy'uruhushya rw'agateganyo, ikora nta interineti.",en:'This app prepares you for the provisional driving-licence theory test. It works fully offline.',fr:"Cette application vous prépare à l'examen théorique du permis provisoire. Fonctionne hors ligne."}},
     {ic:'📚',t:{rw:'Iga kandi wimenyereze',en:'Learn & practise',fr:'Apprenez et entraînez-vous'},b:{rw:"Soma amasomo, wimenyereze ibibazo bigufasha aho udahagaze neza, wisuzume mu 'Iga ibibazo'.",en:'Read lessons, practise questions targeted at your weak spots, and review answers in Study mode.',fr:'Lisez les leçons, entraînez-vous sur vos points faibles et révisez en mode Étude.'}},
     {ic:'📝',t:{rw:'Ikizamini',en:'Mock exam',fr:'Examen blanc'},b:{rw:'Ibibazo 20 mu minota 20. Utsinda ku manota 12/20. Bimeze nk\'ikizamini nyacyo.',en:'20 questions in 20 minutes. Pass at 12/20. Just like the real test.',fr:'20 questions en 20 minutes. Réussite à 12/20. Comme le vrai examen.'}},
     {ic:'🚦',t:{rw:'Ibyapa n\'amategeko',en:'Signs & the law',fr:'Panneaux et loi'},b:{rw:'Reba ibyapa byose, imirongo n\'amatara, ndetse usome amategeko nyayo (Igazeti ya Leta).',en:'Browse all road signs, markings & lights, and read the actual law (Official Gazette).',fr:'Parcourez les panneaux, marquages et feux, et lisez la loi officielle.'}},
@@ -509,7 +509,7 @@ function onboardingGate(){
   let i=0;
   const render=()=>{ const sl=slides[i];
     gate(`<div style="text-align:center">
-      <div style="font-size:64px">${sl.ic}</div>
+      <div style="font-size:64px">${sl.logo?'<img src="assets/icons/appicon.png" alt="" style="width:120px;height:120px;object-fit:contain"/>':sl.ic}</div>
       <h2 style="margin:6px 0">${loc(sl.t)}</h2>
       <p class="muted" style="line-height:1.6;margin:8px 0 18px">${loc(sl.b)}</p>
       <div class="row" style="justify-content:center;gap:6px;margin-bottom:16px">${slides.map((_,j)=>`<span style="width:8px;height:8px;border-radius:50%;background:${j===i?'var(--blue-600)':'var(--border)'}"></span>`).join('')}</div>
@@ -718,7 +718,7 @@ function gate(html){
   if(!g){ g=document.createElement('div'); g.id='gate'; document.body.appendChild(g); }
   const gbadge = S.school && S.school.logo
     ? `<div class="brand-badge" style="background:#fff;padding:4px"><img src="${S.school.logo}" style="max-width:100%;max-height:100%;object-fit:contain"/></div>`
-    : `<div class="brand-badge">🚗</div>`;
+    : `<div class="brand-badge brand-logo"><img src="assets/icons/appicon.png" alt=""/></div>`;
   g.innerHTML=`<div class="gate-card">
     <div class="gate-brand">${gbadge}
       <div><div style="font-weight:800;font-size:20px">Amategeko y'Umuhanda</div>
