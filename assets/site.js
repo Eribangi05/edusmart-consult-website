@@ -1,14 +1,24 @@
 (function () {
   var C = window.EDUSMART || {};
 
-  // mobile menu
+  // mobile menu: the panel sits under a sticky header, so it stays pinned to the top of the screen as the
+  // page scrolls behind it. Its own height can be taller than the screen (many departments and products),
+  // so it needs its own scrollbar sized to whatever room is actually left under the header.
   var t = document.querySelector('.menu-toggle'), n = document.querySelector('.nav');
   if (t && n) {
+    function fitNav() {
+      if (!n.classList.contains('open')) return;
+      var top = n.getBoundingClientRect().top;
+      n.style.maxHeight = Math.max(160, window.innerHeight - top) + 'px';
+    }
     t.addEventListener('click', function () {
       var open = n.classList.toggle('open');
       t.setAttribute('aria-expanded', open ? 'true' : 'false');
+      if (open) { fitNav(); n.scrollTop = 0; } else { n.style.maxHeight = ''; }
     });
-    n.addEventListener('click', function (e) { if (e.target.tagName === 'A') { n.classList.remove('open'); t.setAttribute('aria-expanded', 'false'); } });
+    n.addEventListener('click', function (e) { if (e.target.tagName === 'A') { n.classList.remove('open'); n.style.maxHeight = ''; t.setAttribute('aria-expanded', 'false'); } });
+    window.addEventListener('resize', fitNav);
+    window.addEventListener('orientationchange', function () { setTimeout(fitNav, 200); });
   }
 
   // tabs
