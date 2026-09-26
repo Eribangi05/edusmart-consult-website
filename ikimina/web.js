@@ -27,3 +27,11 @@
     addBtn();
   } catch (e) {}
 })();
+
+/* Cloud sync settings for the web build. For local testing only, on localhost the server address can point at a local copy. */
+(function () {
+  try {
+    window.IKI_PLATFORM = 'web';
+    if (/^(localhost|127\.0\.0\.1)$/.test(location.hostname) && localStorage.getItem('iki_cloud')) window.IKI_CLOUD_URL = localStorage.getItem('iki_cloud');
+  } catch (e) {}
+})();

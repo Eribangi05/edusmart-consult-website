@@ -266,3 +266,25 @@ P(/^by (.+)$/, 'par $1', 'na $1');
 P(/^Weekly contributions of (.+)$/, 'Cotisations hebdomadaires de $1', 'Umusanzu wa buri cyumweru ni $1');
 P(/^Daily contributions of (.+)$/, 'Cotisations quotidiennes de $1', 'Umusanzu wa buri munsi ni $1');
 P(/^Every 2 weeks contributions of (.+)$/, 'Cotisations toutes les 2 semaines de $1', 'Umusanzu wa buri byumweru bibiri ni $1');
+
+/* ---- cloud sync (Kinyarwanda wording to be reviewed by a native speaker) ---- */
+D('Cloud sync', 'Synchronisation en ligne', 'Guhuza amakuru kuri interineti');
+D('Join a group online', 'Rejoindre un groupe en ligne', 'Injira mu itsinda kuri interineti');
+D('Use a code from your President', 'Utilisez un code de votre Président', 'Koresha kode wahawe na Perezida');
+D('Sync now', 'Synchroniser', 'Vugurura ubu');
+D('Invite someone', 'Inviter quelqu’un', 'Tumira umuntu');
+D('Who has access', 'Qui a accès', 'Abemerewe kwinjira');
+D('Stop syncing on this device', 'Arrêter la synchronisation sur cet appareil', 'Hagarika kuvugurura kuri iki gikoresho');
+D('Sign in', 'Se connecter', 'Injira');
+D('Create cloud account', 'Créer un compte en ligne', 'Fungura konti kuri interineti');
+D('Sign out of the cloud', 'Se déconnecter du cloud', 'Sohoka kuri interineti');
+D('Turn on cloud sync for this group', 'Activer la synchronisation pour ce groupe', 'Tangira guhuza amakuru y’iri tsinda');
+D('Join a group online', 'Rejoindre un groupe en ligne', 'Injira mu itsinda kuri interineti');
+D('Your full name', 'Votre nom complet', 'Amazina yawe yuzuye');
+D('Invitation code', 'Code d’invitation', 'Kode y’ubutumire');
+D('Invitation ready', 'Invitation prête', 'Ubutumire burateguye');
+D('Copy message', 'Copier le message', 'Kopera ubutumwa');
+D('Create invitation code', 'Créer un code d’invitation', 'Kora kode y’ubutumire');
+D('Remove', 'Retirer', 'Kuraho');
+D('Syncing…', 'Synchronisation…', 'Kuvugurura…');
+D('Join →', 'Rejoindre →', 'Injira →');

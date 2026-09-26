@@ -43,6 +43,8 @@ h = h.replace('<link rel="stylesheet" href="styles.css">', '<meta name="viewport
 
 h = h.replace('<script src="app.js"></script>', '<script src="app.js"></script>\n<script src="web.js"></script>')
 
+if os.environ.get("IKI_TEST_CLOUD"):          # local testing only: also allow a local copy of the cloud server
+    h = h.replace("connect-src 'self'", "connect-src 'self' " + os.environ["IKI_TEST_CLOUD"], 1)
 open(os.path.join(OUT, "index.html"), "w", encoding="utf-8").write(h)
 
 for fn, a, b in [("app.js", "Desktop Edition", "Web Edition"), ("i18n-data.js", "D('Desktop Edition', 'Édition Bureau', 'Verisiyo ya mudasobwa')", "D('Web Edition', 'Édition Web', 'Verisiyo y’urubuga')")]:

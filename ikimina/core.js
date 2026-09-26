@@ -196,7 +196,7 @@ function calcLoan(principal, ratePct, n, type, first) {
 let SESSION = null;
 const who = () => (SESSION ? SESSION.name : 'System');
 function audit(action, details) { DB.audit.unshift({ id: uid(), action, details, by: who(), at: Date.now() }); if (DB.audit.length > 2000) DB.audit.length = 2000; }
-function commit() { Store.save(DB); }
+function commit() { Store.save(DB); if (window.Cloud) Cloud.changed(); }
 function notify(text, memberId = null, icon = '🔔') { DB.notes.unshift({ id: uid(), text, memberId, icon, at: Date.now() }); if (DB.notes.length > 300) DB.notes.length = 300; }
 
 const ROLES = { PRESIDENT: 'President', ACCOUNTANT: 'Accountant', MEMBER: 'Member' };
