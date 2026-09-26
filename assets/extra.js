@@ -48,6 +48,7 @@
       var payload = Object.assign({ _subject: '[Website request] ' + (d.needs || 'Enquiry') + ' | ' + d.organisation }, d);
       var done = function () { $('#leadDone').classList.remove('hidden'); lead.reset(); window.scrollTo({ top: $('.lead-wrap').offsetTop - 120, behavior: 'smooth' }); };
       var btn = $('button[type=submit]', lead); btn.disabled = true;
+      try { if (C.cloud && C.cloud.baseUrl) fetch(C.cloud.baseUrl + '/v1/public/enquiry', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ name: d.name, email: d.email, organisation: d.organisation, message: text }), keepalive: true }).catch(function () {}); } catch (e) {}
       if (C.formEndpoint) {
         fetch(C.formEndpoint, { method: 'POST', headers: { 'Accept': 'application/json', 'Content-Type': 'application/json' }, body: JSON.stringify(payload) })
           .then(function (r) { if (!r.ok) throw new Error(); done(); })

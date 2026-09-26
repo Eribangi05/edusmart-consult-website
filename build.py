@@ -90,7 +90,7 @@ FOOTER = '''<section class="cta"><div class="container"><h2>Talk to us about you
 <p>Better Research | Stronger Education | Brighter Futures</p></div>
 <div><h4>Departments</h4><a href="education-training.html">Education and Training</a><a href="inclusive-education.html">Inclusive Education</a><a href="research-consulting.html">Research and Consulting</a><a href="elearning.html">E-Learning</a><a href="software-development.html">Software Development</a><a href="index.html#departments">All departments</a></div>
 <div><h4>Products</h4><a href="smart-school-app.html">Smart School App</a><a href="smart-school-cloud.html">Smart School Cloud</a><a href="tour.html">Take the tour</a><a href="pricing.html">Pricing</a><a href="downloads.html">Downloads</a><a href="products.html">All products</a></div>
-<div><h4>Company</h4><a href="about.html">About us</a><a href="team.html">Our team</a><a href="news.html">News and tips</a><a href="stories.html">Success stories</a><a href="partners.html">Partners and careers</a><a href="request.html">Request a demo</a><a href="privacy.html">Privacy</a></div>
+<div><h4>Company</h4><a href="about.html">About us</a><a href="team.html">Our team</a><a href="news.html">News and tips</a><a href="stories.html">Success stories</a><a href="partners.html">Partners and careers</a><a href="request.html">Request a demo</a><a href="privacy.html">Privacy</a><a href="terms.html">Terms</a><a href="security.html">Security</a><a href="child-safety.html">Child safety</a><a href="help.html">Help centre</a><a href="status.html">Status</a></div>
 <div><h4>Contact</h4><a data-phone href="#">+250 782 368 555</a><a data-email href="#">email</a><span>Itetero, Nyagatovu, Kimironko,<br>Gasabo, Kigali, Rwanda</span></div>
 </div>
 <div class="foot-bottom"><span>&copy; <span data-year></span> EduSmart Consult LTD. All rights reserved.</span>
@@ -682,6 +682,7 @@ nf = hero_page("Page not found", "Page not found", "The page you asked for is no
 page("404.html", "Page not found | EduSmart Consult", "Page not found.", "", nf)
 
 exec(open(os.path.join(ROOT, "build2.py"), encoding="utf-8").read())
+exec(open(os.path.join(ROOT, "build3.py"), encoding="utf-8").read())
 pages = ["", "products.html", "smart-school-app.html", "smart-school-cloud.html", "about.html", "contact.html", "privacy.html"] + [d[0] + ".html" for d in DEPTS] + EXTRA_PAGES
 with open(os.path.join(ROOT, "sitemap.xml"), "w", encoding="utf-8") as f:
     f.write('<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n' +
