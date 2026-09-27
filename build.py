@@ -24,7 +24,16 @@ def _icon_inner(name):
         raw = open(os.path.join(ROOT, "assets", "icons", "ph-" + PH[name] + ".svg"), encoding="utf-8").read()
         _ICON_CACHE[name] = re.sub(r"^<svg[^>]*>|</svg>\s*$", "", raw.strip())
     return _ICON_CACHE[name]
+_CLOCK_LIVE = '''<circle cx="50" cy="50" r="45" fill="none" stroke="currentColor" stroke-width="5"/>
+  <circle cx="50" cy="12" r="2.4" fill="currentColor" opacity=".4"/><circle cx="88" cy="50" r="2.4" fill="currentColor" opacity=".4"/>
+  <circle cx="50" cy="88" r="2.4" fill="currentColor" opacity=".4"/><circle cx="12" cy="50" r="2.4" fill="currentColor" opacity=".4"/>
+  <line x1="50" y1="50" x2="50" y2="32" stroke="currentColor" stroke-width="5.5" stroke-linecap="round"><animateTransform attributeName="transform" type="rotate" from="0 50 50" to="360 50 50" dur="43200s" repeatCount="indefinite"/></line>
+  <line x1="50" y1="50" x2="50" y2="20" stroke="currentColor" stroke-width="4" stroke-linecap="round" opacity=".9"><animateTransform attributeName="transform" type="rotate" from="0 50 50" to="360 50 50" dur="3600s" repeatCount="indefinite"/></line>
+  <line x1="50" y1="50" x2="50" y2="15" stroke="#F2C200" stroke-width="2.2" stroke-linecap="round"><animateTransform attributeName="transform" type="rotate" from="0 50 50" to="360 50 50" dur="60s" repeatCount="indefinite"/></line>
+  <circle cx="50" cy="50" r="3.4" fill="currentColor"/>'''
 def ico(name, cls=""):
+    if name == "clock":
+        return f'<span class="ico {cls}"><svg class="clock-live" viewBox="0 0 100 100" aria-hidden="true">{_CLOCK_LIVE}</svg></span>'
     return f'<span class="ico {cls}"><svg viewBox="0 0 256 256" aria-hidden="true" fill="currentColor">{_icon_inner(name)}</svg></span>'
 
 
