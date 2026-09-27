@@ -234,10 +234,19 @@ PRODUCTS = [
 ]
 CATS = ["School and learning", "Community and finance", "Field and research", "Jobs and business", "Lifestyle", "Transport and driving"]
 
+APK_LINKS = {"akazi": "Akazi-Android-1.0.0.apk", "akazi-template": "AkaziJobBoardTemplate-Android-1.0.0.apk", "budgetwise": "BudgetWise-Android-1.0.0.apk", "jus-champion": "JusChampion-Android-1.0.0.apk", "codevault-manager": "CodeVaultManager-Android-1.1.0.apk", "nightshift-manager": "NightShiftManager-Android-1.0.0.apk", "smartcart": "SmartCart-Android-1.0.0.apk", "ironlog": "IronLog-Android-1.0.0.apk", "studentlearn": "StudentLearn-Android-1.0.0.apk", "teacherdesk-pro": "TeacherDeskPro-Android-1.0.0.apk", "kidsreads-rwanda": "KidsReadsRwanda-Android-1.0.0.apk", "ubumenyi-bw-abana": "UbumenyiBwAbana-Android-1.0.0.apk", "nursery-1": "UbumenyiNursery1-Android-1.0.0.apk", "nursery-2": "UbumenyiNursery2-Android-1.0.0.apk", "nursery-3": "UbumenyiNursery3-Android-1.0.0.apk"}  # slug -> file on downloads.edusmartconsult.com
+
+
 def prod_card(p):
     slug, name, cat, logo, pg, desc, plat = p
     topic = (name.replace("|", "").replace("&", "and").replace("  ", " ") + " enquiry").replace(" ", "%20")
-    tag = f'<a class="btn btn-outline btn-sm" href="{pg}">See the product</a>' if pg else f'<a class="btn btn-outline btn-sm" href="contact.html?topic={topic}#form">Ask about it</a>'
+    apk = APK_LINKS.get(slug)
+    if pg:
+        tag = f'<a class="btn btn-outline btn-sm" href="{pg}">See the product</a>'
+    elif apk:
+        tag = f'<a class="btn btn-primary btn-sm" href="https://downloads.edusmartconsult.com/{apk}" download>Download APK</a> <a class="btn btn-outline btn-sm" href="contact.html?topic={topic}#form">Ask about it</a>'
+    else:
+        tag = f'<a class="btn btn-outline btn-sm" href="contact.html?topic={topic}#form">Ask about it</a>'
     return f'''<article class="pcard" id="{slug}" data-cat="{cat}"><img class="plogo" src="assets/{logo}" alt="{name} logo" width="72" height="72" loading="lazy">
 <div class="pbody"><span class="pcat">{cat}</span><h3>{name}</h3><p>{desc}</p><div class="pfoot"><span class="pplat">{plat}</span>{tag}</div></div></article>'''
 
