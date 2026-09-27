@@ -13,7 +13,8 @@ HERE = os.path.dirname(os.path.abspath(__file__))
 SITE = os.path.dirname(os.path.dirname(HERE))
 SRC = os.environ.get("AMG_SRC") or r"C:\Users\ingab\AndroidStudioProjects\RwandaTheoryApp\AmategekoWindows"
 CLOUD_DIR = os.environ.get("AMG_CLOUD") or os.path.join(os.path.dirname(SITE), "Cloud Sync Server")
-OUT = os.path.join(SITE, "amategeko")
+OUT = os.environ.get("AMG_OUT") or os.path.join(SITE, "amategeko")
+FULL = bool(os.environ.get("AMG_FULL"))      # Android: bundle the full content so the app works offline with no code
 
 # how many items the free sample holds
 SAMPLE = {"questions": 40, "signs": 36, "glossary": 15, "lessons": 2}
@@ -74,13 +75,15 @@ def main():
     if os.path.isdir(OUT):
         shutil.rmtree(OUT)
     os.makedirs(os.path.join(OUT, "data"))
-    for n, v in sample.items():
+    for n, v in (data if FULL else sample).items():
         write_json(os.path.join(OUT, "data", n + ".json"), v)
+    if FULL:
+        meta = dict(meta, sample=meta["full"], bundledFull=True)
     write_json(os.path.join(OUT, "data", "meta.json"), meta)
 
     # ---- the full content goes to the cloud server, not the public site
     full_dir = os.path.join(CLOUD_DIR, "content-theory")
-    if os.path.isdir(CLOUD_DIR):
+    if os.path.isdir(CLOUD_DIR) and not FULL:
         for n in data:
             write_json(os.path.join(full_dir, n + ".json"), data[n])
     else:

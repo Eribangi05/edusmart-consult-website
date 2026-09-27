@@ -27,6 +27,36 @@ def _icon_inner(name):
 def ico(name, cls=""):
     return f'<span class="ico {cls}"><svg viewBox="0 0 256 256" aria-hidden="true" fill="currentColor">{_icon_inner(name)}</svg></span>'
 
+
+# ---- the web apps, listed once and used on the home page and on apps.html
+R2_BASE = "https://pub-7fc506eee89448009fad02ad6d52e594.r2.dev"
+APP_CARDS = [
+ dict(slug="fmis", name="FMIS", tag="Field Management Information System", logo="assets/products/fmis.png", page="field-management.html", web="fmis/",
+      blurb="Collect data with forms, GPS and photos, assign tasks, check in, review and report. For any institution, team or individual.",
+      apk="assets/downloads/FMIS-Android-1.0.0.apk", apk_size="4 MB", win=R2_BASE + "/FMIS-Setup-1.0.0.exe", win_size="84 MB", note="Free to try. Cloud sync for teams."),
+ dict(slug="ikimina", name="Ikimina", tag="Savings group manager", logo="assets/products/ikimina.png", page="savings-groups.html", web="ikimina/",
+      blurb="Run an ikimina, VSLA or tontine: contributions, loans, rotation, reports and roles for the President, Accountant and members.",
+      apk="assets/downloads/Ikimina-Android-1.1.0.apk", apk_size="2 MB", win=R2_BASE + "/Ikimina-Setup-1.1.0.exe", win_size="82 MB", note="Free to try. Cloud sync between officers and members."),
+ dict(slug="amategeko", name="Amategeko y'Umuhanda", tag="Road code theory practice", logo="assets/products/amategeko.png", page="road-code.html", web="amategeko/",
+      blurb="Prepare for the Rwanda provisional driving licence theory test in Kinyarwanda, English or French: questions, signs and mock exams.",
+      apk=R2_BASE + "/Amategeko-Android-1.1.0.apk", apk_size="26 MB", win=R2_BASE + "/Amategeko-Setup-1.1.0.exe", win_size="105 MB", note="Free sample. Full version with a code. Progress follows your account."),
+ dict(slug="school", name="Smart School App", tag="Offline learning and school management", logo="assets/ssa-logo-96.png", page="smart-school-app.html", web="try.html",
+      blurb="The full Primary 1 to 6 curriculum, exams, lesson plans, timetables and reports for schools, with Smart School Cloud for online access.",
+      apk=None, apk_size="", win=None, win_size="", note="Live demo school. Installers on the downloads page."),
+]
+
+
+def app_tile(a):
+    return (f'<article class="appcard"><a class="ap-logo" href="{a["page"]}"><img src="{a["logo"]}" alt="{a["name"]} logo" width="72" height="72" loading="lazy"></a>'
+            f'<div class="ap-body"><h3><a href="{a["page"]}">{a["name"]}</a></h3><span class="ap-tag">{a["tag"]}</span><p>{a["blurb"]}</p>'
+            f'<div class="ap-actions"><a class="btn btn-gold btn-sm" href="{a["web"]}">{"Open the live demo" if a["slug"] == "school" else "Open the web app"}</a><a class="btn btn-outline btn-sm" href="{a["page"]}">Learn more</a></div></div></article>')
+
+
+APPS_HOME = ('<section class="section" id="apps"><div class="container"><div class="section-head"><div><div class="kicker">Web apps</div><h2>Open our apps in your browser</h2></div>'
+             '<p>No installation needed. Try them now, then install them on Windows or Android and share your work between devices with one account.</p></div>'
+             '<div class="appgrid">' + "".join(app_tile(a) for a in APP_CARDS) + '</div>'
+             '<p style="margin-top:1.4rem;text-align:center"><a class="btn btn-primary" href="apps.html">See all web apps and downloads</a></p></div></section>')
+
 DEPT_LIST = [
  ("education-training", "Education and Training"), ("inclusive-education", "Inclusive and Special Needs Education"),
  ("research-consulting", "Research and Consulting"), ("elearning", "E-Learning and Digital Learning"),
@@ -53,7 +83,8 @@ def topbar():
 def header(active):
     cur = lambda k: ' aria-current="page"' if active == k else ""
     dd = "".join(f'<a href="{s}.html">{t}</a>' for s, t in DEPT_LIST)
-    prod = ('<a href="smart-school-app.html">Smart School App<small>Offline learning suite for Windows and Android</small></a>'
+    prod = ('<a href="apps.html">All web apps<small>Open our apps in your browser</small></a>'
+            '<a href="smart-school-app.html">Smart School App<small>Offline learning suite for Windows and Android</small></a>'
             '<a href="smart-school-cloud.html">Smart School Cloud<small>Online access and device sync</small></a>'
             '<a href="try.html">Try it live<small>Open the demo school in your browser</small></a>'
             "<a href=\"road-code.html\">Amategeko y'Umuhanda<small>Road code practice in your browser</small></a>"
@@ -78,6 +109,7 @@ def header(active):
 <nav class="nav" aria-label="Main"><a href="index.html"{cur("index.html")}>Home</a>
 <div class="dd"><a href="index.html#departments"{cur("dept")}>Departments</a><div class="dd-menu">{dd}</div></div>
 <div class="dd"><a href="products.html"{cur("products")}>Products</a><div class="dd-menu">{prod}</div></div>
+<a href="apps.html"{cur("apps")}>Web apps</a>
 <div class="dd"><a href="news.html"{cur("resources")}>Resources</a><div class="dd-menu">{res}</div></div>
 <div class="dd"><a href="about.html"{cur("about")}>About</a><div class="dd-menu">{about}</div></div>
 <a class="nav-search" href="search.html" data-search-open aria-label="Search the site" title="Search (press /)">{ico("search")}</a>
@@ -92,7 +124,7 @@ FOOTER = '''<section class="cta"><div class="container"><h2>Talk to us about you
 <div><div class="foot-logo"><img src="assets/logo-horizontal.webp" alt="EduSmart Consult" width="132" height="44"></div>
 <p>Better Research | Stronger Education | Brighter Futures</p></div>
 <div><h4>Departments</h4><a href="education-training.html">Education and Training</a><a href="inclusive-education.html">Inclusive Education</a><a href="research-consulting.html">Research and Consulting</a><a href="elearning.html">E-Learning</a><a href="software-development.html">Software Development</a><a href="index.html#departments">All departments</a></div>
-<div><h4>Products</h4><a href="smart-school-app.html">Smart School App</a><a href="smart-school-cloud.html">Smart School Cloud</a><a href="road-code.html">Amategeko y'Umuhanda</a><a href="savings-groups.html">Ikimina</a><a href="field-management.html">FMIS</a><a href="tour.html">Take the tour</a><a href="pricing.html">Pricing</a><a href="downloads.html">Downloads</a><a href="products.html">All products</a></div>
+<div><h4>Products</h4><a href="smart-school-app.html">Smart School App</a><a href="smart-school-cloud.html">Smart School Cloud</a><a href="apps.html">All web apps</a><a href="road-code.html">Amategeko y'Umuhanda</a><a href="savings-groups.html">Ikimina</a><a href="field-management.html">FMIS</a><a href="tour.html">Take the tour</a><a href="pricing.html">Pricing</a><a href="downloads.html">Downloads</a><a href="products.html">All products</a></div>
 <div><h4>Company</h4><a href="about.html">About us</a><a href="team.html">Our team</a><a href="news.html">News and tips</a><a href="stories.html">Success stories</a><a href="partners.html">Partners and careers</a><a href="request.html">Request a demo</a></div>
 </div>
 <div class="foot-contact"><span>Itetero, Nyagatovu, Kimironko, Gasabo, Kigali, Rwanda</span><a data-phone href="#">+250 782 368 555</a><a data-email href="#">email</a></div>
@@ -280,7 +312,7 @@ home = f'''
 <div class="eyebrow"><i></i> Better Research | Stronger Education | Brighter Futures</div>
 <h1>Education, research and digital solutions for <em class="rot" data-words="Rwanda|schools|organisations|communities">Rwanda</em>.</h1>
 <p class="lead">EduSmart Consult LTD is a Kigali based company working in education and training, inclusive education, research, e-learning, software development, data services and ICT support. We help schools and organisations learn better, decide with evidence and work with reliable technology.</p>
-<div class="actions"><a class="btn btn-primary" href="#departments">Explore our departments</a><a class="btn btn-sky" href="products.html">See our software</a></div>
+<div class="actions"><a class="btn btn-primary" href="#departments">Explore our departments</a><a class="btn btn-sky" href="products.html">See our software</a><a class="btn btn-gold" href="apps.html">Open the web apps</a></div>
 
 </div>
 <div class="hero-panel rv"><h3>What we do</h3>
@@ -300,6 +332,8 @@ home = f'''
 <div class="tile gold rv"><b>P1 to P6</b><span>Full primary curriculum in our Smart School App</span></div>
 <div class="tile navy rv"><b data-count="2">2</b><span>Platforms for our school app: Windows and Android</span></div>
 </div></div></section>
+
+{APPS_HOME}
 
 <section class="section sky" id="departments"><div class="container">
 <div class="section-head"><div><div class="kicker">Our departments</div><h2>Nine areas of expertise</h2></div>
@@ -351,12 +385,50 @@ home = f'''
       </div>
     </article>
 
+
+    <article class="feat-slide" data-slide="2">
+      <div class="split">
+        <div class="rv">
+          <div class="prod-head"><img src="assets/fmis-96.png" alt="FMIS logo" width="84" height="84" style="border-radius:50%"><div><span class="badge">Made by EduSmart Consult</span><h2 style="margin:.3rem 0 0;color:#fff">FMIS</h2></div></div>
+          <p>A field management system for any institution, project team or individual: data collection forms with GPS and photos, tasks, check-in, review, reports and messages. It works offline and syncs when the phone is online.</p>
+          <ul class="checklist">
+          <li>Build forms with 11 question types</li>
+          <li>GPS check-in and a field map that works offline</li>
+          <li>Five roles: Admin, Manager, Supervisor, Field agent, Viewer</li>
+          <li>Review, approve or return each submission</li>
+          <li>Web, Windows and Android with cloud sync</li>
+          </ul>
+          <div class="actions"><a class="btn btn-gold" href="fmis/">Open the web app</a><a class="btn btn-ghost-light" href="field-management.html">Learn more</a></div>
+        </div>
+        <div class="shots rv">{win("assets/fmis-shots/fmis-d-dashboard.jpg", "FMIS dashboard", title="FMIS", logo="assets/fmis-96.png")}<div class="shot-phone">{phone("assets/fmis-shots/fmis-m-dashboard.jpg", "FMIS field agent dashboard", "")}</div></div>
+      </div>
+    </article>
+
+    <article class="feat-slide" data-slide="3">
+      <div class="split">
+        <div class="rv">
+          <div class="prod-head"><img src="assets/ikimina-192.png" alt="Ikimina logo" width="84" height="84" style="border-radius:50%"><div><span class="badge">Made by EduSmart Consult</span><h2 style="margin:.3rem 0 0;color:#fff">Ikimina</h2></div></div>
+          <p>Run a savings group with clear records: contributions, loans, rotation and reports. The President, the Accountant and members each get the right access, and the books can be shared across phones and computers.</p>
+          <ul class="checklist">
+          <li>Contributions, loans with interest and penalties</li>
+          <li>Rotation and pot payouts</li>
+          <li>PDF statements and Excel exports</li>
+          <li>Members see only their own records</li>
+          <li>Web, Windows and Android with cloud sync</li>
+          </ul>
+          <div class="actions"><a class="btn btn-gold" href="ikimina/">Open the web app</a><a class="btn btn-ghost-light" href="savings-groups.html">Learn more</a></div>
+        </div>
+        <div class="shots rv">{win("assets/ikimina-shots/iki-d-dashboard.jpg", "Ikimina dashboard", title="Ikimina", logo="assets/ikimina-192.png")}<div class="shot-phone">{phone("assets/ikimina-shots/iki-m-dashboard.jpg", "Ikimina on a phone", "")}</div></div>
+      </div>
+    </article>
   </div>
   <div class="feat-controls">
     <button class="feat-arrow feat-prev" type="button" aria-label="Previous featured product">&#8249;</button>
     <div class="feat-dots" role="tablist" aria-label="Featured products">
       <button class="feat-dot is-active" type="button" data-go="0" role="tab" aria-selected="true" aria-label="Smart School App"></button>
       <button class="feat-dot" type="button" data-go="1" role="tab" aria-selected="false" aria-label="Amategeko y'Umuhanda"></button>
+      <button class="feat-dot" type="button" data-go="2" role="tab" aria-selected="false" aria-label="FMIS"></button>
+      <button class="feat-dot" type="button" data-go="3" role="tab" aria-selected="false" aria-label="Ikimina"></button>
     </div>
     <button class="feat-arrow feat-next" type="button" aria-label="Next featured product">&#8250;</button>
   </div>

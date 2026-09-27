@@ -606,7 +606,7 @@ function go(key){
   // Strict exam: block navigating away while an exam is in progress - warn, save, end instead.
   if(EX && !EX.done && key!=='exam'){ confirmLeaveExam(); return; }
   current=key; buildNav(); document.getElementById('topTitle').textContent=t(key);
-  speechSynthesis && speechSynthesis.cancel();
+  if(window.speechSynthesis) window.speechSynthesis.cancel();   // some phones have no speech engine
   VIEWS[key] ? VIEWS[key]() : VIEWS.home();
   document.getElementById('view').scrollTop=0;
 }

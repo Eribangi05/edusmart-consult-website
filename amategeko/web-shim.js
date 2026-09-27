@@ -44,6 +44,7 @@
   var ready = Promise.all(NAMES.concat(['meta']).map(getJSON)).then(function (all) {
     NAMES.forEach(function (n, i) { state.data[n] = all[i]; });
     state.meta = all[NAMES.length];
+    if (state.meta && state.meta.bundledFull) { state.mode = 'full'; state.label = 'Full version'; return; }   // the Android app carries the full content, so no code is needed
     var code = ls('amg_code'); var full = parse(ls('amg_full'));
     if (!code) {                                                                          // full content that came with a cloud account
       var acct = parse(ls('amg_acct_full'));

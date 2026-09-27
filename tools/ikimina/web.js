@@ -5,7 +5,7 @@
     bar.style.cssText = 'position:fixed;left:0;right:0;bottom:0;z-index:99999;background:#0f5132;color:#fff;font:13px/1.4 system-ui,sans-serif;padding:8px 14px;display:flex;gap:12px;align-items:center;justify-content:center;flex-wrap:wrap';
     bar.innerHTML = '<span>Your group data is saved only in this browser on this device. Use Reports &rsaquo; Backup all data to keep a copy.</span><a href="../savings-groups.html" style="color:#f5b301;font-weight:600">About Ikimina</a><button id="wb-x" style="background:none;border:1px solid #fff8;color:#fff;border-radius:6px;padding:2px 10px;cursor:pointer">OK</button>';
     var seen = false; try { seen = localStorage.getItem('iki-web-note') === '1'; } catch (e) {}
-    if (!seen) { document.body.appendChild(bar); bar.querySelector('#wb-x').onclick = function () { bar.remove(); try { localStorage.setItem('iki-web-note', '1'); } catch (e) {} }; }
+    if (!seen && !window.IKI_NATIVE) { document.body.appendChild(bar); bar.querySelector('#wb-x').onclick = function () { bar.remove(); try { localStorage.setItem('iki-web-note', '1'); } catch (e) {} }; }
   } catch (e) {}
 })();
 
@@ -31,7 +31,7 @@
 /* Cloud sync settings for the web build. For local testing only, on localhost the server address can point at a local copy. */
 (function () {
   try {
-    window.IKI_PLATFORM = 'web';
+    window.IKI_PLATFORM = window.IKI_NATIVE ? 'android' : 'web';
     if (/^(localhost|127\.0\.0\.1)$/.test(location.hostname) && localStorage.getItem('iki_cloud')) window.IKI_CLOUD_URL = localStorage.getItem('iki_cloud');
   } catch (e) {}
 })();

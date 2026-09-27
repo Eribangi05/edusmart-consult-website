@@ -20,6 +20,7 @@ OG_PAGES = [
  ("tour", "Take the tour", "Smart School App, screen by screen"),
  ("savings-groups", "Ikimina", "Savings group manager, free in your browser"),
  ("field-management", "FMIS", "Field data collection and team management"),
+ ("apps", "Web apps", "Open our apps in your browser and install them on Windows and Android"),
  ("try", "Try Smart School App live", "Open the demo school in your browser, no sign up"),
  ("pricing", "Pricing and licences", "Licensed per school, with training included"),
  ("team", "Our team", "The people behind EduSmart Consult"),

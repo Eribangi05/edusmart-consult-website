@@ -76,7 +76,7 @@ notes = [
   "Lesson plan generator: whole unit generation and minutes for each stage",
   "Drawing tasks now come with a teacher rubric and printable drawing boxes",
   "Android now has the same Answer keys screen and exam marking as Windows"])]
-downloads_body = hero_page("Downloads", "Download Smart School App", "Get the app for Windows or Android, or use it online in a browser. The full library is inside the app, so the files are large. Download once, then copy to other devices.") + f'''
+downloads_body = hero_page("Downloads", "Download Smart School App", "Get the app for Windows or Android, or use it online in a browser. The full library is inside the app, so the files are large. Download once, then copy to other devices. Looking for Ikimina, FMIS or Amategeko y'Umuhanda? See all web apps and their downloads.") + f'''<div class="container" style="padding-top:1rem"><div class="callout-box"><b>More apps.</b> Ikimina, FMIS and Amategeko y'Umuhanda have their own installers. <a href="apps.html#downloads">Open the web apps and downloads page</a>.</div></div>
 <section class="section"><div class="container">
 <div class="grid g3">
 <div class="card dl">{ico("device")}<h3>Windows</h3><div class="meta">Version <span data-version></span> | Installer | about 2 GB</div><p>Windows 10 or 11, 64 bit. Best for the head teacher, the school office and the computer lab.</p><a class="btn btn-primary" data-download="windows" href="#"><span data-label>Download for Windows</span></a></div>
