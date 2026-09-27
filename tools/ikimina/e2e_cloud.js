@@ -38,7 +38,7 @@ const wait = (ms) => sleep(ms);
     ok(pInfo.linked, 'President turned on cloud sync for the group');
     const codes = {};
     for (const [id, key] of [['m2', 'acc'], ['m3', 'mem'], ['m4', 'mem2']]) {
-      codes[key] = await P.ev(`document.querySelector('[data-act=cloudInvite]').click();await new Promise(r=>setTimeout(r,400));document.querySelector('#modal-root select[name=id]').value='${id}';document.querySelector('#modal-root .btn.p').click();await new Promise(r=>setTimeout(r,2500));const m=(document.getElementById('modal-root').innerText.match(/IKM-[A-Z0-9]{4}-[A-Z0-9]{4}/)||[])[0];closeModal();return m`);
+      codes[key] = await P.ev(`document.querySelector('[data-act=cloudInvite]').click();await new Promise(r=>setTimeout(r,400));document.querySelector('#modal-root select[name=id]').value='${id}';document.querySelector('#modal-root .btn.p').click();let m;for(let i=0;i<30&&!m;i++){await new Promise(r=>setTimeout(r,500));m=(document.getElementById('modal-root').innerText.match(/IKM-[A-Z0-9]{4}-[A-Z0-9]{4}/)||[])[0];}closeModal();return m`);
     }
     ok(/^IKM-/.test(codes.acc) && /^IKM-/.test(codes.mem), 'invitation codes were created through the invite screen');
 
