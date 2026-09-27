@@ -33,3 +33,6 @@
 
 /* web build: on localhost the cloud address can be pointed at a local server (tests only) */
 (function () { try { window.FMIS_PLATFORM = 'web'; if (/^(localhost|127\.0\.0\.1)$/.test(location.hostname) && localStorage.getItem('fmis_cloud')) window.FMIS_CLOUD_URL = localStorage.getItem('fmis_cloud'); } catch (e) { /* ignore */ } })();
+
+/* installable and offline: register the service worker on the web only (never inside the Android or Windows apps) */
+(function () { try { if ('serviceWorker' in navigator && (location.protocol === 'https:' || location.hostname === 'localhost') && !window.api && !window.FmisNative) navigator.serviceWorker.register('sw.js').catch(function () {}); } catch (e) { /* ignore */ } })();

@@ -35,3 +35,6 @@
     if (/^(localhost|127\.0\.0\.1)$/.test(location.hostname) && localStorage.getItem('iki_cloud')) window.IKI_CLOUD_URL = localStorage.getItem('iki_cloud');
   } catch (e) {}
 })();
+
+/* installable and offline: register the service worker on the web only (never inside the Android or Windows apps) */
+(function () { try { if ('serviceWorker' in navigator && (location.protocol === 'https:' || location.hostname === 'localhost') && !window.api && !window.IKI_NATIVE) navigator.serviceWorker.register('sw.js').catch(function () {}); } catch (e) { /* ignore */ } })();
