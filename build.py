@@ -29,7 +29,7 @@ def ico(name, cls=""):
 
 
 # ---- the web apps, listed once and used on the home page and on apps.html
-R2_BASE = "https://pub-7fc506eee89448009fad02ad6d52e594.r2.dev"
+R2_BASE = "https://downloads.edusmartconsult.com"
 APP_CARDS = [
  dict(slug="fmis", name="FMIS", tag="Field Management Information System", logo="assets/products/fmis.png", page="field-management.html", web="fmis/",
       blurb="Collect data with forms, GPS and photos, assign tasks, check in, review and report. For any institution, team or individual.",
