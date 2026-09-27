@@ -37,6 +37,14 @@ def ico(name, cls=""):
     return f'<span class="ico {cls}"><svg viewBox="0 0 256 256" aria-hidden="true" fill="currentColor">{_icon_inner(name)}</svg></span>'
 
 
+# ---- Rwanda reach panel: computed once from the same NESA accredited-schools directory bundled
+# with Smart School App and Amategeko y'Umuhanda (content/data/schools-rwanda.json, 2026-08-31
+# snapshot, Primary/nursery/secondary/TVET, all accreditation levels), so the number on this page
+# and the number the apps' own school-picker shows are the same source, not a separate guess.
+RWANDA_PROVINCES = [
+ ("Kigali City", 3, 35, 607), ("East", 7, 95, 1279), ("North", 5, 89, 790), ("South", 8, 101, 1163), ("West", 7, 96, 1122),
+]
+
 # ---- the web apps, listed once and used on the home page and on apps.html
 R2_BASE = "https://downloads.edusmartconsult.com"
 APP_CARDS = [
@@ -111,6 +119,7 @@ def header(active):
              '<a href="team.html">Our team<small>The people behind the work</small></a>'
              '<a href="partners.html">Partners and careers<small>Work and grow with us</small></a>')
     return f'''<a class="skip" href="#main">Skip to content</a>
+<div class="scroll-progress" aria-hidden="true"></div>
 {topbar()}
 <header class="site-header"><div class="container nav-wrap">
 <a class="brand" href="index.html" aria-label="EduSmart Consult home"><img src="assets/logo-horizontal.webp" alt="EduSmart Consult" width="186" height="62"></a>
@@ -121,12 +130,12 @@ def header(active):
 <a href="apps.html"{cur("apps")}>Web apps</a>
 <div class="dd"><a href="news.html"{cur("resources")}>Resources</a><div class="dd-menu">{res}</div></div>
 <div class="dd"><a href="about.html"{cur("about")}>About</a><div class="dd-menu">{about}</div></div>
-<a class="nav-search" href="search.html" data-search-open aria-label="Search the site" title="Search (press /)">{ico("search")}</a>
+<a class="nav-search" href="search.html" data-search-open aria-label="Search the site" title="Search (press / or Ctrl+K)">{ico("search")}</a>
 <a href="contact.html"{cur("contact.html")}>Contact</a>
 <a href="request.html"{cur("request.html")} class="btn btn-primary btn-sm">Request a demo</a></nav>
 </div></header>'''
 
-FOOTER = '''<section class="cta"><div class="container"><h2>Talk to us about your school or organisation.</h2>
+FOOTER = f'''<section class="cta"><div class="container"><h2>Talk to us about your school or organisation.</h2>
 <a class="btn btn-gold" href="contact.html#form">Send an enquiry</a></div></section>
 <footer class="footer"><div class="container">
 <div class="foot-grid">
@@ -145,6 +154,16 @@ FOOTER = '''<section class="cta"><div class="container"><h2>Talk to us about you
 <div class="lightbox" id="lb" role="dialog" aria-label="Enlarged screenshot"><img alt=""></div>
 <div class="consent hidden" id="consent" role="dialog" aria-label="Privacy notice"><p><b>Your privacy.</b> This site sets no tracking cookies. It only remembers this notice on your device. <a href="privacy.html">Read more</a></p><div><button class="btn btn-primary btn-sm" data-consent="essential">OK</button><button class="btn btn-outline btn-sm" data-consent="all" data-analytics-only hidden>Allow anonymous statistics</button></div></div>
 <div class="install hidden" id="installBox" role="dialog" aria-label="Install this site"><button type="button" id="installBtn">Install as an app</button><button type="button" id="installX" aria-label="Dismiss" title="Not now">&times;</button></div>
+<a class="wa-float" data-wa="Hello EduSmart Consult, I would like to know more." href="#" rel="noopener" target="_blank" aria-label="Chat with us on WhatsApp" title="Chat on WhatsApp">{ico("whatsapp")}</a>
+<button type="button" class="disp-toggle" aria-label="Display settings: dark mode, contrast and text size" title="Display settings" aria-haspopup="true">
+<svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="4" y1="6" x2="20" y2="6"/><circle cx="9" cy="6" r="2" fill="currentColor" stroke="none"/><line x1="4" y1="12" x2="20" y2="12"/><circle cx="16" cy="12" r="2" fill="currentColor" stroke="none"/><line x1="4" y1="18" x2="20" y2="18"/><circle cx="11" cy="18" r="2" fill="currentColor" stroke="none"/></svg>
+</button>
+<div class="disp-panel" role="dialog" aria-label="Display settings">
+<h4>Display settings</h4>
+<div class="disp-row"><span>Dark mode</span><button type="button" class="switch" id="dispDark" aria-label="Toggle dark mode"></button></div>
+<div class="disp-row"><span>High contrast</span><button type="button" class="switch" id="dispContrast" aria-label="Toggle high contrast"></button></div>
+<div class="disp-row"><span>Text size</span><div class="disp-seg"><button type="button" data-step="-1">A-</button><button type="button" data-step="0">A</button><button type="button" data-step="1">A+</button></div></div>
+</div>
 <script src="assets/config.js"></script><script src="assets/site.js"></script><script src="assets/extra.js" defer></script>'''
 
 
@@ -325,7 +344,7 @@ for i, (slug, ic, title, short, *_r) in enumerate(DEPTS):
     dept_cards += f'<a class="card dept {c}" href="{slug}.html">{ico(ic)}<h3>{title}</h3><p>{short}</p><span class="more">Learn more &rarr;</span></a>'
 
 home = f'''
-<section class="hero"><div class="container hero-grid">
+<section class="hero"><div class="hero-blobs" aria-hidden="true"><i></i><i></i><i></i></div><div class="container hero-grid">
 <div class="rv">
 <div class="eyebrow"><i></i> Better Research | Stronger Education | Brighter Futures</div>
 <h1>Education, research and digital solutions for <em class="rot" data-words="Rwanda|schools|organisations|communities">Rwanda</em>.</h1>
@@ -352,6 +371,11 @@ home = f'''
 </div></div></section>
 
 {APPS_HOME}
+
+<section class="section soft"><div class="container">
+<div class="section-head" style="text-align:center;max-width:640px;margin:0 auto"><div class="kicker">Not sure where to start?</div><h2>Find the right app in three taps</h2><p>Answer a couple of quick questions and we will point you to the product built for that.</p></div>
+<div class="wizard rv" id="appWizard"><noscript><p>Enable JavaScript to use this, or <a href="products.html">browse all our apps</a> directly.</p></noscript></div>
+</div></section>
 
 <section class="section sky" id="departments"><div class="container">
 <div class="section-head"><div><div class="kicker">Our departments</div><h2>Nine areas of expertise</h2></div>
@@ -471,6 +495,13 @@ home = f'''
 <div class="logo-marquee" aria-hidden="true"><div class="lm-track">{logo_strip()}{logo_strip()}</div></div>
 <div class="ptiles">{prod_tiles()}</div>
 <p style="margin-top:1.6rem"><a class="btn btn-primary" href="products.html">See all products</a> &nbsp; <a class="btn btn-sky" href="smart-school-app.html">Featured: Smart School App</a></p>
+</div></section>
+
+<section class="section"><div class="container">
+<div class="section-head"><div><div class="kicker">Nationwide reach</div><h2>Built with Rwanda's own school records</h2></div>
+<p>Smart School App's school picker draws on the national accredited-schools directory (NESA), across all five provinces. Tap a province to see it.</p></div>
+<div class="rw-panel" id="rwPanel">{"".join(f'<button type="button" class="rw-prov" data-districts="{dist}" data-sectors="{sec}" data-schools="{sch}"><b data-count="{sch}">{sch}</b><span>{p}</span></button>' for p, dist, sec, sch in RWANDA_PROVINCES)}</div>
+<div class="rw-detail" id="rwDetail"></div>
 </div></section>
 
 <section class="section sunny"><div class="container">

@@ -128,7 +128,11 @@
     modal.addEventListener('click', function (e) { if (e.target === modal) close(); });
     mi.addEventListener('input', function () { run(mi.value, mr); });
     $$('[data-search-open]').forEach(function (a) { a.addEventListener('click', function (e) { e.preventDefault(); open(); }); });
-    document.addEventListener('keydown', function (e) { if (e.key === 'Escape') close(); if (e.key === '/' && !/INPUT|TEXTAREA|SELECT/.test((document.activeElement || {}).tagName)) { e.preventDefault(); open(); } });
+    document.addEventListener('keydown', function (e) {
+      if (e.key === 'Escape') close();
+      if (e.key === '/' && !/INPUT|TEXTAREA|SELECT/.test((document.activeElement || {}).tagName)) { e.preventDefault(); open(); }
+      if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === 'k') { e.preventDefault(); open(); }
+    });
   }
 
   // ---------------- privacy notice and optional anonymous statistics (nothing is loaded without a choice)
@@ -177,6 +181,164 @@
       getJSON('content/' + file).catch(function () { return []; }).then(function (list) {
         var e = file === 'testimonials.json' ? { quote: $('#oText').value.trim(), name: name, role: $('#oRole').value.trim(), organisation: $('#oOrg').value.trim() } : file === 'team.json' ? { name: name, role: $('#oRole').value.trim(), bio: $('#oText').value.trim(), photo: $('#oPic').value.trim() } : { name: name, type: $('#oRole').value.trim(), logo: $('#oPic').value.trim(), url: '' };
         list.push(e); download(file, list);
+      });
+    });
+  }
+})();
+
+/* ---------------- engagement pass: scroll progress, header shadow, card tilt, display settings,
+   the "which app" wizard and the Rwanda reach panel. Same no-library, guarded-by-presence style
+   as the rest of this file. */
+(function () {
+  var $ = function (s, r) { return (r || document).querySelector(s); };
+  var $$ = function (s, r) { return Array.prototype.slice.call((r || document).querySelectorAll(s)); };
+  function esc(s) { return String(s == null ? '' : s).replace(/[&<>"']/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]; }); }
+  function store(k, v) { try { if (v === undefined) return localStorage.getItem(k); localStorage.setItem(k, v); } catch (e) { return null; } }
+  var reduced = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  // scroll progress bar + header elevation + floating buttons (hidden near the very top of the
+  // page, where they would sit over the hero's own buttons on shorter screens)
+  var bar = $('.scroll-progress'), header = $('.site-header'), waFloat = $('.wa-float'), dispToggle0 = $('.disp-toggle'), dispPanel0 = $('.disp-panel');
+  if (bar || header || waFloat || dispToggle0) {
+    var ticking = false;
+    function onScroll() {
+      if (ticking) return; ticking = true;
+      requestAnimationFrame(function () {
+        var h = document.documentElement, y = h.scrollTop, max = h.scrollHeight - h.clientHeight;
+        if (bar) bar.style.width = (max > 0 ? (y / max) * 100 : 0) + '%';
+        if (header) header.classList.toggle('scrolled', y > 8);
+        var past = y > 420;
+        if (waFloat) waFloat.classList.toggle('show', past);
+        if (dispToggle0) { dispToggle0.classList.toggle('show', past); if (!past && dispPanel0) dispPanel0.classList.remove('open'); }
+        ticking = false;
+      });
+    }
+    window.addEventListener('scroll', onScroll, { passive: true });
+    onScroll();
+  }
+
+  // card hover-tilt: only for a real mouse, and only when motion is welcome
+  if (window.matchMedia && window.matchMedia('(hover: hover) and (pointer: fine)').matches && !reduced) {
+    document.documentElement.classList.add('tilt-on');
+    document.addEventListener('mousemove', function (e) {
+      var el = e.target.closest && e.target.closest('.card, .dept, .prod-card');
+      if (!el) return;
+      var r = el.getBoundingClientRect();
+      var px = (e.clientX - r.left) / r.width - 0.5, py = (e.clientY - r.top) / r.height - 0.5;
+      el.style.setProperty('--tx', (px * 8).toFixed(2) + 'deg');
+      el.style.setProperty('--ty', (py * -8).toFixed(2) + 'deg');
+    });
+    document.addEventListener('mouseout', function (e) {
+      var el = e.target.closest && e.target.closest('.card, .dept, .prod-card');
+      if (el) { el.style.setProperty('--tx', '0deg'); el.style.setProperty('--ty', '0deg'); }
+    });
+  }
+
+  // display settings: dark mode, text size, high contrast - all three persisted, dark mode also
+  // seeded from the system preference the first time a visitor arrives
+  var root = document.documentElement;
+  // dark mode is opt-in only (not auto-applied from the OS preference): this site's colours were
+  // designed and checked for light mode, and silently flipping every dark-mode phone to a
+  // half-audited dark palette risks unreadable text for far more visitors than it helps
+  var theme = store('edu_theme') || 'light';
+  var textStep = Number(store('edu_textstep')) || 0; // -1, 0, 1
+  var contrast = store('edu_contrast') === 'high';
+  function applyDisplay() {
+    root.setAttribute('data-theme', theme);
+    if (contrast) root.setAttribute('data-contrast', 'high'); else root.removeAttribute('data-contrast');
+    root.style.fontSize = (100 + textStep * 12) + '%';
+  }
+  applyDisplay();
+
+  var dispToggle = $('.disp-toggle'), dispPanel = $('.disp-panel');
+  if (dispToggle && dispPanel) {
+    dispToggle.addEventListener('click', function () { dispPanel.classList.toggle('open'); });
+    document.addEventListener('click', function (e) { if (!dispPanel.contains(e.target) && e.target !== dispToggle) dispPanel.classList.remove('open'); });
+    var darkSwitch = $('#dispDark', dispPanel);
+    if (darkSwitch) {
+      darkSwitch.classList.toggle('on', theme === 'dark');
+      darkSwitch.addEventListener('click', function () { theme = theme === 'dark' ? 'light' : 'dark'; store('edu_theme', theme); darkSwitch.classList.toggle('on', theme === 'dark'); applyDisplay(); });
+    }
+    var hcSwitch = $('#dispContrast', dispPanel);
+    if (hcSwitch) {
+      hcSwitch.classList.toggle('on', contrast);
+      hcSwitch.addEventListener('click', function () { contrast = !contrast; store('edu_contrast', contrast ? 'high' : ''); hcSwitch.classList.toggle('on', contrast); applyDisplay(); });
+    }
+    $$('.disp-seg button', dispPanel).forEach(function (b) {
+      b.classList.toggle('on', Number(b.dataset.step) === textStep);
+      b.addEventListener('click', function () {
+        textStep = Number(b.dataset.step); store('edu_textstep', String(textStep));
+        $$('.disp-seg button', dispPanel).forEach(function (x) { x.classList.toggle('on', x === b); });
+        applyDisplay();
+      });
+    });
+  }
+
+  // "which app is right for you?" wizard (homepage only - no-op elsewhere)
+  var wiz = $('#appWizard');
+  if (wiz) {
+    var RESULTS = {
+      smartschool: { name: 'Smart School App', href: 'smart-school-app.html', logo: 'assets/ssa-logo-96.png', text: 'Works fully offline on Windows and Android, with the whole Primary 1 to 6 curriculum, exams and reports built in.' },
+      cloud: { name: 'Smart School Cloud', href: 'smart-school-cloud.html', logo: 'assets/ssa-logo-96.png', text: 'The same Smart School App, open in a browser, with records synced automatically between devices.' },
+      ikimina: { name: 'Ikimina', href: 'savings-groups.html', logo: 'assets/ikimina-192.png', text: 'Track contributions, loans and meetings for your savings group, from any phone.' },
+      fmis: { name: 'FMIS', href: 'field-management.html', logo: 'assets/fmis-96.png', text: 'Collect field data with forms, GPS and photos, assign tasks and see it all on one dashboard.' },
+      amategeko: { name: "Amategeko y'Umuhanda", href: 'road-code.html', logo: 'assets/amategeko-192.png', text: 'Practice the official Rwanda road code questions and signs, with a free sample and full offline access.' },
+      products: { name: 'all our apps', href: 'products.html', logo: 'assets/logo-horizontal.webp', text: "Here's everything we build, so you can browse and pick what fits." }
+    };
+    var STEPS = {
+      root: { q: 'Who is this mainly for?', opts: [
+        { t: 'A school', i: '🏫', to: 'school' },
+        { t: 'A savings group or community', i: '💰', to: 'RESULT', r: 'ikimina' },
+        { t: 'A field team or organisation', i: '🧭', to: 'RESULT', r: 'fmis' },
+        { t: 'A family or one learner', i: '👪', to: 'family' }
+      ] },
+      school: { q: 'Should it work with no internet at all?', opts: [
+        { t: 'Yes, fully offline', i: '📶', to: 'RESULT', r: 'smartschool' },
+        { t: 'Online access is fine too', i: '☁️', to: 'RESULT', r: 'cloud' }
+      ] },
+      family: { q: 'What do they need?', opts: [
+        { t: 'Reading, maths and school subjects', i: '📚', to: 'RESULT', r: 'smartschool' },
+        { t: 'Learning the road code', i: '🚗', to: 'RESULT', r: 'amategeko' },
+        { t: 'Not sure, show me everything', i: '🔎', to: 'RESULT', r: 'products' }
+      ] }
+    };
+    var hist = ['root'];
+    function progress() { return '<div class="wizard-progress"><i class="done"></i>' + (hist.length > 1 ? '<i class="done"></i>' : '<i></i>') + '</div>'; }
+    function renderStep(key) {
+      var s = STEPS[key];
+      wiz.innerHTML = progress() + '<p class="wizard-q">' + esc(s.q) + '</p><div class="wizard-opts">' +
+        s.opts.map(function (o, idx) { return '<button class="wizard-opt" type="button" data-idx="' + idx + '"><span>' + o.i + '</span> ' + esc(o.t) + '</button>'; }).join('') + '</div>' +
+        (hist.length > 1 ? '<button class="wizard-back" type="button" data-back>&larr; Back</button>' : '');
+      $$('.wizard-opt', wiz).forEach(function (b) {
+        b.addEventListener('click', function () {
+          var o = s.opts[Number(b.dataset.idx)];
+          if (o.to === 'RESULT') { hist.push('RESULT'); renderResult(o.r); } else { hist.push(o.to); renderStep(o.to); }
+        });
+      });
+      var back = $('[data-back]', wiz); if (back) back.addEventListener('click', function () { hist.pop(); renderStep(hist[hist.length - 1]); });
+    }
+    function renderResult(key) {
+      var r = RESULTS[key];
+      wiz.innerHTML = progress() + '<div class="wizard-result"><img src="' + esc(r.logo) + '" alt="" width="64" height="64" loading="lazy"><div><h3 style="margin:0 0 .3rem">' + esc(r.name) + '</h3><p style="margin:0 0 .8rem">' + esc(r.text) + '</p><a class="btn btn-primary btn-sm" href="' + esc(r.href) + '">Explore ' + esc(r.name) + '</a></div></div><button class="wizard-back" type="button" data-restart>Start over</button>';
+      $('[data-restart]', wiz).addEventListener('click', function () { hist = ['root']; renderStep('root'); });
+    }
+    renderStep('root');
+  }
+
+  // Rwanda reach panel: numbers are already in the markup (server-rendered from the accredited-
+  // schools directory), this only wires up the click-to-see-detail interaction
+  var rwPanel = $('#rwPanel'), rwDetail = $('#rwDetail');
+  if (rwPanel && rwDetail) {
+    $$('.rw-prov', rwPanel).forEach(function (btn) {
+      btn.addEventListener('click', function () {
+        var already = btn.classList.contains('on');
+        $$('.rw-prov', rwPanel).forEach(function (b) { b.classList.remove('on'); });
+        if (already) { rwDetail.classList.remove('on'); rwDetail.innerHTML = ''; return; }
+        btn.classList.add('on');
+        rwDetail.classList.add('on');
+        rwDetail.innerHTML = '<div><b>' + esc(btn.dataset.districts) + '</b><span>Districts</span></div>' +
+          '<div><b>' + esc(btn.dataset.sectors) + '</b><span>Sectors</span></div>' +
+          '<div><b>' + esc(btn.dataset.schools) + '</b><span>Accredited schools (NESA)</span></div>';
       });
     });
   }
