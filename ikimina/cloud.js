@@ -21,6 +21,9 @@
   function fnv(s) { let h = 0x811c9dc5; for (let i = 0; i < s.length; i++) { h ^= s.charCodeAt(i); h = Math.imul(h, 0x01000193); } return (h >>> 0).toString(36) + s.length.toString(36); }
   const hashOf = (o) => fnv(canon(o));
 
+    // The free server sleeps when idle and needs up to a minute to wake: ask it to wake up as soon as the app opens, so the first sync is quick
+  try { if (navigator.onLine !== false && typeof fetch === 'function') fetch(base().replace('/v1/acct', '/v1/public/status'), { method: 'GET' }).catch(function () {}); } catch (e) { /* ignore */ }
+
   function say(state, msg) { status = { state, msg: msg || '' }; const el = document.getElementById('cloudStatus'); if (el) el.textContent = statusText(); }
   function statusText() {
     if (status.state === 'syncing') return 'Syncing…';
@@ -32,7 +35,7 @@
 
   function call(method, path, body, auth) {
     const ctl = typeof AbortController === 'function' ? new AbortController() : null;
-    const to = ctl ? setTimeout(() => ctl.abort(), 30000) : null;     // the free server can take a while to wake up
+    const to = ctl ? setTimeout(() => ctl.abort(), 65000) : null;     // the free server can take a while to wake up
     const headers = { 'Content-Type': 'application/json' };
     if (auth !== false && cl()) headers.Authorization = 'Bearer ' + cl().token;
     return fetch(base() + path, { method, headers, body: body === undefined ? undefined : JSON.stringify(body), signal: ctl ? ctl.signal : undefined })

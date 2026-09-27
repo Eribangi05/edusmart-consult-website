@@ -404,7 +404,70 @@ def company_brochure():
     d.build()
 
 
+# ================================================================== FMIS
+def fmis_guide():
+    d = Doc("FMIS-guide", "FMIS guide")
+    d.cover(cover_block("FMIS<br><em>Field Management</em>", "Collect data, manage your team, follow progress and report, in the field and at the office.",
+                        ["Web", "Windows", "Android", "Works offline", "Cloud sync"],
+                        [("11", "question types"), ("5", "roles"), ("3", "platforms")],
+                        '<div style="position:absolute;left:14mm;right:14mm;top:0"><div style="width:156mm">' + win(IMG + "fmis-d-dashboard.jpg", "FMIS") + '</div>' +
+                        '<div style="position:absolute;right:0;top:16mm">' + phone(IMG + "fmis-m-dashboard.jpg", "width:46mm") + '</div></div>', "fmis-192.png", 130))
+
+    d.page(head("What it does", "One system for the whole field programme", "Forms, tasks, check-in, review, reports and messages, on the phone in the field and on the computer at the office.") +
+           win(IMG + "fmis-d-dashboard.jpg", "Dashboard", [(20, 30), (15, 75)]) + '<p class="cap">The dashboard shows the submissions this week, the team in the field, overdue tasks and the review queue.</p>' +
+           '<div class="g3" style="margin-top:3mm">' + fc("pencil-simple-line", "c3", "Forms and data collection", "Text, numbers, choices, dates, ratings, GPS and photos, with required answers and limits.", True) + fc("map-pin", "c5", "GPS check-in and field map", "Check in and out, and see where data was collected, with no internet.", True) +
+           fc("target", "c6", "Tasks and projects", "Assign work, set due dates, follow progress and notes from the field.", True) + fc("shield-check", "c2", "Review and quality", "Approve, return for correction or reject each submission with a note.", True) +
+           fc("users-three", "c4", "Team and roles", "Add people or import a CSV list. Five roles decide who sees what.", True) + fc("chart-bar", "c1", "Reports and exports", "Print summary reports as PDF and export to Excel.", True) + '</div>')
+
+    d.page(head("Data collection", "Build a form, collect, review", "Design a form in minutes. Field agents fill it on a phone, even with no signal. Supervisors review the same day.") +
+           '<div class="row"><div style="flex:1.2">' + win(IMG + "fmis-d-builder.jpg", "Form builder", [(60, 30), (60, 58)]) + '<p class="cap">The form builder: choose a type for each question and mark it required.</p></div>' +
+           '<div style="flex:1.2">' + win(IMG + "fmis-d-review.jpg", "Review", [(50, 30), (50, 60)]) + '<p class="cap">Review: every answer, the photo and the GPS point in one place.</p></div></div>' +
+           steps([("Build", "Create the form and publish it."), ("Collect", "Field agents fill it on a phone. Drafts are saved."), ("Review", "Approve, return or reject with a note."), ("Export", "Excel, PDF and summaries.")]) +
+           '<div class="row" style="margin-top:4mm"><div style="flex:1">' + phone(IMG + "fmis-m-fill.jpg", "width:44mm") + '</div><div style="flex:2"><h2 class="s">On the phone in the field</h2>' + ck(["Works with no internet, and sends the data when the phone is online", "GPS point and photo for each visit", "Required answers and number limits keep the data clean", "Approved data is locked so it cannot be changed later"]) + '</div></div>')
+
+    d.page(head("Team and follow-up", "Tasks, check-in, map and reports", "Everything a supervisor needs to keep the work on track.") +
+           '<div class="row"><div style="flex:1.2">' + win(IMG + "fmis-d-tasks.jpg", "Tasks", [(30, 30), (30, 55)]) + '<p class="cap">Tasks with due dates, overdue flags and notes.</p></div>' +
+           '<div style="flex:1.2">' + win(IMG + "fmis-d-map.jpg", "Field map", [(50, 35), (25, 70)]) + '<p class="cap">Field map: points by review status, with no map tiles needed.</p></div></div>' +
+           '<div class="row" style="margin-top:3mm"><div style="flex:1.6">' + win(IMG + "fmis-d-reports.jpg", "Reports", [(50, 30)]) + '<p class="cap">Summary reports for donors and partners, ready to print or save as PDF.</p></div><div style="flex:.7;text-align:center">' + phone(IMG + "fmis-m-attendance.jpg", "width:40mm") + '</div></div>')
+
+    d.page(head("Roles and sync", "Everyone sees what they should", "The server, not just the screen, decides who can read and change what.") +
+           '<table class="tb"><tr><th>Role</th><th>What they do</th><th>What they see</th></tr><tr><td>Admin</td><td>Owns the workspace and the team</td><td>Everything</td></tr><tr><td>Manager</td><td>Runs projects, builds forms, reviews</td><td>Everything except settings</td></tr><tr><td>Supervisor</td><td>Assigns tasks, reviews work</td><td>All field work</td></tr><tr><td>Field agent</td><td>Collects data, checks in, reports</td><td>Own work and published forms</td></tr><tr><td>Viewer</td><td>Read only, for funders and partners</td><td>Projects, tasks, approved data</td></tr></table>' +
+           '<h2 class="s" style="margin-top:5mm">Connect your team in five steps</h2>' + steps([("Create", "The Admin creates the workspace."), ("Sync", "Turn on cloud sync in Settings."), ("Invite", "Send each person a one-time code."), ("Join", "They enter the code and their own phone number."), ("Work", "Data flows both ways, offline first.")]) +
+           '<div class="g2" style="margin-top:4mm">' + fc("lock-key", "c1", "You stay in control", "Backups in one button. The Admin can remove anyone's access at once.", True) + fc("wifi-high", "c4", "Works with poor networks", "Changes wait on the phone and are sent when it is online.", True) + '</div>' +
+           cta("Start your workspace today", "Open the web app at www.edusmartconsult.com/fmis or ask us to set it up and train your team."))
+    d.build()
+
+
+# ================================================================== IKIMINA
+def ikimina_guide():
+    d = Doc("Ikimina-guide", "Ikimina guide")
+    d.cover(cover_block("<em>Ikimina</em><br>Savings groups", "Run your savings group with clear records: contributions, loans, rotation and reports.",
+                        ["Web", "Windows", "Android", "Works offline", "Cloud sync"],
+                        [("3", "roles"), ("4", "contribution cycles"), ("8", "reports")],
+                        '<div style="position:absolute;left:14mm;right:14mm;top:0"><div style="width:156mm">' + win(IMG + "iki-d-dashboard.jpg", "Ikimina") + '</div>' +
+                        '<div style="position:absolute;right:0;top:16mm">' + phone(IMG + "iki-m-dashboard.jpg", "width:46mm") + '</div></div>', "ikimina-192.png", 130))
+
+    d.page(head("What it does", "Clear books for your group", "Contributions, loans with interest, rotation, income and expenses, with the right access for the President, the Accountant and members.") +
+           win(IMG + "iki-d-loans.jpg", "Loans", [(25, 40), (60, 40)]) + '<p class="cap">Loans with a repayment schedule, balances and overdue warnings.</p>' +
+           '<div class="g3" style="margin-top:3mm">' + fc("users-three", "c4", "Members and roles", "The President approves, the Accountant records, members see their own savings.", True) + fc("target", "c3", "Contributions", "Daily, weekly, every two weeks or monthly, with more than one share allowed.", True) +
+           fc("chart-bar", "c6", "Loans", "Flat or declining interest, a maximum based on savings, and late penalties.", True) + fc("clock", "c5", "Rotation", "Set the order, record each payout and see whose turn is next.", True) +
+           fc("pencil-simple-line", "c2", "Requests and meetings", "Loan requests, absence notices, meeting notes and announcements.", True) + fc("file-text", "c1", "Reports", "PDF statements, share-out calculator and Excel exports.", True) + '</div>')
+
+    d.page(head("Members and reports", "Everyone in the group, every shilling accounted for", "") +
+           '<div class="row"><div style="flex:1.2">' + win(IMG + "iki-d-members.jpg", "Members", [(35, 35), (75, 35)]) + '<p class="cap">The members register with savings, arrears and a reliability score.</p></div>' +
+           '<div style="flex:1.2">' + win(IMG + "iki-d-reports.jpg", "Reports", [(30, 35), (60, 55)]) + '<p class="cap">Statements, share-out calculator and exports.</p></div></div>' +
+           '<div class="row" style="margin-top:4mm"><div style="flex:1.4">' + win(IMG + "iki-d-rotation.jpg", "Rotation", [(50, 35)]) + '<p class="cap">Rotation and pot payouts.</p></div><div style="flex:.7;text-align:center">' + phone(IMG + "iki-m-member.jpg", "width:40mm") + '<p class="cap">A member sees only their own savings and loans.</p></div></div>')
+
+    d.page(head("Sync and safety", "One set of books on every officer's device", "Turn on cloud sync so the President and the Accountant see the same figures, while members see only their own records.") +
+           steps([("Turn on", "The President turns on cloud sync."), ("Invite", "Send each officer or member a code."), ("Join", "They enter it with their own phone number."), ("Work", "Payments recorded by the Accountant reach the President.")]) +
+           '<div class="g2" style="margin-top:4mm">' + fc("lock-key", "c1", "Your data stays yours", "Everything is saved on the device first. Backups take one button.", True) + fc("shield-check", "c2", "Members are protected", "The server sends members only their own records and the group notices.", True) +
+           fc("wifi-high", "c4", "Works offline", "Record payments at the meeting with no signal. It syncs later.", True) + fc("translate", "c6", "Three languages", "Kinyarwanda, English and French.", True) + '</div>' +
+           '<div class="row" style="margin-top:4mm"><div style="flex:1">' + phone(IMG + "iki-m-menu.jpg", "width:42mm") + '</div><div style="flex:2"><h2 class="s">Good to know</h2>' + ck(["The demo group uses the PIN 1234 for everyone", "Records live on one device until sync is on", "Payments are recorded as cash or mobile money with a reference; the app does not move money", "Save a backup regularly from Reports"]) + '</div></div>' +
+           cta("Try Ikimina now", "Open www.edusmartconsult.com/ikimina, or ask us about the Windows and Android apps."))
+    d.build()
+
+
 if __name__ == "__main__":
-    which = sys.argv[1:] or ["app", "cloud", "amategeko", "company"]
+    which = sys.argv[1:] or ["app", "cloud", "amategeko", "company", "fmis", "ikimina"]
     for w in which:
-        {"app": app_guide, "cloud": cloud_guide, "amategeko": amategeko_guide, "company": company_brochure}[w]()
+        {"app": app_guide, "cloud": cloud_guide, "amategeko": amategeko_guide, "company": company_brochure, "fmis": fmis_guide, "ikimina": ikimina_guide}[w]()

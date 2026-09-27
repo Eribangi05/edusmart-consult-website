@@ -21,6 +21,9 @@
   const friendly = (j) => (j && j.message) || 'That did not work. Try again.';
   const netMsg = 'Could not reach the server. Check your internet connection and try again.';
 
+    // The free server sleeps when idle and needs up to a minute to wake: ask it to wake up as soon as the app opens, so the first sync is quick
+  try { if (navigator.onLine !== false && typeof fetch === 'function') fetch(base().replace('/v1/acct', '/v1/public/status'), { method: 'GET' }).catch(function () {}); } catch (e) { /* ignore */ }
+
   function paintDot() {
     const d = document.getElementById('syncdot'); if (!d) return;
     const map = { idle: ['#8aa0aa', linked() ? 'Sync on' : 'Sync off (this device only)'], syncing: ['#f5a623', 'Syncing…'], ok: ['#1a9f6e', 'Synced'], error: ['#d64545', status.msg || 'Sync problem'] };
@@ -32,7 +35,7 @@
     const c = cl(); return c && c.lastSync ? 'Last synced ' + new Date(c.lastSync).toLocaleString() : '';
   }
   function call(method, path, body, auth) {
-    const ctl = typeof AbortController === 'function' ? new AbortController() : null; const to = ctl ? setTimeout(() => ctl.abort(), 30000) : null;   // the free server can take a while to wake up
+    const ctl = typeof AbortController === 'function' ? new AbortController() : null; const to = ctl ? setTimeout(() => ctl.abort(), 65000) : null;   // the free server can take a while to wake up
     const headers = { 'Content-Type': 'application/json' }; if (auth !== false && cl()) headers.Authorization = 'Bearer ' + cl().token;
     return fetch(base() + path, { method, headers, body: body === undefined ? undefined : JSON.stringify(body), signal: ctl ? ctl.signal : undefined })
       .then((r) => { if (to) clearTimeout(to); return r.json().catch(() => ({})).then((j) => { j._status = r.status; return j; }); });

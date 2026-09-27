@@ -35,7 +35,7 @@ ik = hero_page("Savings groups", "Ikimina", "Run your savings group with clear r
 <div><div class="kicker">Try it now</div><h2>Open it in your browser</h2>
 <p>No download and no sign up. Start with the demo group to look around, or create your own group in two minutes. Everything you enter stays in your own browser.</p>
 <ol class="next"><li>Press <b>Open the web app</b>.</li><li>Choose <b>Explore with demo data</b> to see a full group, or <b>Create my group</b> to start yours.</li><li>In the demo, sign in as any member with the PIN <b>1234</b>.</li><li>Use <b>Reports</b> to save a backup of your data.</li></ol>
-<p style="margin-top:1.2rem"><a class="btn btn-gold" href="ikimina/">Open the web app</a> <a class="btn btn-outline" href="contact.html?topic={_ik_topic}#form">Ask about Windows or Android</a></p></div>
+<p style="margin-top:1.2rem"><a class="btn btn-gold" href="ikimina/">Open the web app</a> <a class="btn btn-outline" href="assets/downloads/Ikimina-Android-1.1.0.apk" download>Android app</a> <a class="btn btn-outline" href="{R2_BASE}/Ikimina-Setup-1.1.0.exe" download>Windows installer</a> <a class="btn btn-outline" href="assets/brochures/Ikimina-guide.pdf" download>Guide (PDF)</a></p></div>
 <div class="grid" style="gap:1rem">
 <img src="assets/products/ikimina.png" alt="Ikimina logo" width="140" height="140" style="width:min(140px,50%);height:auto;margin:0 auto .4rem;display:block">
 <div class="card">{ico("target")}<h3>Demo group</h3><p>Twisungane Ikimina, a sample group with 13 members, loans, meetings and months of history, so you can try every screen.</p></div>
@@ -83,7 +83,7 @@ ik = hero_page("Savings groups", "Ikimina", "Run your savings group with clear r
 </div>
 <div class="reach-actions">
 <a class="btn btn-gold" href="ikimina/">Open the web app</a>
-<a class="btn btn-ghost-light" href="contact.html?topic={_ik_topic}#form">Ask about Windows or Android</a>
+<a class="btn btn-ghost-light" href="assets/brochures/Ikimina-guide.pdf" download>Download the guide (PDF)</a>
 </div></div></div></section>'''
 add("savings-groups.html", "Ikimina | Savings group manager in your browser", "Manage a savings group (ikimina, VSLA or tontine) in your browser: contributions, loans, rotation, reports and roles for the President, Accountant and members.", "products", ik,
     ld=ld_bc([("Home", ""), ("Products", "products.html"), ("Ikimina", "savings-groups.html")]))

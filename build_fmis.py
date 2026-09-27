@@ -35,7 +35,7 @@ fm = hero_page("Field management", "FMIS", "Field Management Information System:
 <div><div class="kicker">Try it now</div><h2>One workspace for your whole field team</h2>
 <p>FMIS is for any institution, project or individual that collects data and manages people in the field: surveys, monitoring, inspections, programme delivery and reporting. Everything works on the device with no internet. When you turn on cloud sync, the team shares one workspace and reports arrive as soon as a phone is online.</p>
 <ol class="next"><li>Press <b>Open the web app</b> and choose <b>Explore with demo data</b>, or <b>Create a workspace</b>.</li><li>Sign in as any person in the demo. The PIN is <b>1234</b>.</li><li>Look at the forms, submissions, tasks, map and reports.</li><li>To use it for real, create your workspace, add your team and turn on cloud sync.</li></ol>
-<p style="margin-top:1.2rem"><a class="btn btn-gold" href="fmis/">Open the web app</a> <a class="btn btn-outline" href="assets/downloads/FMIS-Android-1.0.0.apk" download>Android app (APK)</a> <a class="btn btn-outline" href="contact.html?topic={_fm_topic}#form">Ask for the Windows installer</a></p></div>
+<p style="margin-top:1.2rem"><a class="btn btn-gold" href="fmis/">Open the web app</a> <a class="btn btn-outline" href="assets/downloads/FMIS-Android-1.0.0.apk" download>Android app (APK)</a> <a class="btn btn-outline" href="{R2_BASE}/FMIS-Setup-1.0.0.exe" download>Windows installer</a> <a class="btn btn-outline" href="assets/brochures/FMIS-guide.pdf" download>Guide (PDF)</a></p></div>
 <div class="grid" style="gap:1rem">
 <img src="assets/fmis-192.png" alt="FMIS logo" width="180" height="180" style="width:min(180px,55%);height:auto;margin:0 auto .4rem;display:block;filter:drop-shadow(0 12px 24px rgba(6,48,122,.25))">
 <div class="card">{ico("target")}<h3>Demo workspace</h3><p>A household survey team with 11 people, forms, tasks, GPS points and reports, so you can try every screen and every role.</p></div>
@@ -97,7 +97,7 @@ fm = hero_page("Field management", "FMIS", "Field Management Information System:
 <div class="reach-actions">
 <a class="btn btn-gold" href="fmis/">Open the web app</a>
 <a class="btn btn-ghost-light" href="assets/downloads/FMIS-Android-1.0.0.apk" download>Android app (APK)</a>
-<a class="btn btn-ghost-light" href="contact.html?topic={_fm_topic}#form">Ask about Windows or training</a>
+<a class="btn btn-ghost-light" href="assets/brochures/FMIS-guide.pdf" download>Download the guide (PDF)</a>
 </div></div></div></section>'''
 add("field-management.html", "FMIS | Field Management Information System", "FMIS is a field management system for data collection, tasks, GPS check-in, reports and team management. Works offline on Windows, Android and the web, with cloud sync for teams.", "products", fm,
     ld=ld_bc([("Home", ""), ("Products", "products.html"), ("FMIS", "field-management.html")]))

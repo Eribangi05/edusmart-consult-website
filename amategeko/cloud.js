@@ -17,6 +17,9 @@
     return JSON.stringify(v);
   }
   function deviceId() { return 'dev-' + Math.random().toString(36).slice(2) + Date.now().toString(36); }
+    // The free server sleeps when idle and needs up to a minute to wake: ask it to wake up as soon as the app opens, so the first sync is quick
+  try { if (navigator.onLine !== false && typeof fetch === 'function') fetch(base().replace('/v1/acct', '/v1/public/status'), { method: 'GET' }).catch(function () {}); } catch (e) { /* ignore */ }
+
   function say(state, msg) { status = { state: state, msg: msg || '' }; var el = document.getElementById('cloudStatus'); if (el) el.textContent = statusText(); }
   function statusText() {
     if (!signedIn()) return '';
@@ -28,7 +31,7 @@
 
   function call(method, path, body, needAuth) {
     var ctl = typeof AbortController === 'function' ? new AbortController() : null;
-    var to = ctl ? setTimeout(function () { ctl.abort(); }, 30000) : null;   // the free server can take a while to wake up
+    var to = ctl ? setTimeout(function () { ctl.abort(); }, 65000) : null;   // the free server can take a while to wake up
     var headers = { 'Content-Type': 'application/json' };
     if (needAuth !== false && signedIn()) headers.Authorization = 'Bearer ' + S.cloud.token;
     return fetch(base() + path, { method: method, headers: headers, body: body === undefined ? undefined : JSON.stringify(body), signal: ctl ? ctl.signal : undefined })
