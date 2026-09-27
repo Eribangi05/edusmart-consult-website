@@ -117,6 +117,7 @@ def header(active):
            '<a href="search.html">Search the site<small>Find pages and products</small></a>')
     about = ('<a href="about.html">About us<small>Who we are</small></a>'
              '<a href="team.html">Our team<small>The people behind the work</small></a>'
+             '<a href="impact.html">Impact<small>Numbers behind the products</small></a>'
              '<a href="partners.html">Partners and careers<small>Work and grow with us</small></a>')
     return f'''<a class="skip" href="#main">Skip to content</a>
 <div class="scroll-progress" aria-hidden="true"></div>
@@ -143,7 +144,7 @@ FOOTER = f'''<section class="cta"><div class="container"><h2>Talk to us about yo
 <p>Better Research | Stronger Education | Brighter Futures</p></div>
 <div><h4>Departments</h4><a href="education-training.html">Education and Training</a><a href="inclusive-education.html">Inclusive Education</a><a href="research-consulting.html">Research and Consulting</a><a href="elearning.html">E-Learning</a><a href="software-development.html">Software Development</a><a href="index.html#departments">All departments</a></div>
 <div><h4>Products</h4><a href="smart-school-app.html">Smart School App</a><a href="smart-school-cloud.html">Smart School Cloud</a><a href="apps.html">All web apps</a><a href="road-code.html">Amategeko y'Umuhanda</a><a href="savings-groups.html">Ikimina</a><a href="field-management.html">FMIS</a><a href="tour.html">Take the tour</a><a href="pricing.html">Pricing</a><a href="downloads.html">Downloads</a><a href="products.html">All products</a></div>
-<div><h4>Company</h4><a href="about.html">About us</a><a href="team.html">Our team</a><a href="news.html">News and tips</a><a href="stories.html">Success stories</a><a href="partners.html">Partners and careers</a><a href="request.html">Request a demo</a></div>
+<div><h4>Company</h4><a href="about.html">About us</a><a href="team.html">Our team</a><a href="impact.html">Impact</a><a href="news.html">News and tips</a><a href="stories.html">Success stories</a><a href="partners.html">Partners and careers</a><a href="request.html">Request a demo</a></div>
 </div>
 <div class="foot-contact"><span>Itetero, Nyagatovu, Kimironko, Gasabo, Kigali, Rwanda</span><a data-phone href="#">+250 782 368 555</a><a data-email href="#">email</a></div>
 <div class="foot-legal"><a href="privacy.html">Privacy</a><a href="terms.html">Terms</a><a href="security.html">Security</a><a href="child-safety.html">Child safety</a><a href="help.html">Help centre</a><a href="status.html">Status</a></div>
@@ -372,8 +373,8 @@ home = f'''
 
 {APPS_HOME}
 
-<section class="section soft"><div class="container">
-<div class="section-head" style="text-align:center;max-width:640px;margin:0 auto"><div class="kicker">Not sure where to start?</div><h2>Find the right app in three taps</h2><p>Answer a couple of quick questions and we will point you to the product built for that.</p></div>
+<section class="section soft tight"><div class="container">
+<div class="section-head"><div><div class="kicker">Not sure where to start?</div><h2>Find the right app in three taps</h2></div><p>Answer a couple of quick questions and we will point you to the product built for that.</p></div>
 <div class="wizard rv" id="appWizard"><noscript><p>Enable JavaScript to use this, or <a href="products.html">browse all our apps</a> directly.</p></noscript></div>
 </div></section>
 
@@ -844,7 +845,12 @@ privacy = hero_page("Privacy", "Privacy", "How this website and our products han
 </div></section>'''
 page("privacy.html", "Privacy | EduSmart Consult", "Privacy information for the EduSmart Consult website, Smart School App and Smart School Cloud.", "", privacy)
 
-nf = hero_page("Page not found", "Page not found", "The page you asked for is not here.") + '<section class="section"><div class="container"><a class="btn btn-primary" href="index.html">Go to the home page</a></div></section>'
+nf = hero_page("Page not found", "Page not found", "The page you asked for may have moved, or the link may be out of date. Try a search, or one of the links below.") + f'''
+<section class="section"><div class="container" style="max-width:860px">
+<form class="sform" role="search" onsubmit="return false"><input id="siteQ" type="search" placeholder="Search for a product, service or guide" autocomplete="off" aria-label="Search the site" autofocus><button class="btn btn-primary" type="button" id="siteGo">Search</button></form>
+<div id="siteResults" class="results" aria-live="polite"><p class="muted">Type at least two letters, or try one of these:</p></div>
+<p style="margin-top:1.6rem"><a class="btn btn-primary" href="index.html">Go to the home page</a> <a class="btn btn-outline" href="products.html">See all products</a> <a class="btn btn-outline" href="contact.html">Contact us</a></p>
+</div></section>'''
 page("404.html", "Page not found | EduSmart Consult", "Page not found.", "", nf)
 
 exec(open(os.path.join(ROOT, "build2.py"), encoding="utf-8").read())

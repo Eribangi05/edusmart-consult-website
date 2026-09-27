@@ -58,6 +58,28 @@
     });
   }
 
+  // ---------------- news email subscribe (posts to the same form endpoint as the contact form)
+  var subForm = $('#subForm');
+  if (subForm) {
+    subForm.addEventListener('submit', function (e) {
+      e.preventDefault();
+      var email = $('#subEmail', subForm).value.trim();
+      var msg = $('#subMsg');
+      var btn = subForm.querySelector('button');
+      function done(text) { msg.textContent = text; msg.classList.add('show'); subForm.reset(); }
+      btn.disabled = true;
+      if (C.formEndpoint) {
+        fetch(C.formEndpoint, { method: 'POST', headers: { 'Accept': 'application/json', 'Content-Type': 'application/json' }, body: JSON.stringify({ email: email, _subject: 'News subscribe: ' + email }) })
+          .then(function (r) { if (!r.ok) throw new Error(); done('Thanks - you are on the list.'); })
+          .catch(function () { done('That did not go through. Please email ' + C.email + ' to subscribe.'); })
+          .then(function () { btn.disabled = false; });
+      } else {
+        location.href = 'mailto:' + C.email + '?subject=' + encodeURIComponent('Subscribe me to news updates') + '&body=' + encodeURIComponent('My email: ' + email);
+        done('Your email app has opened. Send it and we will add you.'); btn.disabled = false;
+      }
+    });
+  }
+
   // ---------------- news filter
   var nq = $('#newsQ');
   if (nq) {
@@ -277,6 +299,18 @@
   // "which app is right for you?" wizard (homepage only - no-op elsewhere)
   var wiz = $('#appWizard');
   if (wiz) {
+    var ICON = {
+      school: '<path d="M12 3 2 8l10 5 10-5-10-5Z"/><path d="M6 10.5V16c0 1.5 3 3 6 3s6-1.5 6-3v-5.5"/><path d="M22 8v6"/>',
+      coins: '<ellipse cx="9" cy="7" rx="6" ry="3"/><path d="M3 7v4c0 1.66 2.69 3 6 3s6-1.34 6-3V7"/><path d="M3 11v4c0 1.66 2.69 3 6 3"/><ellipse cx="16" cy="15" rx="5" ry="2.5"/><path d="M11 15v3c0 1.1 2.24 2 5 2s5-.9 5-2v-3"/>',
+      compass: '<circle cx="12" cy="12" r="9"/><path d="m14.5 9.5-2 5-5 2 2-5 5-2Z"/>',
+      family: '<circle cx="8" cy="8" r="3"/><path d="M2 20c0-3 2.5-5 6-5s6 2 6 5"/><circle cx="17" cy="7" r="2.4"/><path d="M14.7 20c.2-2.4 1.4-4 3.3-4.4"/>',
+      wifi: '<path d="M2 8.5a15 15 0 0 1 20 0"/><path d="M5.5 12.5a10 10 0 0 1 13 0"/><path d="M9 16.5a5 5 0 0 1 6 0"/><circle cx="12" cy="20" r="1" fill="currentColor" stroke="none"/>',
+      cloud: '<path d="M7 18a4 4 0 0 1-.5-8A6 6 0 0 1 18 9.5 4.3 4.3 0 0 1 17.5 18Z"/>',
+      book: '<path d="M4 5.5A2.5 2.5 0 0 1 6.5 3H20v16H6.5A2.5 2.5 0 0 0 4 21.5Z"/><path d="M4 21.5A2.5 2.5 0 0 1 6.5 19H20"/>',
+      car: '<path d="M4 16V11l2-4h12l2 4v5"/><path d="M4 16h16"/><circle cx="7.5" cy="17.5" r="1.5"/><circle cx="16.5" cy="17.5" r="1.5"/>',
+      search: '<circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/>'
+    };
+    function icon(name, col) { return '<span class="ico ' + (col || '') + '"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">' + ICON[name] + '</svg></span>'; }
     var RESULTS = {
       smartschool: { name: 'Smart School App', href: 'smart-school-app.html', logo: 'assets/ssa-logo-96.png', text: 'Works fully offline on Windows and Android, with the whole Primary 1 to 6 curriculum, exams and reports built in.' },
       cloud: { name: 'Smart School Cloud', href: 'smart-school-cloud.html', logo: 'assets/ssa-logo-96.png', text: 'The same Smart School App, open in a browser, with records synced automatically between devices.' },
@@ -285,21 +319,22 @@
       amategeko: { name: "Amategeko y'Umuhanda", href: 'road-code.html', logo: 'assets/amategeko-192.png', text: 'Practice the official Rwanda road code questions and signs, with a free sample and full offline access.' },
       products: { name: 'all our apps', href: 'products.html', logo: 'assets/logo-horizontal.webp', text: "Here's everything we build, so you can browse and pick what fits." }
     };
+    var COL = ['c1', 'c2', 'c3', 'c1'];
     var STEPS = {
       root: { q: 'Who is this mainly for?', opts: [
-        { t: 'A school', i: '🏫', to: 'school' },
-        { t: 'A savings group or community', i: '💰', to: 'RESULT', r: 'ikimina' },
-        { t: 'A field team or organisation', i: '🧭', to: 'RESULT', r: 'fmis' },
-        { t: 'A family or one learner', i: '👪', to: 'family' }
+        { t: 'A school', ic: 'school', to: 'school' },
+        { t: 'A savings group or community', ic: 'coins', to: 'RESULT', r: 'ikimina' },
+        { t: 'A field team or organisation', ic: 'compass', to: 'RESULT', r: 'fmis' },
+        { t: 'A family or one learner', ic: 'family', to: 'family' }
       ] },
       school: { q: 'Should it work with no internet at all?', opts: [
-        { t: 'Yes, fully offline', i: '📶', to: 'RESULT', r: 'smartschool' },
-        { t: 'Online access is fine too', i: '☁️', to: 'RESULT', r: 'cloud' }
+        { t: 'Yes, fully offline', ic: 'wifi', to: 'RESULT', r: 'smartschool' },
+        { t: 'Online access is fine too', ic: 'cloud', to: 'RESULT', r: 'cloud' }
       ] },
       family: { q: 'What do they need?', opts: [
-        { t: 'Reading, maths and school subjects', i: '📚', to: 'RESULT', r: 'smartschool' },
-        { t: 'Learning the road code', i: '🚗', to: 'RESULT', r: 'amategeko' },
-        { t: 'Not sure, show me everything', i: '🔎', to: 'RESULT', r: 'products' }
+        { t: 'Reading, maths and school subjects', ic: 'book', to: 'RESULT', r: 'smartschool' },
+        { t: 'Learning the road code', ic: 'car', to: 'RESULT', r: 'amategeko' },
+        { t: 'Not sure, show me everything', ic: 'search', to: 'RESULT', r: 'products' }
       ] }
     };
     var hist = ['root'];
@@ -307,8 +342,9 @@
     function renderStep(key) {
       var s = STEPS[key];
       wiz.innerHTML = progress() + '<p class="wizard-q">' + esc(s.q) + '</p><div class="wizard-opts">' +
-        s.opts.map(function (o, idx) { return '<button class="wizard-opt" type="button" data-idx="' + idx + '"><span>' + o.i + '</span> ' + esc(o.t) + '</button>'; }).join('') + '</div>' +
+        s.opts.map(function (o, idx) { return '<button class="wizard-opt" type="button" data-idx="' + idx + '">' + icon(o.ic, COL[idx % COL.length]) + '<span>' + esc(o.t) + '</span></button>'; }).join('') + '</div>' +
         (hist.length > 1 ? '<button class="wizard-back" type="button" data-back>&larr; Back</button>' : '');
+      wiz.setAttribute('aria-live', 'polite');
       $$('.wizard-opt', wiz).forEach(function (b) {
         b.addEventListener('click', function () {
           var o = s.opts[Number(b.dataset.idx)];
@@ -319,7 +355,7 @@
     }
     function renderResult(key) {
       var r = RESULTS[key];
-      wiz.innerHTML = progress() + '<div class="wizard-result"><img src="' + esc(r.logo) + '" alt="" width="64" height="64" loading="lazy"><div><h3 style="margin:0 0 .3rem">' + esc(r.name) + '</h3><p style="margin:0 0 .8rem">' + esc(r.text) + '</p><a class="btn btn-primary btn-sm" href="' + esc(r.href) + '">Explore ' + esc(r.name) + '</a></div></div><button class="wizard-back" type="button" data-restart>Start over</button>';
+      wiz.innerHTML = progress() + '<div class="wizard-result"><img src="' + esc(r.logo) + '" alt="" width="56" height="56" loading="lazy"><div><h3>' + esc(r.name) + '</h3><p>' + esc(r.text) + '</p><a class="btn btn-primary btn-sm" href="' + esc(r.href) + '">Explore ' + esc(r.name) + '</a></div></div><button class="wizard-back" type="button" data-restart>Start over</button>';
       $('[data-restart]', wiz).addEventListener('click', function () { hist = ['root']; renderStep('root'); });
     }
     renderStep('root');

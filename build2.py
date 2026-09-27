@@ -109,8 +109,16 @@ def render_body(blocks):
         elif k == "ol": out.append("<ol class=\"next\">" + "".join(f"<li>{esc(x)}</li>" for x in b[1]) + "</ol>")
     return "\n".join(out)
 
+def read_time(blocks):
+    words = 0
+    for b in blocks:
+        k = b[0]
+        if k in ("p", "h"): words += len(b[1].split())
+        elif k in ("ul", "ol"): words += sum(len(x.split()) for x in b[1])
+    return max(1, round(words / 200))
+
 def news_card(p):
-    return f'''<article class="ncard" data-cat="{esc(p["category"])}" data-text="{esc((p["title"] + " " + p["summary"]).lower())}"><a href="news-{p["slug"]}.html"><span class="ncat">{esc(p["category"])}</span><h3>{esc(p["title"])}</h3><p>{esc(p["summary"])}</p><span class="nmeta">{fmt_date(p["date"])} | Read more</span></a></article>'''
+    return f'''<article class="ncard" data-cat="{esc(p["category"])}" data-text="{esc((p["title"] + " " + p["summary"]).lower())}"><a href="news-{p["slug"]}.html"><span class="ncat">{esc(p["category"])}</span><h3>{esc(p["title"])}</h3><p>{esc(p["summary"])}</p><span class="nmeta">{fmt_date(p["date"])} &middot; {read_time(p["body"])} min read | Read more</span></a></article>'''
 
 cats = []
 for p in NEWS:
@@ -119,6 +127,9 @@ news_body = hero_page("News and tips", "News and teaching tips", "Product update
 <section class="section"><div class="container">
 <div class="toolbar-f"><input id="newsQ" type="search" placeholder="Search articles" aria-label="Search articles"><div class="chip-row" id="newsCats"><button class="chip on" data-ncat="all">All</button>{"".join(f'<button class="chip" data-ncat="{esc(c)}">{esc(c)}</button>' for c in cats)}</div></div>
 <div class="ngrid">{"".join(news_card(p) for p in NEWS)}</div><p class="empty-note hidden" id="newsEmpty">No articles match. Try a different word.</p>
+<div class="subscribe rv"><div><h3>Get new posts by email</h3><p>One email when we publish something new. No spam, unsubscribe any time.</p></div>
+<form id="subForm" class="sub-form"><label class="sr-only" for="subEmail">Email address</label><input id="subEmail" name="email" type="email" required placeholder="you@example.com" autocomplete="email"><button class="btn btn-primary" type="submit">Subscribe</button></form>
+<p class="msg" id="subMsg" role="status"></p></div>
 <p style="margin-top:1.4rem"><a class="btn btn-outline btn-sm" href="feed.xml">RSS feed</a></p></div></section>'''
 add("news.html", "News and teaching tips | EduSmart Consult", "Product updates, guides for schools and teaching tips from EduSmart Consult.", "resources", news_body,
     ld=ld_bc([("Home", ""), ("News and tips", "news.html")]))
@@ -126,7 +137,7 @@ add("news.html", "News and teaching tips | EduSmart Consult", "Product updates, 
 for i, p in enumerate(NEWS):
     url = f"{SITE_URL}/news-{p['slug']}.html"
     others = [q for q in NEWS if q["slug"] != p["slug"]][:3]
-    body = hero_page(f'<a href="news.html">News and tips</a> / Article', esc(p["title"]), f'{esc(p["category"])} | {fmt_date(p["date"])}') + f'''
+    body = hero_page(f'<a href="news.html">News and tips</a> / Article', esc(p["title"]), f'{esc(p["category"])} | {fmt_date(p["date"])} | {read_time(p["body"])} min read') + f'''
 <section class="section"><div class="container article">
 <div class="prose">{render_body(p["body"])}
 <div class="share"><b>Share</b><a class="btn btn-wa btn-sm" data-share="wa" href="#" data-title="{esc(p["title"])}" data-url="{url}" rel="noopener">WhatsApp</a><a class="btn btn-outline btn-sm" data-share="mail" href="#" data-title="{esc(p["title"])}" data-url="{url}">Email</a><button class="btn btn-outline btn-sm" type="button" data-share="copy" data-url="{url}">Copy link</button></div></div>
@@ -200,6 +211,38 @@ pricing_body = hero_page("Pricing", "Pricing and licences", "Smart School App is
 <details><summary>Can prices be paid in installments or through a project?</summary><p>Tell us how your school or project pays for software and we will suggest a way that works.</p></details></div></section>'''
 add("pricing.html", "Pricing and licences | Smart School App", "Smart School App is licensed per school. See what is included, compare Windows, Android and online use, and request a quote.", "products", pricing_body,
     ld=ld_bc([("Home", ""), ("Pricing", "pricing.html")]))
+
+# ============================================================ IMPACT
+def stat(col, icon, n, label, sub):
+    return f'<div class="tile {col} rv"><b>{n}</b><span>{label}</span>{f"<small>{sub}</small>" if sub else ""}</div>'
+impact_body = hero_page("Impact", "What we have built so far", "Real numbers behind the products, not projections. We will keep this page updated as schools and organisations take these tools further.") + f'''
+<section class="section"><div class="container">
+<div class="section-head"><div><div class="kicker">Software</div><h2>Products and platforms</h2></div><p>Everything here is a real, working product, not a prototype.</p></div>
+<div class="stats stats-big">
+{stat("navy", "code", str(len(PRODUCTS)), "Software products", "Built and maintained in house")}
+{stat("sky", "buildings", "9", "Departments", "Under one company")}
+{stat("gold", "device", "2", "Platforms for our own apps", "Windows and Android")}
+{stat("navy", "translate", "3", "Languages", "English, French, Kinyarwanda")}
+</div></div></section>
+<section class="section soft"><div class="container">
+<div class="section-head"><div><div class="kicker">Curriculum content</div><h2>What is actually inside the apps</h2></div><p>Content built from the real REB curriculum and the official Rwanda road code, not summaries.</p></div>
+<div class="grid g3">
+<div class="card rv">{ico("book")}<h3>Full Primary curriculum</h3><p>Smart School App covers Primary 1 to 6: books, exams, lesson plans, timetables and reports, aligned to the REB Competence-Based Curriculum.</p></div>
+<div class="card rv">{ico("file")}<h3>Past exam questions, with answers</h3><p>Over 2,500 past exam questions carry a drafted answer key that a teacher reviews, edits and confirms before it is relied on for marking.</p></div>
+<div class="card rv">{ico("target")}<h3>328 road code questions, 126 signs</h3><p>Amategeko y'Umuhanda's full content: questions, road signs, a glossary and timed mock exams, in Kinyarwanda, English and French.</p></div>
+</div></div></section>
+<section class="section"><div class="container">
+<div class="section-head"><div><div class="kicker">Nationwide reach</div><h2>Built on Rwanda's own school records</h2></div><p>Smart School App's school picker uses the same national accredited-schools directory as the numbers below (NESA, all five provinces).</p></div>
+<div class="stats stats-big">
+{stat("navy", "pin", "5", "Provinces covered", "")}
+{stat("sky", "buildings", "30", "Districts covered", "Every district in Rwanda")}
+{stat("gold", "school", "4,961", "Accredited schools indexed", "Nursery to TVET, NESA directory")}
+</div>
+<p style="margin-top:1.2rem"><a class="btn btn-outline btn-sm" href="index.html#departments">See the interactive province breakdown on the home page</a></p></div></section>
+<section class="section soft"><div class="container"><div class="reach"><div><div class="kicker">Want to be part of this</div><h2>Bring these tools to your school or programme</h2><p>We train your team and stay available after delivery.</p></div>
+<div class="reach-actions"><a class="btn btn-gold" href="request.html">Request a demo</a><a class="btn btn-ghost-light" href="stories.html">Read success stories</a></div></div></div></section>'''
+add("impact.html", "Impact | EduSmart Consult", "Real numbers behind EduSmart Consult's products: software built, curriculum content, languages and nationwide school coverage.", "about", impact_body,
+    ld=ld_bc([("Home", ""), ("Impact", "impact.html")]))
 
 # ============================================================ TEAM
 TEAM = load_json("team.json", [])
