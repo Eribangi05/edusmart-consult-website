@@ -526,6 +526,9 @@ details{margin-top:.7rem}
 .rwmap-panel ul{list-style:none;margin:0;padding:0}
 .rwmap-panel li{padding:.4rem 0;border-bottom:1px solid var(--line);font-size:.88rem;color:var(--ink)}
 .rwmap-panel li:last-child{border-bottom:none}
+.rwmap-panel li.pinned{cursor:pointer;display:flex;align-items:center;gap:.45rem}
+.rwmap-panel li.pinned svg{flex:none;color:var(--gold-700,#8a5a00)}
+.rwmap-panel li.pinned:hover{color:var(--navy-700)}
 .rwmap-legend{display:flex;gap:1rem;align-items:center;font-size:.78rem;color:var(--muted);margin-top:.9rem;flex-wrap:wrap}
 .rwmap-legend .scale{display:flex;gap:2px}
 .rwmap-legend .scale i{width:16px;height:12px;border-radius:2px;display:inline-block}

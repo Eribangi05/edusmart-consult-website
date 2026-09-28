@@ -16,6 +16,11 @@
 # with each sector's real school names embedded in its properties.
 #
 # Usage:  pip install pyshp  &&  python tools/build_rwanda_sectors.py <path-to-unzipped-SHP-folder>
+#
+# After running this, run  node tools/fetch-school-coordinates.js  to attach a real lat/lon to each
+# school where one is known (from the public MINEDUC/REB/NESA/RTB "All Schools of Rwanda" ArcGIS layer -
+# see that script's header). This script always starts from name-only school lists, so re-run the
+# coordinate step afterward or the map will lose its pins.
 import shapefile, json, re, sys, os
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
