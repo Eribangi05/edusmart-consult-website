@@ -238,7 +238,8 @@ impact_body = hero_page("Impact", "What we have built so far", "Real numbers beh
 {stat("sky", "buildings", "30", "Districts covered", "Every district in Rwanda")}
 {stat("gold", "school", "4,961", "Accredited schools indexed", "Nursery to TVET, NESA directory")}
 </div>
-<p style="margin-top:1.2rem"><a class="btn btn-outline btn-sm" href="index.html#departments">See the interactive province breakdown on the home page</a></p></div></section>
+<p style="margin:1.2rem 0 1.6rem">Every one of Rwanda's 416 sectors, shown on its real boundary. Click any sector below to see the schools actually recorded in it.</p>
+{rwmap()}</div></section>
 <section class="section soft"><div class="container"><div class="reach"><div><div class="kicker">Want to be part of this</div><h2>Bring these tools to your school or programme</h2><p>We train your team and stay available after delivery.</p></div>
 <div class="reach-actions"><a class="btn btn-gold" href="request.html">Request a demo</a><a class="btn btn-ghost-light" href="stories.html">Read success stories</a></div></div></div></section>'''
 add("impact.html", "Impact | EduSmart Consult", "Real numbers behind EduSmart Consult's products: software built, curriculum content, languages and nationwide school coverage.", "about", impact_body,

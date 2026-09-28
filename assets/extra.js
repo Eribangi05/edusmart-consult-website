@@ -361,21 +361,4 @@
     renderStep('root');
   }
 
-  // Rwanda reach panel: numbers are already in the markup (server-rendered from the accredited-
-  // schools directory), this only wires up the click-to-see-detail interaction
-  var rwPanel = $('#rwPanel'), rwDetail = $('#rwDetail');
-  if (rwPanel && rwDetail) {
-    $$('.rw-prov', rwPanel).forEach(function (btn) {
-      btn.addEventListener('click', function () {
-        var already = btn.classList.contains('on');
-        $$('.rw-prov', rwPanel).forEach(function (b) { b.classList.remove('on'); });
-        if (already) { rwDetail.classList.remove('on'); rwDetail.innerHTML = ''; return; }
-        btn.classList.add('on');
-        rwDetail.classList.add('on');
-        rwDetail.innerHTML = '<div><b>' + esc(btn.dataset.districts) + '</b><span>Districts</span></div>' +
-          '<div><b>' + esc(btn.dataset.sectors) + '</b><span>Sectors</span></div>' +
-          '<div><b>' + esc(btn.dataset.schools) + '</b><span>Accredited schools (NESA)</span></div>';
-      });
-    });
-  }
 })();

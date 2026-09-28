@@ -45,6 +45,21 @@ RWANDA_PROVINCES = [
  ("Kigali City", 3, 35, 607), ("East", 7, 95, 1279), ("North", 5, 89, 790), ("South", 8, 101, 1163), ("West", 7, 96, 1122),
 ]
 
+def rwmap():
+    """Interactive map of Rwanda's 416 sectors (real boundaries), shaded by accredited-school count,
+    with a click-through list of the real schools in whichever sector is selected. Include this once
+    per page (it loads Leaflet + a ~130KB gzipped GeoJSON of its own, so it is not in the shared footer)."""
+    legend = "".join(f'<i style="background:{c}"></i>' for c in ["#dbe7f7", "#a9cdef", "#63a8e6", "#1f7fd6", "#06307a"])
+    return f'''<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css">
+<div class="rwmap-wrap rv">
+<div><div id="rwMap" class="rwmap" role="application" aria-label="Interactive map of Rwanda's sectors, shaded by number of accredited schools"></div>
+<div class="rwmap-legend"><span>Fewer schools</span><span class="scale">{legend}</span><span>More schools</span></div>
+<p class="rwmap-credit">Sector boundaries: National Institute of Statistics of Rwanda, via OCHA ROSEA (HDX), CC BY-IGO. School list: NESA accredited-schools directory.</p></div>
+<div class="rwmap-panel" id="rwMapPanel"><p class="muted">Click any sector on the map to see the accredited schools in it.</p></div>
+</div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
+<script src="assets/map.js" defer></script>'''
+
 # ---- the web apps, listed once and used on the home page and on apps.html
 R2_BASE = "https://downloads.edusmartconsult.com"
 APP_CARDS = [
@@ -500,9 +515,8 @@ home = f'''
 
 <section class="section"><div class="container">
 <div class="section-head"><div><div class="kicker">Nationwide reach</div><h2>Built with Rwanda's own school records</h2></div>
-<p>Smart School App's school picker draws on the national accredited-schools directory (NESA), across all five provinces. Tap a province to see it.</p></div>
-<div class="rw-panel" id="rwPanel">{"".join(f'<button type="button" class="rw-prov" data-districts="{dist}" data-sectors="{sec}" data-schools="{sch}"><b data-count="{sch}">{sch}</b><span>{p}</span></button>' for p, dist, sec, sch in RWANDA_PROVINCES)}</div>
-<div class="rw-detail" id="rwDetail"></div>
+<p>Smart School App's school picker draws on the national accredited-schools directory (NESA), across all 416 sectors. Click a sector to see the real schools in it.</p></div>
+{rwmap()}
 </div></section>
 
 <section class="section sunny"><div class="container">

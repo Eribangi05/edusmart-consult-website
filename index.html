@@ -207,9 +207,16 @@
 
 <section class="section"><div class="container">
 <div class="section-head"><div><div class="kicker">Nationwide reach</div><h2>Built with Rwanda's own school records</h2></div>
-<p>Smart School App's school picker draws on the national accredited-schools directory (NESA), across all five provinces. Tap a province to see it.</p></div>
-<div class="rw-panel" id="rwPanel"><button type="button" class="rw-prov" data-districts="3" data-sectors="35" data-schools="607"><b data-count="607">607</b><span>Kigali City</span></button><button type="button" class="rw-prov" data-districts="7" data-sectors="95" data-schools="1279"><b data-count="1279">1279</b><span>East</span></button><button type="button" class="rw-prov" data-districts="5" data-sectors="89" data-schools="790"><b data-count="790">790</b><span>North</span></button><button type="button" class="rw-prov" data-districts="8" data-sectors="101" data-schools="1163"><b data-count="1163">1163</b><span>South</span></button><button type="button" class="rw-prov" data-districts="7" data-sectors="96" data-schools="1122"><b data-count="1122">1122</b><span>West</span></button></div>
-<div class="rw-detail" id="rwDetail"></div>
+<p>Smart School App's school picker draws on the national accredited-schools directory (NESA), across all 416 sectors. Click a sector to see the real schools in it.</p></div>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css">
+<div class="rwmap-wrap rv">
+<div><div id="rwMap" class="rwmap" role="application" aria-label="Interactive map of Rwanda's sectors, shaded by number of accredited schools"></div>
+<div class="rwmap-legend"><span>Fewer schools</span><span class="scale"><i style="background:#dbe7f7"></i><i style="background:#a9cdef"></i><i style="background:#63a8e6"></i><i style="background:#1f7fd6"></i><i style="background:#06307a"></i></span><span>More schools</span></div>
+<p class="rwmap-credit">Sector boundaries: National Institute of Statistics of Rwanda, via OCHA ROSEA (HDX), CC BY-IGO. School list: NESA accredited-schools directory.</p></div>
+<div class="rwmap-panel" id="rwMapPanel"><p class="muted">Click any sector on the map to see the accredited schools in it.</p></div>
+</div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
+<script src="assets/map.js" defer></script>
 </div></section>
 
 <section class="section sunny"><div class="container">
