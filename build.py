@@ -64,7 +64,7 @@ def rwmap():
 R2_BASE = "https://downloads.edusmartconsult.com"
 APP_CARDS = [
  dict(slug="fmis", name="FMIS", tag="Field Management Information System", logo="assets/products/fmis.png", page="field-management.html", web="fmis/",
-      blurb="Collect data with forms, GPS and photos, assign tasks, check in, review and report. For any institution, team or individual.",
+      blurb="Collect data with smart forms (skip logic, repeat groups, GPS and photos), assign tasks, check in, review and report. For any institution, team or individual.",
       apk="assets/downloads/FMIS-Android-1.0.0.apk", apk_size="4 MB", win=R2_BASE + "/FMIS-Setup-1.0.0.exe", win_size="84 MB", note="Free to try. Cloud sync for teams."),
  dict(slug="ikimina", name="Ikimina", tag="Savings group manager", logo="assets/products/ikimina.png", page="savings-groups.html", web="ikimina/",
       blurb="Run an ikimina, VSLA or tontine: contributions, loans, rotation, reports and roles for the President, Accountant and members.",

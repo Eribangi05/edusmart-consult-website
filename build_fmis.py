@@ -1,17 +1,17 @@
 # FMIS (Field Management Information System) landing page. Executed at the end of build3.py (shares its names).
 _fm_topic = _up.quote("FMIS field management system enquiry")
-_fm_facts = ["Forms with GPS and photos", "Tasks, check-ins and reports", "Five roles, one workspace", "Works offline, syncs online",
+_fm_facts = ["Forms with GPS and photos", "Skip logic and repeat groups", "Tasks, check-ins and reports", "Five roles, one workspace", "Works offline, syncs online",
              "Web, Windows and Android", "For institutions, teams and individuals"]
 _fm_items = "".join(f'<span class="tk"><b>{i + 1:02d}</b> {esc(t)}</span>' for i, t in enumerate(_fm_facts))
 _fm_ticker = f'<div class="ticker-strip"><div class="ticker" aria-hidden="true"><div class="ticker-track">{_fm_items}{_fm_items}</div></div></div>'
 
 FM_TOUR = [
  ("fmis-d-dashboard", "Dashboard", "Submissions this week, team in the field, overdue tasks and the review queue, all on one screen.", ["Live numbers for the whole programme", "Charts of daily submissions and review status", "Top performing field agents"]),
- ("fmis-d-builder", "Build your own forms", "Design a data collection form in minutes: text, numbers, choices, dates, GPS, photos and ratings, with required fields and limits.", ["11 question types", "Required answers and number ranges", "Publish when it is ready"]),
+ ("fmis-d-builder", "Build your own forms", "Design a data collection form with 16 question types, skip logic to show a question only when it is relevant, repeat groups for lists like household members, and validation rules such as an end date after a start date.", ["16 question types, including barcode/QR and audio", "Skip logic, repeat groups and cross-question validation", "Publish when it is ready"]),
  ("fmis-d-submissions", "Collected data", "Every response in one list with who collected it, when, where and whether it was reviewed.", ["Search and filter by form or person", "Approve, return for correction or reject", "Export everything to Excel (CSV)"]),
  ("fmis-d-review", "Review with the full picture", "A supervisor sees every answer, the photo and the GPS point, and replies to the collector with a note.", ["GPS point with a map link", "Photo evidence", "Note back to the field agent"]),
  ("fmis-d-tasks", "Tasks and follow-up", "Assign work to people, set due dates and priorities, and see what is late.", ["Overdue tasks flagged", "Progress and notes from the field", "Linked to projects"]),
- ("fmis-d-map", "Field map", "See where data was collected and where the team checked in. It works with no internet.", ["Points coloured by review status", "Check-ins from the last 7 days", "Open any point on a street map"]),
+ ("fmis-d-map", "Field map", "See where data was collected and where the team checked in. Capturing a GPS point on a form also shows the real Rwanda sector it falls in, so a collector can confirm their location on the spot.", ["Points coloured by review status", "Real Rwanda sector boundaries on GPS capture", "Open any point on a street map"]),
  ("fmis-d-performance", "Performance", "A fair score for each field agent from quality, output, task completion and attendance.", ["Leaderboard", "Certificates for training and good work", "Export to CSV"]),
  ("fmis-d-reports", "Reports", "Choose a period and a project and print a summary report, or save it as a PDF.", ["Submissions by person and day", "Approval rate and progress", "Ready for donors and partners"]),
 ]
@@ -26,7 +26,7 @@ def _fm_phone(img, alt):
 fm = hero_page("Field management", "FMIS", "Field Management Information System: collect data, manage your team, follow progress and report, in the field and at the office.") + _fm_ticker + f'''
 <section class="section"><div class="container">
 <div class="grid g4">
-<div class="tile navy rv"><b data-count="11">11</b><span>Question types for your forms</span></div>
+<div class="tile navy rv"><b data-count="16">16</b><span>Question types for your forms</span></div>
 <div class="tile sky rv"><b data-count="5">5</b><span>Roles: Admin, Manager, Supervisor, Field agent, Viewer</span></div>
 <div class="tile navy rv"><b data-count="3">3</b><span>Web, Windows and Android</span></div>
 <div class="tile sky rv"><b data-count="0">0</b><span>Internet needed to collect data</span></div>
@@ -53,8 +53,10 @@ fm = hero_page("Field management", "FMIS", "Field Management Information System:
 </div></section>
 <section class="section soft"><div class="container"><div class="section-head"><div><div class="kicker">What is inside</div><h2>Everything a field programme needs</h2></div><p>The same features on the web, on Windows and on Android.</p></div>
 <div class="grid g3">
-<div class="card">{ico("edit")}<h3>Forms and data collection</h3><p>Build forms with text, numbers, choices, dates, ratings, GPS locations and photos. Required answers and number limits keep the data clean.</p></div>
-<div class="card">{ico("pin")}<h3>GPS check-in and field map</h3><p>Field agents check in and out, and every submission can carry a GPS point. See the points on a map that works offline.</p></div>
+<div class="card">{ico("edit")}<h3>16 question types</h3><p>Short and long text, number, decimal, date, time, date and time, single and multiple choice, yes/no, rating, GPS, photo, audio recording, barcode/QR code and phone number, plus notes.</p></div>
+<div class="card">{ico("code")}<h3>Skip logic and validation</h3><p>Show a question only when an earlier answer matches a condition, and require answers to compare correctly against each other, for example an end date after a start date.</p></div>
+<div class="card">{ico("database")}<h3>Repeat groups</h3><p>Collect a repeatable list inside one form, such as one entry per household member or asset, with add and remove on the fill screen and one row per entry in the export.</p></div>
+<div class="card">{ico("pin")}<h3>GPS check-in and field map</h3><p>Field agents check in and out, and every submission can carry a GPS point shown against the real Rwanda sector it falls in. See every point on a map that works offline.</p></div>
 <div class="card">{ico("target")}<h3>Tasks and projects</h3><p>Group work into projects with targets, assign tasks, set due dates and follow progress from the field.</p></div>
 <div class="card">{ico("shield")}<h3>Review and quality</h3><p>Supervisors approve, return for correction or reject each submission with a note. Approved data is locked.</p></div>
 <div class="card">{ico("users")}<h3>Team and roles</h3><p>Add people by hand or import a CSV list. Five roles decide who can see and do what.</p></div>
@@ -78,13 +80,16 @@ fm = hero_page("Field management", "FMIS", "Field Management Information System:
 <section class="section soft"><div class="container"><div class="section-head"><div><div class="kicker">Web, Windows and Android</div><h2>Which version suits you</h2></div></div>
 <div class="scroll-x"><table class="cmp" style="width:100%"><tr><th></th><th>Web</th><th>Windows</th><th>Android</th></tr>
 <tr><td>Needs installing</td><td>No</td><td>Yes</td><td>Yes</td></tr><tr><td>Works without internet</td><td>Keep the tab open</td><td>Yes</td><td>Yes</td></tr>
-<tr><td>GPS and photos</td><td>Yes, in a browser that allows it</td><td>Photos from files, location typed in</td><td>Yes, GPS and camera</td></tr>
+<tr><td>GPS, photos and audio</td><td>Yes, in a browser that allows it</td><td>Photos and audio from files, location typed in</td><td>Yes, GPS and camera</td></tr>
+<tr><td>Barcode/QR field</td><td>Type or paste the code</td><td>Type or paste the code</td><td>Type or paste the code</td></tr>
 <tr><td>Cloud sync between devices</td><td>Yes</td><td>Yes</td><td>Yes</td></tr><tr><td>PDF and Excel exports</td><td>Yes</td><td>Yes</td><td>Yes</td></tr></table></div>
 <div class="callout-box"><b>Good to know.</b> Data lives on each device until you turn on cloud sync. Use the backup button in Settings to keep a copy. <a href="contact.html?topic={_fm_topic}#form">Ask us about training and setup</a>.</div></div></section>
 <section class="section"><div class="container" style="max-width:820px"><div class="section-head"><div><div class="kicker">Questions</div><h2>Good to know</h2></div></div>
 <details><summary>Do field agents need internet to collect data?</summary><p>No. Forms, GPS, photos, check-ins and tasks work with no connection. Everything is saved on the device and is sent when it goes online.</p></details>
 <details><summary>Is our data safe?</summary><p>Data stays on your devices until you turn on cloud sync. With sync on, it travels over a secure connection, each person signs in with a phone number and PIN, and the server decides who can read or change what. Use a strong PIN and remove people who leave.</p></details>
 <details><summary>Can I change the forms after people started collecting?</summary><p>Yes. Edit and publish the form again. Answers already collected stay as they are, and new answers follow the new questions.</p></details>
+<details><summary>What is skip logic and how do repeat groups work?</summary><p>Skip logic shows a question only when an earlier answer matches a condition you set, so a form does not ask irrelevant questions. A repeat group lets one form collect a list, such as one entry per household member: the person filling it adds or removes entries, and the export gives one row per entry alongside the form's other answers.</p></details>
+<details><summary>Can I scan a barcode?</summary><p>The barcode/QR field accepts a typed or pasted code today on every device. Camera scanning is being added to the Android app; until then, type or paste the code.</p></details>
 <details><summary>What happens if two people edit at the same time?</summary><p>The most recent change wins for the same record. People collecting data each create their own records, so they never overwrite each other. Approved submissions are locked.</p></details>
 <details><summary>Does it work in Kinyarwanda and French?</summary><p>The menus are available in English, French and Kinyarwanda. Your forms can be written in any language.</p></details>
 <details><summary>Can we use it for a project with many teams?</summary><p>Yes. Create one workspace per project or per organisation, add managers and supervisors, and invite field agents with codes.</p></details>
@@ -99,5 +104,5 @@ fm = hero_page("Field management", "FMIS", "Field Management Information System:
 <a class="btn btn-ghost-light" href="assets/downloads/FMIS-Android-1.0.0.apk" download>Android app (APK)</a>
 <a class="btn btn-ghost-light" href="assets/brochures/FMIS-guide.pdf" download>Download the guide (PDF)</a>
 </div></div></div></section>'''
-add("field-management.html", "FMIS | Field Management Information System", "FMIS is a field management system for data collection, tasks, GPS check-in, reports and team management. Works offline on Windows, Android and the web, with cloud sync for teams.", "products", fm,
+add("field-management.html", "FMIS | Field Management Information System", "FMIS is a field management system for data collection, tasks, GPS check-in, reports and team management, with 16 question types, skip logic, repeat groups and validation rules. Works offline on Windows, Android and the web, with cloud sync for teams.", "products", fm,
     ld=ld_bc([("Home", ""), ("Products", "products.html"), ("FMIS", "field-management.html")]))
