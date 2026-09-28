@@ -17,6 +17,7 @@ PH = {
  "download": "download-simple", "school": "graduation-cap", "whatsapp": "whatsapp-logo", "call": "phone-call", "mail": "envelope-simple",
  "handshake": "handshake", "translate": "translate", "lock": "lock-key", "cloud": "cloud", "briefcase": "briefcase", "buildings": "buildings",
  "chalkboard": "chalkboard-teacher", "bulb": "lightbulb", "rocket": "rocket", "pin": "map-pin", "handheart": "hand-heart", "books": "books",
+ "facebook": "facebook-logo", "instagram": "instagram-logo", "linkedin": "linkedin-logo", "x": "x-logo",
 }
 _ICON_CACHE = {}
 def _icon_inner(name):
@@ -31,10 +32,12 @@ _CLOCK_LIVE = '''<circle cx="50" cy="50" r="45" fill="none" stroke="currentColor
   <line x1="50" y1="50" x2="50" y2="20" stroke="currentColor" stroke-width="4" stroke-linecap="round" opacity=".9"><animateTransform attributeName="transform" type="rotate" from="0 50 50" to="360 50 50" dur="3600s" repeatCount="indefinite"/></line>
   <line x1="50" y1="50" x2="50" y2="15" stroke="#F2C200" stroke-width="2.2" stroke-linecap="round"><animateTransform attributeName="transform" type="rotate" from="0 50 50" to="360 50 50" dur="60s" repeatCount="indefinite"/></line>
   <circle cx="50" cy="50" r="3.4" fill="currentColor"/>'''
+_VIEWBOX_24 = {"facebook", "instagram", "linkedin", "x"}  # official brand marks, drawn on a 24x24 grid (not Phosphor's 256x256)
 def ico(name, cls=""):
     if name == "clock":
         return f'<span class="ico {cls}"><svg class="clock-live" viewBox="0 0 100 100" aria-hidden="true">{_CLOCK_LIVE}</svg></span>'
-    return f'<span class="ico {cls}"><svg viewBox="0 0 256 256" aria-hidden="true" fill="currentColor">{_icon_inner(name)}</svg></span>'
+    vb = "0 0 24 24" if name in _VIEWBOX_24 else "0 0 256 256"
+    return f'<span class="ico {cls}"><svg viewBox="{vb}" aria-hidden="true" fill="currentColor">{_icon_inner(name)}</svg></span>'
 
 
 # ---- Rwanda reach panel: computed once from the same NESA accredited-schools directory bundled
@@ -151,12 +154,22 @@ def header(active):
 <a href="request.html"{cur("request.html")} class="btn btn-primary btn-sm">Request a demo</a></nav>
 </div></header>'''
 
+# social profiles: add the URL here as each one goes live - a platform with no URL is simply left
+# out of the footer row, no other change needed
+SOCIAL = [
+ ("facebook", "https://www.facebook.com/profile.php?id=61594813774948", "Facebook"),
+ ("instagram", None, "Instagram"),
+ ("linkedin", None, "LinkedIn"),
+ ("x", None, "X (Twitter)"),
+]
+_social_links = "".join(f'<a href="{u}" target="_blank" rel="noopener" aria-label="{l} (opens in a new tab)">{ico(k)}</a>' for k, u, l in SOCIAL if u)
 FOOTER = f'''<section class="cta"><div class="container"><h2>Talk to us about your school or organisation.</h2>
 <a class="btn btn-gold" href="contact.html#form">Send an enquiry</a></div></section>
 <footer class="footer"><div class="container">
 <div class="foot-grid">
 <div><div class="foot-logo"><img src="assets/logo-horizontal.webp" alt="EduSmart Consult" width="132" height="44"></div>
-<p>Better Research | Stronger Education | Brighter Futures</p></div>
+<p>Better Research | Stronger Education | Brighter Futures</p>
+<div class="foot-social">{_social_links}</div></div>
 <div><h4>Departments</h4><a href="education-training.html">Education and Training</a><a href="inclusive-education.html">Inclusive Education</a><a href="research-consulting.html">Research and Consulting</a><a href="elearning.html">E-Learning</a><a href="software-development.html">Software Development</a><a href="index.html#departments">All departments</a></div>
 <div><h4>Products</h4><a href="smart-school-app.html">Smart School App</a><a href="smart-school-cloud.html">Smart School Cloud</a><a href="apps.html">All web apps</a><a href="road-code.html">Amategeko y'Umuhanda</a><a href="savings-groups.html">Ikimina</a><a href="field-management.html">FMIS</a><a href="tour.html">Take the tour</a><a href="pricing.html">Pricing</a><a href="downloads.html">Downloads</a><a href="products.html">All products</a></div>
 <div><h4>Company</h4><a href="about.html">About us</a><a href="team.html">Our team</a><a href="impact.html">Impact</a><a href="news.html">News and tips</a><a href="stories.html">Success stories</a><a href="partners.html">Partners and careers</a><a href="request.html">Request a demo</a></div>
