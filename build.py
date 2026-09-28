@@ -231,8 +231,6 @@ PRODUCTS = [
   "Offline learning and school management suite for Primary 1 to 6: books, exams, lesson plans, timetables, marking and reports.", "Windows, Android"),
  ("smart-school-cloud", "Smart School Cloud", "School and learning", "ssa-logo-96.png", "smart-school-cloud.html",
   "The online side of Smart School App: use it in a browser and keep records in step across Windows and Android devices.", "Web, cloud sync"),
- ("reb-class-apps", "REB Class, Reader and Subject Apps", "School and learning", "products/classapps.svg", None,
-  "Focused Android apps for each Primary class and subject: class apps, read aloud story readers and single subject pupil book apps.", "Android"),
  ("teacherdesk-pro", "TeacherDesk Pro", "School and learning", "products/teacherdesk.webp", None,
   "A teacher's daily desk: attendance, lesson plans, self assessment, exam results, notes, a book library and a timetable.", "Android"),
  ("studentlearn", "StudentLearn", "School and learning", "products/studentlearn.svg", None,
