@@ -16,82 +16,245 @@ ACT.editForm = ({ id }) => { if (!guard(can.manageWork())) return; const f = S.f
 function builderModal(f) {
   modal({ title: BLD.form ? 'Edit form' : '＋ New form', wide: true, submit: 'Save form',
     body: `<div class="fg">${fld({ name: 'name', label: 'Form name', required: true, full: true, value: f.name || '' })}${fld({ name: 'description', label: 'Instructions for the person filling it', type: 'textarea', full: true, rows: 2, value: f.description || '' })}${fld({ name: 'projectId', label: 'Project', options: [['', '(general)'], ...memberOpts(DB.projects)], value: f.projectId || '' })}${fld({ name: 'status', label: 'Status', options: options(STATUS.form), value: f.status || 'DRAFT', hint: 'Only Published forms can be filled by field agents.' })}</div>
-    <h4 style="margin-top:16px">Questions</h4><div id="bfields"></div><div class="row wrap mt" style="gap:8px"><button type="button" class="btn s" data-act="addField">＋ Add a question</button></div>`,
-    onSubmit: (v) => { const fields = BLD.fields.filter((x) => x.label.trim() || x.type === 'note'); if (!fields.filter((x) => x.type !== 'note').length) { toast('Add at least one question.', true); return false; }
-      for (const x of fields) { if (!x.label.trim()) { toast('Every question needs a label.', true); return false; } if ((x.type === 'choice' || x.type === 'multi') && (x.options || []).filter((o) => o.trim()).length < 2) { toast(`"${x.label}" needs at least two options.`, true); return false; } }
-      const clean = fields.map((x) => { const o = { id: x.id, label: x.label.trim(), type: x.type, required: !!x.required }; if (x.options) o.options = x.options.map((s) => s.trim()).filter(Boolean); if (x.type === 'number') { if (x.min !== '' && x.min != null) o.min = +x.min; if (x.max !== '' && x.max != null) o.max = +x.max; } if (x.hint) o.hint = x.hint; return o; });
+    <h4 style="margin-top:16px">Questions</h4><div id="bfields"></div><div class="row wrap mt" style="gap:8px"><button type="button" class="btn s" data-act="addField">＋ Add a question</button><button type="button" class="btn s" data-act="addRepeat">＋ Add a repeat group</button></div>`,
+    onSubmit: (v) => {
+      const stripBlank = (list) => list.filter((x) => x.label.trim() || x.type === 'note');
+      const checkOne = (x, fields) => { if (!x.label.trim()) { toast('Every question needs a label.', true); return false; } if ((x.type === 'choice' || x.type === 'multi') && (x.options || []).filter((o) => o.trim()).length < 2) { toast(`"${x.label}" needs at least two options.`, true); return false; }
+        if (x.skipIf) { const refIdx = fields.indexOf(fields.find((y) => y.id === x.skipIf.fieldId)); if (refIdx === -1 || refIdx >= fields.indexOf(x)) { toast(`"${x.label}"'s show-only-if must reference an earlier question.`, true); return false; } if (!['answered', 'unanswered'].includes(x.skipIf.op) && !String(x.skipIf.value ?? '').trim()) { toast(`"${x.label}"'s show-only-if needs a value to compare against.`, true); return false; } }
+        if (x.constraint) { const refIdx = fields.indexOf(fields.find((y) => y.id === x.constraint.fieldId)); if (refIdx === -1 || refIdx >= fields.indexOf(x)) { toast(`"${x.label}"'s comparison must reference an earlier question.`, true); return false; } } return true; };
+      const fields = stripBlank(BLD.fields); if (!fields.filter((x) => x.type !== 'note').length) { toast('Add at least one question.', true); return false; }
+      for (const x of fields) {
+        if (x.type === 'repeat') { x.fields = stripBlank(x.fields || []); if (!x.fields.filter((y) => y.type !== 'note').length) { toast(`"${x.label || 'Repeat group'}" needs at least one question in it.`, true); return false; } for (const y of x.fields) if (!checkOne(y, x.fields)) return false; if (!x.label.trim()) { toast('Every repeat group needs a name.', true); return false; } continue; }
+        if (!checkOne(x, fields)) return false;
+      }
+      const cleanOne = (x) => { const o = { id: x.id, label: x.label.trim(), type: x.type, required: !!x.required }; if (x.options) o.options = x.options.map((s) => s.trim()).filter(Boolean); if (x.type === 'number' || x.type === 'decimal') { if (x.min !== '' && x.min != null) o.min = +x.min; if (x.max !== '' && x.max != null) o.max = +x.max; } if (x.hint) o.hint = x.hint; if (x.skipIf) o.skipIf = x.skipIf; if (x.constraint) o.constraint = x.constraint; if (x.type === 'repeat') o.fields = x.fields.map(cleanOne); return o; };
+      const clean = fields.map(cleanOne);
       if (BLD.form) { Object.assign(BLD.form, { name: v.name.trim(), description: v.description, projectId: v.projectId || null, status: v.status, fields: clean, version: (BLD.form.version || 1) + 1, updatedAt: Date.now() }); audit('Form updated', v.name); }
       else { DB.forms.push({ id: uid(), name: v.name.trim(), description: v.description, projectId: v.projectId || null, status: v.status, fields: clean, version: 1, createdBy: SESSION.id, createdAt: Date.now() }); audit('Form created', v.name); }
       commit(); refresh(); toast('Form saved'); } });
   paintBuilder();
 }
+// only a question with a simple, directly-comparable answer can be referenced by a later question's
+// skip condition - not GPS/photo (not meaningfully comparable) or a note (not an answer at all)
+const SKIP_REFABLE = (t) => !['note', 'gps', 'photo'].includes(t);
+const SKIP_OPS_NUMERIC = [['eq', 'is'], ['neq', 'is not'], ['gt', 'is greater than'], ['lt', 'is less than'], ['answered', 'is answered'], ['unanswered', 'is not answered']];
+const SKIP_OPS_OTHER = [['eq', 'is'], ['neq', 'is not'], ['answered', 'is answered'], ['unanswered', 'is not answered']];
+// constraint: a question's OWN answer must compare a certain way against an earlier question's
+// answer, e.g. "end date after start date" - unlike skipIf there is no literal value to type in,
+// it is always a same-form field reference, so the stored shape is just {fieldId, op}
+const CONSTRAINT_TYPES = ['number', 'decimal', 'date', 'time', 'datetime'];
+const CONSTRAINT_OPS = [['gt', 'must be after/greater than'], ['lt', 'must be before/less than'], ['neq', 'must be different from']];
+// number/decimal compare numerically; date/time/datetime inputs are all ISO-formatted so plain
+// string comparison already sorts them chronologically - no date-parsing library needed
+function compareOrdered(type, op, v, ref) {
+  const isNum = type === 'number' || type === 'decimal';
+  if (op === 'neq') return isNum ? +v !== +ref : String(v) !== String(ref);
+  if (op === 'gt') return isNum ? +v > +ref : String(v) > String(ref);
+  return isNum ? +v < +ref : String(v) < String(ref); // 'lt'
+}
+function skipRow(x, dbf, prior) {
+  if (!prior.length) return '';
+  const ref = x.skipIf && prior.find((y) => y.id === x.skipIf.fieldId);
+  const ops = ref && (ref.type === 'number' || ref.type === 'rating') ? SKIP_OPS_NUMERIC : SKIP_OPS_OTHER;
+  const needsValue = ref && !['answered', 'unanswered'].includes(x.skipIf.op);
+  const valueInput = !ref || !needsValue ? '' : ref.type === 'choice' || ref.type === 'yesno'
+    ? `<select data-bf="${dbf}:skipValue">${(ref.type === 'yesno' ? [['true', 'Yes'], ['false', 'No']] : ref.options.map((o) => [o, o])).map(([v, l]) => `<option value="${esc(v)}" ${String(x.skipIf.value) === v ? 'selected' : ''}>${esc(l)}</option>`).join('')}</select>`
+    : `<input data-bf="${dbf}:skipValue" value="${esc(x.skipIf.value ?? '')}" placeholder="Value" aria-label="Value to compare">`;
+  return `<div class="row wrap" style="gap:8px;margin-top:6px"><label class="muted sm">Show only if</label><select data-bf="${dbf}:skipField" aria-label="Depends on question">
+    <option value="">Always show</option>${prior.map((y) => `<option value="${esc(y.id)}" ${x.skipIf && x.skipIf.fieldId === y.id ? 'selected' : ''}>${esc(y.label || '(untitled question)')}</option>`).join('')}</select>
+    ${ref ? `<select data-bf="${dbf}:skipOp" aria-label="Condition">${ops.map(([v, l]) => `<option value="${v}" ${x.skipIf.op === v ? 'selected' : ''}>${l}</option>`).join('')}</select>${valueInput}` : ''}</div>`;
+}
+// a repeat group is a pseudo-field {type:'repeat', fields:[...]} - one level deep only (a repeat
+// inside a repeat is refused in the builder, see ACT.addSubField). dbf addresses a field by its
+// dot-joined index path ("2" for a top-level field, "2.0" for its first nested question) so the
+// same input/move/delete plumbing works for both without a second copy of the row template.
+function fieldRow(x, path, list, prior) {
+  const dbf = path.join('.'); const i = path[path.length - 1]; const top = path.length === 1;
+  return `<div class="bfield"><div class="row wrap" style="gap:8px"><span class="bn">${i + 1}</span><input class="sp" data-bf="${dbf}:label" value="${esc(x.label)}" placeholder="${x.type === 'note' ? 'Instruction text' : 'Question'}" aria-label="Question"><select data-bf="${dbf}:type" aria-label="Type">${options(FIELD_TYPES).map(([k, l]) => `<option value="${k}" ${x.type === k ? 'selected' : ''}>${l}</option>`).join('')}</select></div>
+    ${x.type === 'choice' || x.type === 'multi' ? `<textarea data-bf="${dbf}:options" rows="3" placeholder="One option per line" aria-label="Options">${esc((x.options || []).join('\n'))}</textarea>` : ''}
+    ${x.type === 'number' || x.type === 'decimal' ? `<div class="row" style="gap:8px"><input type="number" data-bf="${dbf}:min" value="${esc(x.min ?? '')}" placeholder="Minimum"><input type="number" data-bf="${dbf}:max" value="${esc(x.max ?? '')}" placeholder="Maximum"></div>` : ''}
+    ${top ? skipRow(x, dbf, prior) : ''}
+    ${top && CONSTRAINT_TYPES.includes(x.type) ? constraintRow(x, dbf, prior.filter((y) => CONSTRAINT_TYPES.includes(y.type))) : ''}
+    <div class="row wrap" style="gap:8px">${x.type !== 'note' ? `<label class="chkl"><input type="checkbox" data-bf="${dbf}:required" ${x.required ? 'checked' : ''}> Required</label>` : ''}<span class="sp"></span><button type="button" class="btn s" data-act="moveField" data-path="${dbf}" data-d="-1" ${i === 0 ? 'disabled' : ''} aria-label="Move up">↑</button><button type="button" class="btn s" data-act="moveField" data-path="${dbf}" data-d="1" ${i === list.length - 1 ? 'disabled' : ''} aria-label="Move down">↓</button><button type="button" class="btn s r" data-act="delField" data-path="${dbf}" aria-label="Delete question">✕</button></div></div>`;
+}
+function constraintRow(x, dbf, prior) {
+  if (!prior.length) return '';
+  const ref = x.constraint && prior.find((y) => y.id === x.constraint.fieldId);
+  return `<div class="row wrap" style="gap:8px;margin-top:6px"><label class="muted sm">Compared to</label><select data-bf="${dbf}:constraintField" aria-label="Compare against">
+    <option value="">No comparison</option>${prior.map((y) => `<option value="${esc(y.id)}" ${x.constraint && x.constraint.fieldId === y.id ? 'selected' : ''}>${esc(y.label || '(untitled question)')}</option>`).join('')}</select>
+    ${ref ? `<select data-bf="${dbf}:constraintOp" aria-label="Comparison">${CONSTRAINT_OPS.map(([v, l]) => `<option value="${v}" ${x.constraint.op === v ? 'selected' : ''}>${l}</option>`).join('')}</select>` : ''}</div>`;
+}
+function fieldAt(path) { return path.length === 1 ? BLD.fields[path[0]] : (BLD.fields[path[0]] || {}).fields && BLD.fields[path[0]].fields[path[1]]; }
 function paintBuilder() {
   const host = $('#bfields'); if (!host) return;
-  host.innerHTML = BLD.fields.map((x, i) => `<div class="bfield"><div class="row wrap" style="gap:8px"><span class="bn">${i + 1}</span><input class="sp" data-bf="${i}:label" value="${esc(x.label)}" placeholder="${x.type === 'note' ? 'Instruction text' : 'Question'}" aria-label="Question ${i + 1}"><select data-bf="${i}:type" aria-label="Type">${options(FIELD_TYPES).map(([k, l]) => `<option value="${k}" ${x.type === k ? 'selected' : ''}>${l}</option>`).join('')}</select></div>
-    ${x.type === 'choice' || x.type === 'multi' ? `<textarea data-bf="${i}:options" rows="3" placeholder="One option per line" aria-label="Options">${esc((x.options || []).join('\n'))}</textarea>` : ''}
-    ${x.type === 'number' ? `<div class="row" style="gap:8px"><input type="number" data-bf="${i}:min" value="${esc(x.min ?? '')}" placeholder="Minimum"><input type="number" data-bf="${i}:max" value="${esc(x.max ?? '')}" placeholder="Maximum"></div>` : ''}
-    <div class="row wrap" style="gap:8px">${x.type !== 'note' ? `<label class="chkl"><input type="checkbox" data-bf="${i}:required" ${x.required ? 'checked' : ''}> Required</label>` : ''}<span class="sp"></span><button type="button" class="btn s" data-act="moveField" data-i="${i}" data-d="-1" ${i === 0 ? 'disabled' : ''} aria-label="Move up">↑</button><button type="button" class="btn s" data-act="moveField" data-i="${i}" data-d="1" ${i === BLD.fields.length - 1 ? 'disabled' : ''} aria-label="Move down">↓</button><button type="button" class="btn s r" data-act="delField" data-i="${i}" aria-label="Delete question">✕</button></div></div>`).join('');
+  // a reorder or type change can leave a skip condition pointing at a question that is no longer
+  // earlier (or no longer exists) - drop it rather than let the builder and the saved data disagree
+  BLD.fields.forEach((x, i) => { if (x.skipIf && !BLD.fields.slice(0, i).some((y) => y.id === x.skipIf.fieldId)) x.skipIf = undefined; if (x.constraint && !BLD.fields.slice(0, i).some((y) => y.id === x.constraint.fieldId)) x.constraint = undefined; });
+  host.innerHTML = BLD.fields.map((x, i) => {
+    if (x.type === 'repeat') {
+      return `<div class="bfield brepeat"><div class="row wrap" style="gap:8px"><span class="bn">${i + 1}</span><input class="sp" data-bf="${i}:label" value="${esc(x.label)}" placeholder="Repeat group name, e.g. Household member" aria-label="Repeat group ${i + 1}"><span class="pill">Repeat group</span></div>
+        <div class="brepeat-sub">${(x.fields || []).map((sx, j) => fieldRow(sx, [i, j], x.fields, [])).join('')}</div>
+        <div class="row wrap mt" style="gap:8px"><button type="button" class="btn s" data-act="addSubField" data-path="${i}">＋ Add a question to this group</button></div>
+        <div class="row wrap" style="gap:8px;margin-top:8px"><span class="sp"></span><button type="button" class="btn s" data-act="moveField" data-path="${i}" data-d="-1" ${i === 0 ? 'disabled' : ''} aria-label="Move up">↑</button><button type="button" class="btn s" data-act="moveField" data-path="${i}" data-d="1" ${i === BLD.fields.length - 1 ? 'disabled' : ''} aria-label="Move down">↓</button><button type="button" class="btn s r" data-act="delField" data-path="${i}" aria-label="Delete group">✕ Remove group</button></div></div>`;
+    }
+    return fieldRow(x, [i], BLD.fields, BLD.fields.slice(0, i).filter((y) => SKIP_REFABLE(y.type)));
+  }).join('');
 }
 document.addEventListener('input', (e) => {
-  const el = e.target.closest && e.target.closest('[data-bf]'); if (!el || !BLD) return; const [i, p] = el.dataset.bf.split(':'); const f = BLD.fields[+i]; if (!f) return;
-  if (p === 'required') f.required = el.checked; else if (p === 'options') f.options = el.value.split('\n'); else if (p === 'type') { f.type = el.value; if ((f.type === 'choice' || f.type === 'multi') && !f.options) f.options = ['Option 1', 'Option 2']; paintBuilder(); } else f[p] = el.value;
+  const el = e.target.closest && e.target.closest('[data-bf]'); if (!el || !BLD) return; const [pathStr, p] = el.dataset.bf.split(':'); const path = pathStr.split('.').map(Number); const f = fieldAt(path); if (!f) return;
+  if (p === 'required') f.required = el.checked; else if (p === 'options') f.options = el.value.split('\n'); else if (p === 'type') { f.type = el.value; if ((f.type === 'choice' || f.type === 'multi') && !f.options) f.options = ['Option 1', 'Option 2']; paintBuilder(); }
+  else if (p === 'skipField') { f.skipIf = el.value ? { fieldId: el.value, op: 'eq', value: '' } : undefined; paintBuilder(); }
+  else if (p === 'skipOp') { f.skipIf.op = el.value; paintBuilder(); }
+  else if (p === 'skipValue') { f.skipIf.value = el.value; }
+  else if (p === 'constraintField') { f.constraint = el.value ? { fieldId: el.value, op: 'gt' } : undefined; paintBuilder(); }
+  else if (p === 'constraintOp') { f.constraint.op = el.value; }
+  else f[p] = el.value;
 });
-ACT.addField = () => { BLD.fields.push(newField('text')); paintBuilder(); const l = $$('#bfields input[data-bf$=":label"]'); if (l.length) l[l.length - 1].focus(); };
-ACT.delField = ({ i }) => { BLD.fields.splice(+i, 1); paintBuilder(); };
-ACT.moveField = ({ i, d }) => { i = +i; const j = i + +d; if (j < 0 || j >= BLD.fields.length) return; [BLD.fields[i], BLD.fields[j]] = [BLD.fields[j], BLD.fields[i]]; paintBuilder(); };
-ACT.previewForm = ({ id }) => { const f = S.form(id); modal({ title: 'Preview: ' + esc(f.name), wide: true, cancel: 'Close', body: `<p class="muted">${esc(f.description || '')}</p><div class="fg">${f.fields.map((x) => fieldInput(x, undefined)).join('')}</div>` }); };
+const focusLastLabel = () => { const l = $$('#bfields input[data-bf$=":label"]'); if (l.length) l[l.length - 1].focus(); };
+ACT.addField = () => { BLD.fields.push(newField('text')); paintBuilder(); focusLastLabel(); };
+ACT.addRepeat = () => { BLD.fields.push({ id: 'q' + uid().slice(-6), label: '', type: 'repeat', fields: [newField('text')] }); paintBuilder(); };
+ACT.addSubField = ({ path }) => { const rep = BLD.fields[+path]; if (!rep || rep.type !== 'repeat') return; rep.fields.push(newField('text')); paintBuilder(); focusLastLabel(); };
+ACT.delField = ({ path }) => { const idx = path.split('.').map(Number); if (idx.length === 1) BLD.fields.splice(idx[0], 1); else BLD.fields[idx[0]].fields.splice(idx[1], 1); paintBuilder(); };
+ACT.moveField = ({ path, d }) => { const idx = path.split('.').map(Number); d = +d; const list = idx.length === 1 ? BLD.fields : BLD.fields[idx[0]].fields; const i = idx[idx.length - 1]; const j = i + d; if (j < 0 || j >= list.length) return; [list[i], list[j]] = [list[j], list[i]]; paintBuilder(); };
+ACT.previewForm = ({ id }) => { const f = S.form(id); modal({ title: 'Preview: ' + esc(f.name), wide: true, cancel: 'Close', body: `<p class="muted">${esc(f.description || '')}</p><div class="fg">${f.fields.map((x) => x.type === 'repeat' ? repeatBlock(x, undefined) : fieldInput(x, undefined)).join('')}</div>` }); };
 
 /* ---------- filling a form ---------- */
-function fieldInput(x, val) {
-  const name = 'f_' + x.id; const req = x.required ? ' *' : ''; const label = `<label class="f">${esc(x.label)}${req}</label>`; const hint = x.hint ? `<span class="hint muted">${esc(x.hint)}</span>` : '';
+function fieldInput(x, val, prefix = '') {
+  const name = 'f_' + prefix + x.id; const req = x.required ? ' *' : ''; const label = `<label class="f">${esc(x.label)}${req}</label>`; const hint = x.hint ? `<span class="hint muted">${esc(x.hint)}</span>` : '';
   const isR = x.required ? 'required' : '';
   switch (x.type) {
     case 'note': return `<div class="full"><div class="alert"><span>ℹ️</span><span>${esc(x.label)}</span></div></div>`;
     case 'longtext': return `<div class="full">${label}<textarea name="${name}" rows="3" ${isR}>${esc(val || '')}</textarea>${hint}</div>`;
-    case 'number': return `<div>${label}<input name="${name}" type="number" inputmode="decimal" step="any" ${x.min != null ? `min="${x.min}"` : ''} ${x.max != null ? `max="${x.max}"` : ''} value="${esc(val ?? '')}" ${isR}>${hint}</div>`;
+    case 'number': case 'decimal': return `<div>${label}<input name="${name}" type="number" inputmode="decimal" step="any" ${x.min != null ? `min="${x.min}"` : ''} ${x.max != null ? `max="${x.max}"` : ''} value="${esc(val ?? '')}" ${isR}>${hint}</div>`;
     case 'date': return `<div>${label}<input name="${name}" type="date" value="${esc(val || '')}" ${isR}></div>`;
+    case 'time': return `<div>${label}<input name="${name}" type="time" value="${esc(val || '')}" ${isR}></div>`;
+    case 'datetime': return `<div>${label}<input name="${name}" type="datetime-local" value="${esc(val || '')}" ${isR}></div>`;
     case 'phone': return `<div>${label}<input name="${name}" type="tel" inputmode="tel" value="${esc(val || '')}" ${isR}></div>`;
+    case 'barcode': return `<div class="full">${label}<div class="row wrap" style="gap:8px"><input class="sp" name="${name}" type="text" value="${esc(val || '')}" placeholder="Scan or type the code" ${isR}>${window.api && window.api.scanBarcode ? `<button type="button" class="btn s p" data-act="scanBarcode" data-n="${name}">📷 Scan</button>` : ''}</div>${hint}</div>`;
     case 'choice': return (x.options || []).length <= 4 ? `<div class="full">${label}<div class="radios">${(x.options || []).map((o) => `<label><input type="radio" name="${name}" value="${esc(o)}" ${val === o ? 'checked' : ''} ${isR}> ${esc(o)}</label>`).join('')}</div></div>` : `<div class="full">${label}<select name="${name}" ${isR}><option value="">Select…</option>${(x.options || []).map((o) => `<option ${val === o ? 'selected' : ''}>${esc(o)}</option>`).join('')}</select></div>`;
     case 'multi': return `<div class="full">${label}<div class="chk">${(x.options || []).map((o) => `<label><input type="checkbox" name="${name}" value="${esc(o)}" ${(val || []).includes(o) ? 'checked' : ''}> ${esc(o)}</label>`).join('')}</div></div>`;
     case 'yesno': return `<div>${label}<div class="radios"><label><input type="radio" name="${name}" value="yes" ${val === true ? 'checked' : ''} ${isR}> Yes</label><label><input type="radio" name="${name}" value="no" ${val === false ? 'checked' : ''} ${isR}> No</label></div></div>`;
     case 'rating': return `<div>${label}<div class="radios stars">${[1, 2, 3, 4, 5].map((n) => `<label title="${n}"><input type="radio" name="${name}" value="${n}" ${+val === n ? 'checked' : ''} ${isR}> ${n}</label>`).join('')}</div></div>`;
-    case 'gps': return `<div class="full">${label}<input type="hidden" name="${name}" value="${esc(val ? JSON.stringify(val) : '')}"><div class="gpsbox" data-gps="${name}" ${x.required ? 'data-req="1"' : ''}><div class="gpsval" id="${name}_v">${val ? `📍 ${val.lat}, ${val.lng} (±${val.acc || '?'} m)` : 'No location captured yet'}</div><div class="row wrap" style="gap:8px"><button type="button" class="btn s p" data-act="captureGps" data-n="${name}">📍 Capture my location</button><input class="gpsin" id="${name}_lat" placeholder="Latitude" inputmode="decimal" value="${val ? val.lat : ''}"><input class="gpsin" id="${name}_lng" placeholder="Longitude" inputmode="decimal" value="${val ? val.lng : ''}"><button type="button" class="btn s" data-act="manualGps" data-n="${name}">Use typed</button></div></div>${hint}</div>`;
+    case 'gps': return `<div class="full">${label}<input type="hidden" name="${name}" value="${esc(val ? JSON.stringify(val) : '')}"><div class="gpsbox" data-gps="${name}" ${x.required ? 'data-req="1"' : ''}><div class="gpsval" id="${name}_v">${val ? `📍 ${val.lat}, ${val.lng} (±${val.acc || '?'} m)` : 'No location captured yet'}</div><div class="row wrap" style="gap:8px"><button type="button" class="btn s p" data-act="captureGps" data-n="${name}">📍 Capture my location</button><input class="gpsin" id="${name}_lat" placeholder="Latitude" inputmode="decimal" value="${val ? val.lat : ''}"><input class="gpsin" id="${name}_lng" placeholder="Longitude" inputmode="decimal" value="${val ? val.lng : ''}"><button type="button" class="btn s" data-act="manualGps" data-n="${name}">Use typed</button></div><div class="gpsmap" id="${name}_map" ${val ? '' : 'hidden'}></div><div class="gpssector muted sm" id="${name}_sector"></div></div>${hint}</div>`;
     case 'photo': return `<div class="full">${label}<input type="hidden" name="${name}" value="${esc(val || '')}"><div class="photobox"><img id="${name}_img" alt="" ${val ? `src="${esc(val)}"` : 'hidden'}><div class="row wrap" style="gap:8px"><label class="btn s p" style="cursor:pointer">📷 Take or choose a photo<input type="file" accept="image/*" capture="environment" hidden data-photo="${name}"></label>${val ? `<button type="button" class="btn s r" data-act="clearPhoto" data-n="${name}">Remove</button>` : `<button type="button" class="btn s r" data-act="clearPhoto" data-n="${name}" hidden>Remove</button>`}</div></div>${hint}</div>`;
+    case 'audio': return `<div class="full">${label}<input type="hidden" name="${name}" value="${esc(val || '')}"><div class="photobox"><audio id="${name}_aud" controls ${val ? `src="${esc(val)}"` : 'hidden'}></audio><div class="row wrap" style="gap:8px"><label class="btn s p" style="cursor:pointer">🎙️ Record or choose audio<input type="file" accept="audio/*" capture hidden data-audio="${name}"></label>${val ? `<button type="button" class="btn s r" data-act="clearAudio" data-n="${name}">Remove</button>` : `<button type="button" class="btn s r" data-act="clearAudio" data-n="${name}" hidden>Remove</button>`}</div></div>${hint}</div>`;
     default: return `<div>${label}<input name="${name}" type="text" value="${esc(val || '')}" ${isR}>${hint}</div>`;
   }
 }
 const setHidden = (n, v) => { const h = document.querySelector(`#mform [name="${n}"]`); if (h) h.value = v; };
+
+// Rwanda sector boundaries (same simplified shapes used on the public website's map), bundled locally
+// under assets/ so this works offline in the field - not fetched from any server. Lets a data collector
+// see which sector their captured GPS point actually falls in, the same way a Kobo form would.
+let SECTORS_GJ = null;
+async function loadSectors() { if (SECTORS_GJ) return SECTORS_GJ; try { SECTORS_GJ = await fetch('assets/rwanda-sectors.json').then((r) => r.json()); } catch (e) { SECTORS_GJ = { type: 'FeatureCollection', features: [] }; } return SECTORS_GJ; }
+function pointInRing(pt, ring) { let inside = false; for (let i = 0, j = ring.length - 1; i < ring.length; j = i++) { const xi = ring[i][0], yi = ring[i][1], xj = ring[j][0], yj = ring[j][1]; if (((yi > pt[1]) !== (yj > pt[1])) && (pt[0] < (xj - xi) * (pt[1] - yi) / (yj - yi) + xi)) inside = !inside; } return inside; }
+function pointInFeature(pt, geom) { if (geom.type === 'Polygon') return pointInRing(pt, geom.coordinates[0]); if (geom.type === 'MultiPolygon') return geom.coordinates.some((poly) => pointInRing(pt, poly[0])); return false; }
+const GPS_MAPS = {}; // one small Leaflet map per GPS field on screen, keyed by its "f_<id>" name
+async function updateGpsMap(n, lat, lng) {
+  const host = $('#' + n + '_map'); const cap = $('#' + n + '_sector'); if (!host || !window.L) return; host.hidden = false;
+  const gj = await loadSectors(); const hit = gj.features.find((f) => pointInFeature([lng, lat], f.geometry));
+  if (cap) cap.textContent = hit ? `📍 ${hit.properties.sector} sector, ${hit.properties.district} district, ${hit.properties.province}` : 'Outside any known Rwanda sector';
+  let gm = GPS_MAPS[n]; if (!gm) gm = GPS_MAPS[n] = { map: L.map(host, { zoomControl: false, attributionControl: false, scrollWheelZoom: false }) };
+  gm.map.invalidateSize(); gm.map.setView([lat, lng], 13);
+  if (gm.marker) gm.marker.setLatLng([lat, lng]); else gm.marker = L.marker([lat, lng]).addTo(gm.map);
+  if (gm.sectorLayer) { gm.map.removeLayer(gm.sectorLayer); gm.sectorLayer = null; }
+  if (hit) gm.sectorLayer = L.geoJSON(hit, { style: { color: '#0aa0f0', weight: 2, fillOpacity: .12 } }).addTo(gm.map);
+}
 ACT.captureGps = async ({ n }) => {
   const box = $('#' + n + '_v'); if (box) box.textContent = 'Getting your location…';
-  try { const g = await getPosition(); setHidden(n, JSON.stringify(g)); if (box) box.textContent = `📍 ${g.lat}, ${g.lng} (±${g.acc} m)`; $('#' + n + '_lat').value = g.lat; $('#' + n + '_lng').value = g.lng; }
+  try { const g = await getPosition(); setHidden(n, JSON.stringify(g)); if (box) box.textContent = `📍 ${g.lat}, ${g.lng} (±${g.acc} m)`; $('#' + n + '_lat').value = g.lat; $('#' + n + '_lng').value = g.lng; updateGpsMap(n, g.lat, g.lng); }
   catch (e) { if (box) box.textContent = e.message; }
 };
 ACT.manualGps = ({ n }) => {
   const lat = parseFloat($('#' + n + '_lat').value), lng = parseFloat($('#' + n + '_lng').value); const box = $('#' + n + '_v');
   if (!(lat >= -90 && lat <= 90) || !(lng >= -180 && lng <= 180)) { if (box) box.textContent = 'Type a valid latitude and longitude, for example -1.9441 and 30.0619.'; return; }
-  const g = { lat: +lat.toFixed(6), lng: +lng.toFixed(6), acc: 0, at: Date.now(), manual: true }; setHidden(n, JSON.stringify(g)); if (box) box.textContent = `📍 ${g.lat}, ${g.lng} (typed)`;
+  const g = { lat: +lat.toFixed(6), lng: +lng.toFixed(6), acc: 0, at: Date.now(), manual: true }; setHidden(n, JSON.stringify(g)); if (box) box.textContent = `📍 ${g.lat}, ${g.lng} (typed)`; updateGpsMap(n, g.lat, g.lng);
 };
 ACT.clearPhoto = ({ n }) => { setHidden(n, ''); const im = $('#' + n + '_img'); if (im) { im.hidden = true; im.removeAttribute('src'); } };
+ACT.clearAudio = ({ n }) => { setHidden(n, ''); const au = $('#' + n + '_aud'); if (au) { au.hidden = true; au.removeAttribute('src'); } };
+// no native scanner is wired up yet on any shell - this hook is here so a future platform.js
+// addition (window.api.scanBarcode) lights the button up automatically; until then the barcode
+// field is manual-entry only, same as GPS's typed fallback when capture isn't available
+ACT.scanBarcode = async ({ n }) => {
+  if (!(window.api && window.api.scanBarcode)) return;
+  try { const code = await window.api.scanBarcode(); if (code) setHidden(n, code); }
+  catch (e) { toast('Could not scan. Type the code instead.', true); }
+};
 document.addEventListener('change', async (e) => {
-  const inp = e.target.closest && e.target.closest('[data-photo]'); if (!inp || !inp.files[0]) return;
-  try { const url = await shrinkImage(inp.files[0]); if (url.length > 230000) return toast('That photo is too large to sync. Take it again from further away or use a smaller size.', true); const n = inp.dataset.photo; setHidden(n, url); const im = $('#' + n + '_img'); im.src = url; im.hidden = false; const rm = inp.closest('.photobox').querySelector('[data-act=clearPhoto]'); if (rm) rm.hidden = false; } catch (err) { toast('Could not read that photo.', true); }
+  const inp = e.target.closest && e.target.closest('[data-photo]');
+  if (inp) { if (!inp.files[0]) return;
+    try { const url = await shrinkImage(inp.files[0]); if (url.length > 230000) return toast('That photo is too large to sync. Take it again from further away or use a smaller size.', true); const n = inp.dataset.photo; setHidden(n, url); const im = $('#' + n + '_img'); im.src = url; im.hidden = false; const rm = inp.closest('.photobox').querySelector('[data-act=clearPhoto]'); if (rm) rm.hidden = false; } catch (err) { toast('Could not read that photo.', true); }
+    return; }
+  const ainp = e.target.closest && e.target.closest('[data-audio]'); if (!ainp || !ainp.files[0]) return;
+  try { const url = await readFileDataUrl(ainp.files[0]); if (url.length > 700000) return toast('That recording is too large to sync. Try a shorter clip.', true); const n = ainp.dataset.audio; setHidden(n, url); const au = $('#' + n + '_aud'); au.src = url; au.hidden = false; const rm = ainp.closest('.photobox').querySelector('[data-act=clearAudio]'); if (rm) rm.hidden = false; } catch (err) { toast('Could not read that recording.', true); }
 });
 
-function readValues(form, fields) {
-  const values = {}; const errs = [];
-  for (const x of fields) {
-    if (x.type === 'note') continue; const n = 'f_' + x.id; let v;
-    if (x.type === 'multi') v = [...form.querySelectorAll(`[name="${n}"]:checked`)].map((c) => c.value);
-    else if (x.type === 'yesno') { const c = form.querySelector(`[name="${n}"]:checked`); v = c ? c.value === 'yes' : undefined; }
-    else if (x.type === 'gps') { const h = form.querySelector(`[name="${n}"]`).value; v = h ? JSON.parse(h) : undefined; }
-    else if (x.type === 'photo') { v = form.querySelector(`[name="${n}"]`).value || undefined; }
-    else if (x.type === 'number') { const s = form.querySelector(`[name="${n}"]`).value; v = s === '' ? undefined : +s; if (v != null && ((x.min != null && v < x.min) || (x.max != null && v > x.max))) errs.push(`"${x.label}" must be between ${x.min ?? '…'} and ${x.max ?? '…'}.`); }
-    else if (x.type === 'rating') { const c = form.querySelector(`[name="${n}"]:checked`); v = c ? +c.value : undefined; }
-    else { const el = form.querySelector(`[name="${n}"]`); const c = el && el.type === 'radio' ? form.querySelector(`[name="${n}"]:checked`) : el; v = c && c.value !== '' ? c.value : undefined; }
-    const has = v !== undefined && !(Array.isArray(v) && !v.length); if (has) values[x.id] = v; else if (x.required) errs.push(`"${x.label}" is required.`);
+// Show-only-if: x.skipIf = {fieldId, op, value}, fieldId must be an EARLIER question (enforced in
+// builderModal's onSubmit and kept consistent by paintBuilder). Evaluated against values collected
+// so far in field order, so a hidden question's own answer is correctly treated as "unanswered" by
+// anything that in turn depends on it.
+function fieldVisible(x, values) {
+  if (!x.skipIf) return true; const { fieldId, op, value } = x.skipIf; const v = values[fieldId];
+  const empty = v === undefined || v === '' || (Array.isArray(v) && !v.length);
+  switch (op) {
+    case 'answered': return !empty;
+    case 'unanswered': return empty;
+    case 'neq': return String(v) !== String(value);
+    case 'gt': return parseFloat(v) > parseFloat(value);
+    case 'lt': return parseFloat(v) < parseFloat(value);
+    default: return String(v) === String(value); // 'eq'
   }
-  return { values, errs };
 }
+// reads one question's raw answer from the DOM, given the name prefix its inputs were rendered with
+// ('' for a normal top-level question, "<repeatId>__<instanceKey>__" for a question inside a repeat
+// instance) - shared by readValues' top-level loop and its per-instance loop over a repeat group.
+function readOneValue(form, x, prefix) {
+  const n = 'f_' + prefix + x.id;
+  if (x.type === 'multi') return [...form.querySelectorAll(`[name="${n}"]:checked`)].map((c) => c.value);
+  if (x.type === 'yesno') { const c = form.querySelector(`[name="${n}"]:checked`); return c ? c.value === 'yes' : undefined; }
+  if (x.type === 'gps') { const h = form.querySelector(`[name="${n}"]`); return h && h.value ? JSON.parse(h.value) : undefined; }
+  if (x.type === 'photo' || x.type === 'audio') { const h = form.querySelector(`[name="${n}"]`); return (h && h.value) || undefined; }
+  if (x.type === 'number' || x.type === 'decimal') { const el = form.querySelector(`[name="${n}"]`); const s = el ? el.value : ''; return s === '' ? undefined : +s; }
+  if (x.type === 'rating') { const c = form.querySelector(`[name="${n}"]:checked`); return c ? +c.value : undefined; }
+  const el = form.querySelector(`[name="${n}"]`); const c = el && el.type === 'radio' ? form.querySelector(`[name="${n}"]:checked`) : el; return c && c.value !== '' ? c.value : undefined;
+}
+function readValues(form, fields) {
+  const values = {}; const errs = []; const visible = new Set();
+  for (const x of fields) {
+    if (!fieldVisible(x, values)) continue; visible.add(x.id);
+    if (x.type === 'note') continue;
+    if (x.type === 'repeat') {
+      const grp = form.querySelector(`#rg_${CSS.escape(x.id)}`); const items = grp ? [...grp.querySelectorAll(':scope > .repeat-item')] : []; const arr = [];
+      items.forEach((item, pos) => { const k = item.dataset.ri; const inst = {};
+        x.fields.forEach((sx) => { if (sx.type === 'note') return; const v = readOneValue(form, sx, x.id + '__' + k + '__');
+          if ((sx.type === 'number' || sx.type === 'decimal') && v != null && ((sx.min != null && v < sx.min) || (sx.max != null && v > sx.max))) errs.push(`${x.label} #${pos + 1}: "${sx.label}" must be between ${sx.min ?? '…'} and ${sx.max ?? '…'}.`);
+          const has = v !== undefined && !(Array.isArray(v) && !v.length); if (has) inst[sx.id] = v; else if (sx.required) errs.push(`${x.label} #${pos + 1}: "${sx.label}" is required.`); });
+        if (Object.keys(inst).length) arr.push(inst); });
+      if (arr.length) values[x.id] = arr; continue;
+    }
+    const v = readOneValue(form, x, '');
+    if ((x.type === 'number' || x.type === 'decimal') && v != null && ((x.min != null && v < x.min) || (x.max != null && v > x.max))) errs.push(`"${x.label}" must be between ${x.min ?? '…'} and ${x.max ?? '…'}.`);
+    const has = v !== undefined && !(Array.isArray(v) && !v.length); if (has) values[x.id] = v; else if (x.required) errs.push(`"${x.label}" is required.`);
+    if (has && x.constraint) { const refV = values[x.constraint.fieldId]; const refField = fields.find((y) => y.id === x.constraint.fieldId); if (refV !== undefined && !compareOrdered(x.type, x.constraint.op, v, refV)) errs.push(`"${x.label}" ${CONSTRAINT_OPS.find(([op]) => op === x.constraint.op)[1]} "${refField ? refField.label : 'that question'}".`); }
+  }
+  return { values, errs, visible };
+}
+// one repeat instance's own question set, namespaced so several instances (and several repeat
+// groups) never collide on input name - k is a stable id assigned once at creation, never reused,
+// so removing an instance can't make a later readValues() call pick up the wrong DOM node
+function repeatInstance(x, k, val) {
+  return `<div class="repeat-item" data-ri="${k}"><div class="row"><b>#${k + 1}</b><span class="sp"></span><button type="button" class="btn s r" data-act="delRepeatItem" data-rid="${esc(x.id)}" data-ri="${k}">Remove</button></div>
+  <div class="fg">${x.fields.map((sx) => fieldInput(sx, val ? val[sx.id] : undefined, x.id + '__' + k + '__')).join('')}</div></div>`;
+}
+function repeatBlock(x, vals) {
+  const count = vals && vals.length ? vals.length : 1;
+  let items = ''; for (let k = 0; k < count; k++) items += repeatInstance(x, k, vals && vals[k]);
+  return `<div class="full repeatgrp"><h4>${esc(x.label)}</h4><div class="repeat-items" id="rg_${esc(x.id)}" data-next="${count}">${items}</div><button type="button" class="btn s" data-act="addRepeatItem" data-rid="${esc(x.id)}">＋ Add another</button></div>`;
+}
+let FILL_FORM = null; // the form currently open in openFill(), so ACT.addRepeatItem can find a repeat's own question list
+ACT.addRepeatItem = ({ rid }) => { const x = FILL_FORM && FILL_FORM.fields.find((y) => y.id === rid); const grp = $('#rg_' + rid); if (!x || !grp) return; const k = +grp.dataset.next; grp.dataset.next = k + 1; grp.insertAdjacentHTML('beforeend', repeatInstance(x, k, undefined)); };
+ACT.delRepeatItem = ({ rid, ri }) => { const grp = $('#rg_' + rid); if (!grp) return; if (grp.children.length <= 1) return toast('A repeat group needs at least one entry.', true); const item = grp.querySelector(`.repeat-item[data-ri="${ri}"]`); if (item) item.remove(); };
 VIEWS.collect = () => {
   const forms = DB.forms.filter((f) => f.status === 'PUBLISHED'); const drafts = S.subsOf(SESSION.id).filter((s) => s.status === 'DRAFT' || s.status === 'RETURNED').sort((a, b) => b.at - a.at);
   return `${drafts.length ? `<div class="card"><h3>✏️ Continue or correct (${drafts.length})</h3>${drafts.map((s) => `<div class="row li"><div class="sp"><b>${esc((S.form(s.formId) || {}).name || 'Form')}</b><div class="muted sm">${s.status === 'RETURNED' ? '↩️ Returned by your supervisor: ' + esc((s.review || {}).note || 'please correct') : 'Draft · ' + ago(s.at)}</div></div><button class="btn s p" data-act="editSub" data-id="${esc(s.id)}">Open</button></div>`).join('')}</div>` : ''}
@@ -101,9 +264,22 @@ ACT.fillForm = ({ id }) => openFill(S.form(id), null);
 ACT.editSub = ({ id }) => { const s = DB.submissions.find((x) => x.id === id); if (s) openFill(S.form(s.formId), s); };
 function openFill(f, existing) {
   if (!f) return toast('That form is no longer available.', true); if (!guard(can.collect(), 'Viewers cannot fill forms.')) return;
-  modal({ title: esc(f.name), wide: true, cancel: 'Cancel', submit: 'Submit', body: `<p class="muted">${esc(f.description || '')}</p>${existing && existing.review && existing.review.note && existing.status === 'RETURNED' ? `<div class="alert bad"><span>↩️</span><span><b>Returned:</b> ${esc(existing.review.note)}</span></div>` : ''}<div class="fg">${f.fields.map((x) => fieldInput(x, existing ? existing.values[x.id] : undefined)).join('')}</div>`,
+  const initVals = existing ? existing.values : {};
+  // a previous modal's GPS map instances are tied to DOM nodes the next modal() call will replace -
+  // drop them so a same-named field in the new modal gets a fresh map instead of a detached one
+  f.fields.forEach((x) => { if (x.type === 'gps' && GPS_MAPS['f_' + x.id]) { try { GPS_MAPS['f_' + x.id].map.remove(); } catch (e) { /* already gone */ } delete GPS_MAPS['f_' + x.id]; } });
+  FILL_FORM = f;
+  modal({ title: esc(f.name), wide: true, cancel: 'Cancel', submit: 'Submit', body: `<p class="muted">${esc(f.description || '')}</p>${existing && existing.review && existing.review.note && existing.status === 'RETURNED' ? `<div class="alert bad"><span>↩️</span><span><b>Returned:</b> ${esc(existing.review.note)}</span></div>` : ''}<div class="fg">${f.fields.map((x) => `<div data-fid="${esc(x.id)}" style="display:${fieldVisible(x, initVals) ? 'contents' : 'none'}">${x.type === 'repeat' ? repeatBlock(x, existing ? existing.values[x.id] : undefined) : fieldInput(x, existing ? existing.values[x.id] : undefined)}</div>`).join('')}</div>`,
     footer: `<button type="button" class="btn" data-act="saveDraft" data-form="${esc(f.id)}" data-sub="${esc(existing ? existing.id : '')}">💾 Save draft</button>`,
+    // re-run on every keystroke/change (modal()'s onInput hook, also called once immediately) so a
+    // hidden question never blocks submit and a shown one always reflects the latest earlier answers
+    // toggling display alone is not enough: a hidden field's <input required> still blocks native
+    // HTML5 form validation on submit (browsers check the control's own computed display, not
+    // whether an ancestor is display:none) - so required has to come off while it's hidden too
+    onInput: (v, form) => { const { visible } = readValues(form, f.fields); f.fields.forEach((x) => { const el = form.querySelector(`[data-fid="${esc(x.id)}"]`); if (!el) return; const show = visible.has(x.id); el.style.display = show ? 'contents' : 'none';
+      el.querySelectorAll('[required],[data-was-required]').forEach((inp) => { if (show) { if (inp.dataset.wasRequired) { inp.required = true; delete inp.dataset.wasRequired; } } else if (inp.required) { inp.required = false; inp.dataset.wasRequired = '1'; } }); }); },
     onSubmit: (v, form) => { const { values, errs } = readValues(form, f.fields); if (errs.length) { toast(errs[0], true); return false; } saveSubmission(f, existing, values, 'SUBMITTED'); } });
+  if (existing) f.fields.forEach((x) => { const v = x.type === 'gps' && existing.values[x.id]; if (v) updateGpsMap('f_' + x.id, v.lat, v.lng); });
 }
 ACT.saveDraft = ({ form, sub }) => { const f = S.form(form); const existing = sub ? DB.submissions.find((x) => x.id === sub) : null; const { values } = readValues($('#mform'), f.fields); if (!Object.keys(values).length) return toast('Nothing to save yet.', true); saveSubmission(f, existing, values, 'DRAFT'); closeModal(); };
 function saveSubmission(f, existing, values, status) {
@@ -114,7 +290,7 @@ function saveSubmission(f, existing, values, status) {
 }
 
 /* ---------- submissions ---------- */
-const subValue = (x, v) => { if (v == null) return '—'; if (x.type === 'yesno') return v ? 'Yes' : 'No'; if (Array.isArray(v)) return v.join(', '); if (x.type === 'gps') return `${v.lat}, ${v.lng}`; if (x.type === 'photo') return '📷 photo'; return String(v); };
+const subValue = (x, v) => { if (v == null) return '—'; if (x.type === 'repeat') return Array.isArray(v) ? `${v.length} entr${v.length === 1 ? 'y' : 'ies'}` : '—'; if (x.type === 'yesno') return v ? 'Yes' : 'No'; if (Array.isArray(v)) return v.join(', '); if (x.type === 'gps') return `${v.lat}, ${v.lng}`; if (x.type === 'photo') return '📷 photo'; if (x.type === 'audio') return '🎙️ recording'; return String(v); };
 VIEWS.submissions = () => {
   const mineOnly = role() === 'AGENT'; const st = VS.tab.subs || 'ALL'; const q = (VS.q.subs || '').toLowerCase(); const ff = VS.sel.subForm || ''; const af = VS.sel.subAgent || '';
   let list = DB.submissions.filter((s) => (!mineOnly || s.memberId === SESSION.id)); if (role() === 'VIEWER') list = list.filter((s) => s.status === 'APPROVED');
@@ -132,8 +308,9 @@ ACT.openSub = ({ id }) => {
   const s = DB.submissions.find((x) => x.id === id); if (!s) return; const f = S.form(s.formId) || { name: 'Form', fields: [] }; const leader = can.review(); const own = s.memberId === SESSION.id;
   modal({ title: esc(f.name), wide: true, cancel: 'Close', submit: leader && s.status !== 'DRAFT' ? 'Save decision' : 'Close', onSubmit: leader && s.status !== 'DRAFT' ? (v) => { const prev = s.status; s.status = v.decision; s.review = { by: SESSION.id, at: Date.now(), note: (v.note || '').trim() }; s.updatedAt = Date.now(); s.seen = false; if (prev !== s.status) audit('Submission ' + STATUS.submission[s.status].toLowerCase(), `${f.name} by ${S.name(s.memberId)}`); commit(); refresh(); toast('Decision saved'); } : null,
     body: `<div class="row wrap" style="gap:12px"><div class="row">${avatar(S.name(s.memberId), 34)}<div><b>${esc(S.name(s.memberId))}</b><div class="muted sm">${fdt(s.at)}</div></div></div><span class="sp"></span>${stPill('submission', s.status)}</div>
-    <div class="list mt">${f.fields.filter((x) => x.type !== 'note' && x.type !== 'photo').map((x) => `<div class="row li"><span class="muted" style="flex:0 0 42%">${esc(x.label)}</span><b class="sp">${esc(subValue(x, s.values[x.id]))}</b></div>`).join('')}</div>
+    <div class="list mt">${f.fields.filter((x) => x.type !== 'note' && x.type !== 'photo' && x.type !== 'audio' && fieldVisible(x, s.values)).map((x) => `<div class="row li"><span class="muted" style="flex:0 0 42%">${esc(x.label)}</span><b class="sp">${esc(subValue(x, s.values[x.id]))}</b></div>`).join('')}</div>
     ${f.fields.filter((x) => x.type === 'photo' && s.values[x.id]).map((x) => `<h4 class="mt">${esc(x.label)}</h4><img class="subphoto" src="${esc(s.values[x.id])}" alt="${esc(x.label)}">`).join('')}
+    ${f.fields.filter((x) => x.type === 'audio' && s.values[x.id]).map((x) => `<h4 class="mt">${esc(x.label)}</h4><audio controls src="${esc(s.values[x.id])}"></audio>`).join('')}
     ${s.gps ? `<div class="alert mt"><span>📍</span><span>${s.gps.lat}, ${s.gps.lng}${s.gps.acc ? ` (±${s.gps.acc} m)` : ''} · <a href="${mapLink(s.gps)}" target="_blank" rel="noopener">Open in OpenStreetMap</a></span></div>` : ''}
     ${s.review && s.review.note ? `<div class="alert ${s.status === 'APPROVED' ? '' : 'bad'} mt"><span>💬</span><span><b>${esc(S.name(s.review.by))}:</b> ${esc(s.review.note)}</span></div>` : ''}
     ${leader && s.status !== 'DRAFT' ? `<h4 class="mt">Review</h4><div class="fg">${fld({ name: 'decision', label: 'Decision', options: [['SUBMITTED', 'Keep waiting'], ['APPROVED', 'Approve'], ['RETURNED', 'Return for correction'], ['REJECTED', 'Reject']], value: s.status })}${fld({ name: 'note', label: 'Note to the collector', type: 'textarea', full: true, rows: 2, value: (s.review && s.review.note) || '' })}</div>` : ''}`,
@@ -142,11 +319,29 @@ ACT.openSub = ({ id }) => {
 };
 ACT.deleteSub = ({ id }) => { if (!guard(can.manageWork())) return; confirmBox('Delete this response permanently?', () => { const s = DB.submissions.find((x) => x.id === id); DB.submissions = DB.submissions.filter((x) => x.id !== id); audit('Response deleted', s ? (S.form(s.formId) || {}).name : ''); commit(); refresh(); closeModal(); toast('Deleted'); }, 'Delete', true); };
 function formRows(f) {
-  const subs = S.subsOfForm(f.id).sort((a, b) => a.at - b.at); const cols = f.fields.filter((x) => x.type !== 'note' && x.type !== 'photo');
-  return [['Response ID', 'Collected by', 'Date', 'Status', ...cols.map((x) => x.label), 'Latitude', 'Longitude', 'Review note'], ...subs.map((s) => [s.id, S.name(s.memberId), fdt(s.at), STATUS.submission[s.status] || s.status, ...cols.map((x) => subValue(x, s.values[x.id]).replace(/^—$/, '')), s.gps ? s.gps.lat : '', s.gps ? s.gps.lng : '', (s.review && s.review.note) || ''])];
+  const subs = S.subsOfForm(f.id).sort((a, b) => a.at - b.at);
+  // the first repeat group gets flattened to one row per instance (standard ODK/XLSForm convention);
+  // a second repeat group in the same form (rare) falls back to a plain entry-count column rather
+  // than being silently dropped - full flattening of more than one repeat is out of scope for v1
+  const repeatField = f.fields.find((x) => x.type === 'repeat');
+  const plainCols = f.fields.filter((x) => x.type !== 'note' && x.type !== 'photo' && x.type !== 'audio' && x !== repeatField);
+  const subCols = repeatField ? repeatField.fields.filter((sx) => sx.type !== 'note' && sx.type !== 'photo' && sx.type !== 'audio') : [];
+  const header = ['Response ID', 'Collected by', 'Date', 'Status', ...plainCols.map((x) => x.label)];
+  if (repeatField) header.push(`${repeatField.label} #`, ...subCols.map((sx) => `${repeatField.label}: ${sx.label}`));
+  header.push('Latitude', 'Longitude', 'Review note');
+  const rows = [header];
+  subs.forEach((s) => {
+    const base = [s.id, S.name(s.memberId), fdt(s.at), STATUS.submission[s.status] || s.status, ...plainCols.map((x) => subValue(x, s.values[x.id]).replace(/^—$/, ''))];
+    const tail = [s.gps ? s.gps.lat : '', s.gps ? s.gps.lng : '', (s.review && s.review.note) || ''];
+    if (!repeatField) { rows.push([...base, ...tail]); return; }
+    const arr = s.values[repeatField.id] || [];
+    if (!arr.length) rows.push([...base, '', ...subCols.map(() => ''), ...tail]);
+    else arr.forEach((inst, idx) => rows.push([...base, String(idx + 1), ...subCols.map((sx) => subValue(sx, inst[sx.id]).replace(/^—$/, '')), ...tail]));
+  });
+  return rows;
 }
 ACT.exportForm = async ({ id }) => { const f = S.form(id); await exportCSV(`${f.name.replace(/[^\w]+/g, '-')}-responses.csv`, formRows(f)); toast('Exported'); };
-ACT.exportAll = async () => { const rows = [['Form', 'Response ID', 'Collected by', 'Date', 'Status', 'Latitude', 'Longitude', 'Answers']]; DB.submissions.forEach((s) => { const f = S.form(s.formId); rows.push([f ? f.name : '', s.id, S.name(s.memberId), fdt(s.at), s.status, s.gps ? s.gps.lat : '', s.gps ? s.gps.lng : '', f ? f.fields.filter((x) => x.type !== 'note' && x.type !== 'photo').map((x) => `${x.label}: ${subValue(x, s.values[x.id])}`).join(' | ') : '']); }); await exportCSV('all-responses.csv', rows); toast('Exported'); };
+ACT.exportAll = async () => { const rows = [['Form', 'Response ID', 'Collected by', 'Date', 'Status', 'Latitude', 'Longitude', 'Answers']]; DB.submissions.forEach((s) => { const f = S.form(s.formId); rows.push([f ? f.name : '', s.id, S.name(s.memberId), fdt(s.at), s.status, s.gps ? s.gps.lat : '', s.gps ? s.gps.lng : '', f ? f.fields.filter((x) => x.type !== 'note' && x.type !== 'photo' && x.type !== 'audio').map((x) => `${x.label}: ${subValue(x, s.values[x.id])}`).join(' | ') : '']); }); await exportCSV('all-responses.csv', rows); toast('Exported'); };
 ACT.formResponses = ({ id }) => { VS.sel.subForm = id; VS.tab.subs = 'ALL'; ACT.go({ r: 'submissions' }); };
 ACT.formSummary = ({ id }) => {
   const f = S.form(id); const subs = S.subsOfForm(id).filter((s) => s.status !== 'DRAFT' && s.status !== 'REJECTED');

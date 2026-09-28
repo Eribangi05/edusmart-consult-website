@@ -92,7 +92,7 @@ const STATUS = {
   member: { ACTIVE: 'Active', INACTIVE: 'Inactive' },
 };
 const PRIORITY = { LOW: 'Low', NORMAL: 'Normal', HIGH: 'High', URGENT: 'Urgent' };
-const FIELD_TYPES = { text: 'Short text', longtext: 'Long text', number: 'Number', date: 'Date', choice: 'Single choice', multi: 'Multiple choice', yesno: 'Yes / No', rating: 'Rating (1 to 5)', gps: 'GPS location', photo: 'Photo', phone: 'Phone number', note: 'Note (instructions, no answer)' };
+const FIELD_TYPES = { text: 'Short text', longtext: 'Long text', number: 'Number', decimal: 'Decimal number', date: 'Date', time: 'Time', datetime: 'Date and time', choice: 'Single choice', multi: 'Multiple choice', yesno: 'Yes / No', rating: 'Rating (1 to 5)', gps: 'GPS location', photo: 'Photo', audio: 'Audio recording', barcode: 'Barcode / QR code', phone: 'Phone number', note: 'Note (instructions, no answer)' };
 const REPORT_TYPES = { DAILY: 'Daily report', WEEKLY: 'Weekly report', INCIDENT: 'Incident', CHALLENGE: 'Challenge or need', SUCCESS: 'Success story' };
 
 function migrate() {
@@ -205,6 +205,9 @@ function shrinkImage(file, max = 900, quality = 0.62) {
     fr.onload = () => { const img = new Image(); img.onerror = reject; img.onload = () => { const k = Math.min(1, max / Math.max(img.width, img.height)); const c = document.createElement('canvas'); c.width = Math.round(img.width * k); c.height = Math.round(img.height * k); c.getContext('2d').drawImage(img, 0, 0, c.width, c.height); resolve(c.toDataURL('image/jpeg', quality)); }; img.src = fr.result; };
     fr.readAsDataURL(file);
   });
+}
+function readFileDataUrl(file) {
+  return new Promise((resolve, reject) => { const fr = new FileReader(); fr.onerror = reject; fr.onload = () => resolve(fr.result); fr.readAsDataURL(file); });
 }
 function getPosition() {
   return new Promise((resolve, reject) => {
