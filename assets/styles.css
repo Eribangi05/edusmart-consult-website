@@ -515,7 +515,7 @@ details{margin-top:.7rem}
 
 /* interactive Rwanda sectors map */
 .rwmap-wrap{display:grid;grid-template-columns:1.5fr 1fr;gap:1.2rem;align-items:start}
-.rwmap{height:520px;border-radius:16px;overflow:hidden;border:1px solid var(--line);background:var(--soft)}
+.rwmap{height:520px;border-radius:16px;overflow:hidden;border:1px solid var(--line);background:var(--soft);isolation:isolate;position:relative}
 .rwmap .leaflet-tooltip{font-family:var(--font);font-weight:700;font-size:.82rem;border:none;box-shadow:var(--shadow)}
 .rwmap-panel{background:var(--bg);border:1px solid var(--line);border-radius:16px;padding:1.3rem;max-height:520px;overflow-y:auto}
 .rwmap-panel h3{margin:0 0 .15rem;font-size:1.05rem}
