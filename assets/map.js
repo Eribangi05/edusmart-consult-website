@@ -31,7 +31,7 @@
     if (!panel) return;
     var known = p.schools.filter(function (s) { return typeof s === 'object'; }).length;
     panel.innerHTML = '<h3>' + esc(p.sector) + '</h3><p class="sub">' + esc(p.district) + ' district, ' + esc(p.province) + '</p>' +
-      '<p class="rwmap-count"><b>' + p.n + '</b> accredited school' + (p.n === 1 ? '' : 's') + '<span>' + (known ? known + ' with a known location' : 'NESA directory') + '</span></p>' +
+      '<p class="rwmap-count"><b>' + p.n + '</b> accredited school' + (p.n === 1 ? '' : 's') + ' listed below<span>' + (known ? known + ' shown on the map with a pin' : 'NESA directory') + '</span></p>' +
       (p.schools.length ? '<ul>' + p.schools.map(function (s, i) {
         var name = typeof s === 'object' ? s.name : s;
         return typeof s === 'object' ? '<li class="pinned" data-i="' + i + '">' + pinIcon + esc(name) + '</li>' : '<li>' + esc(name) + '</li>';
