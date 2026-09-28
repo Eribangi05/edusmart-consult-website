@@ -196,7 +196,7 @@ table.cmp th{background:var(--soft);color:var(--heading)}
 .step::before{background:var(--gold)}.step:nth-child(2)::before{background:var(--cyan);color:#fff}.step:nth-child(3)::before{background:var(--navy);color:#fff}
 .nav .dd{position:relative}
 .nav .dd>a::after{content:"";display:inline-block;margin-left:.4rem;border:4px solid transparent;border-top-color:currentColor;transform:translateY(2px)}
-.nav .dd-menu{position:absolute;left:-1rem;top:100%;min-width:290px;background:var(--card-bg);border:1px solid var(--line);border-top:4px solid var(--gold);border-radius:0 0 12px 12px;box-shadow:var(--shadow-lg);padding:.5rem;display:none}
+.nav .dd-menu{position:absolute;left:-1rem;top:100%;min-width:290px;max-height:calc(100vh - 90px);overflow-y:auto;background:var(--card-bg);border:1px solid var(--line);border-top:4px solid var(--gold);border-radius:0 0 12px 12px;box-shadow:var(--shadow-lg);padding:.5rem;display:none}
 .nav .dd:hover .dd-menu,.nav .dd:focus-within .dd-menu{display:block}
 .nav .dd-menu a{display:block;padding:.55rem .8rem;border-radius:8px;font-weight:600;font-size:.95rem}
 .nav .dd-menu a:hover{background:var(--cyan-100);text-decoration:none}
