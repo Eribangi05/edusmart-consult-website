@@ -223,19 +223,34 @@
   var bar = $('.scroll-progress'), header = $('.site-header'), waFloat = $('.wa-float'), dispToggle0 = $('.disp-toggle'), dispPanel0 = $('.disp-panel');
   if (bar || header || waFloat || dispToggle0) {
     var ticking = false;
+    // cards (e.g. .appcard) carry their own action buttons that can scroll into the same
+    // fixed bottom corners the floating buttons occupy - hide the floating buttons whenever
+    // one of those rows is there, so neither ever sits on top of the other, unclickable
+    var hotEls = $$('.ap-actions, .dl-row');
+    function coveredByCard() {
+      if (!hotEls.length) return false;
+      var vh = window.innerHeight, vw = window.innerWidth;
+      for (var i = 0; i < hotEls.length; i++) {
+        var r = hotEls[i].getBoundingClientRect();
+        if (r.bottom < vh - 170 || r.top > vh) continue;
+        if (r.left < 80 || r.right > vw - 80) return true;
+      }
+      return false;
+    }
     function onScroll() {
       if (ticking) return; ticking = true;
       requestAnimationFrame(function () {
         var h = document.documentElement, y = h.scrollTop, max = h.scrollHeight - h.clientHeight;
         if (bar) bar.style.width = (max > 0 ? (y / max) * 100 : 0) + '%';
         if (header) header.classList.toggle('scrolled', y > 8);
-        var past = y > 420;
+        var past = y > 420 && !coveredByCard();
         if (waFloat) waFloat.classList.toggle('show', past);
         if (dispToggle0) { dispToggle0.classList.toggle('show', past); if (!past && dispPanel0) dispPanel0.classList.remove('open'); }
         ticking = false;
       });
     }
     window.addEventListener('scroll', onScroll, { passive: true });
+    window.addEventListener('resize', onScroll, { passive: true });
     onScroll();
   }
 
@@ -275,7 +290,7 @@
   var dispToggle = $('.disp-toggle'), dispPanel = $('.disp-panel');
   if (dispToggle && dispPanel) {
     dispToggle.addEventListener('click', function () { dispPanel.classList.toggle('open'); });
-    document.addEventListener('click', function (e) { if (!dispPanel.contains(e.target) && e.target !== dispToggle) dispPanel.classList.remove('open'); });
+    document.addEventListener('click', function (e) { if (!dispPanel.contains(e.target) && !dispToggle.contains(e.target)) dispPanel.classList.remove('open'); });
     var darkSwitch = $('#dispDark', dispPanel);
     if (darkSwitch) {
       darkSwitch.classList.toggle('on', theme === 'dark');
