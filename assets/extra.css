@@ -184,3 +184,8 @@ code{overflow-wrap:anywhere;word-break:break-all}
 .subscribe .msg{width:100%;margin:0;font-size:.85rem;font-weight:600;color:var(--ok);display:none}
 .subscribe .msg.show{display:block}
 @media(max-width:600px){.subscribe{flex-direction:column;align-items:stretch}.sub-form{flex-direction:column}.sub-form input{border-radius:12px;border-right:1.5px solid var(--line)}.sub-form .btn{border-radius:12px}}
+
+/* team: centre an incomplete last row (e.g. 5 people in 3 columns); without this file the plain grid still works, just left-aligned */
+.tgrid-c{display:flex;flex-wrap:wrap;justify-content:center}
+.tgrid-c .tcard{flex:0 1 calc((100% - 2.4rem)/3);min-width:0}
+@media(max-width:900px){.tgrid-c .tcard{flex-basis:100%}}

@@ -253,7 +253,7 @@ def _team_card(m):
            else f'<span class="avatar">{esc(initials(m["name"]))}</span>')
     return f'<article class="tcard">{img}<h3>{esc(m["name"])}</h3><span class="role">{esc(m["role"])}</span><p>{esc(m.get("bio", ""))}</p></article>'
 _cards = "".join(_team_card(m) for m in TEAM)
-_team_view = f'<div class="tgrid">{_cards}</div>'
+_team_view = f'<div class="tgrid tgrid-c">{_cards}</div>'
 team_body = hero_page("Our team", "Our team", "A small, focused team in Kigali that you can reach directly.") + f'''
 <section class="section"><div class="container">{_team_view}
 <div class="card gold" style="margin-top:1.4rem;max-width:760px"><h3>Work with us</h3><p>We are always glad to hear from teachers, developers, researchers and trainers who share our goals. See <a href="partners.html#careers">careers</a> or <a href="contact.html#form">write to us</a>.</p></div></div></section>'''
