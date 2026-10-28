@@ -377,10 +377,3 @@
   }
 
 })();
-
-/* team strip: Pause / Play button */
-(function () {
-  var m = document.querySelector('[data-marquee]'); if (!m) return;
-  var b = m.querySelector('.tm-ctl'); if (!b) return;
-  b.addEventListener('click', function () { var p = m.classList.toggle('paused'); b.setAttribute('aria-pressed', p ? 'true' : 'false'); b.textContent = p ? 'Play' : 'Pause'; });
-})();

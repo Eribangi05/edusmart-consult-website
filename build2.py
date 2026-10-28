@@ -253,13 +253,7 @@ def _team_card(m):
            else f'<span class="avatar">{esc(initials(m["name"]))}</span>')
     return f'<article class="tcard">{img}<h3>{esc(m["name"])}</h3><span class="role">{esc(m["role"])}</span><p>{esc(m.get("bio", ""))}</p></article>'
 _cards = "".join(_team_card(m) for m in TEAM)
-# 4+ people: a slowly moving strip (two copies of the cards, the second hidden from screen readers) that pauses
-# on hover/focus and has a Pause button; fewer people stay in the plain grid, where a strip would show gaps
-if len(TEAM) >= 4:
-    _team_view = (f'<div class="tmarquee" data-marquee style="--tm-secs:{len(TEAM) * 16}s"><button type="button" class="tm-ctl" aria-pressed="false">Pause</button>'
-                  f'<div class="tm-view" tabindex="0" aria-label="Our team"><div class="tm-track"><div class="tm-set">{_cards}</div><div class="tm-set" aria-hidden="true">{_cards}</div></div></div></div>')
-else:
-    _team_view = f'<div class="tgrid">{_cards}</div>'
+_team_view = f'<div class="tgrid">{_cards}</div>'
 team_body = hero_page("Our team", "Our team", "A small, focused team in Kigali that you can reach directly.") + f'''
 <section class="section"><div class="container">{_team_view}
 <div class="card gold" style="margin-top:1.4rem;max-width:760px"><h3>Work with us</h3><p>We are always glad to hear from teachers, developers, researchers and trainers who share our goals. See <a href="partners.html#careers">careers</a> or <a href="contact.html#form">write to us</a>.</p></div></div></section>'''
