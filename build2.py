@@ -249,7 +249,7 @@ add("impact.html", "Impact | EduSmart Consult", "Real numbers behind EduSmart Co
 TEAM = load_json("team.json", [])
 def initials(n): return "".join(w[0] for w in n.split()[:2]).upper()
 team_body = hero_page("Our team", "Our team", "A small, focused team in Kigali that you can reach directly.") + f'''
-<section class="section"><div class="container"><div class="tgrid">{"".join(f"""<article class="tcard">{f'<img src="{esc(m["photo"])}" alt="{esc(m["name"])}" width="120" height="120" loading="lazy">' if m.get("photo") else f'<span class="avatar">{esc(initials(m["name"]))}</span>'}<h3>{esc(m["name"])}</h3><span class="role">{esc(m["role"])}</span><p>{esc(m.get("bio", ""))}</p></article>""" for m in TEAM)}</div>
+<section class="section"><div class="container"><div class="tgrid">{"".join(f"""<article class="tcard">{f'<img src="{esc(m["photo"])}" alt="{esc(m["name"])}" width="150" height="150" loading="lazy">' if m.get("photo") else f'<span class="avatar">{esc(initials(m["name"]))}</span>'}<h3>{esc(m["name"])}</h3><span class="role">{esc(m["role"])}</span><p>{esc(m.get("bio", ""))}</p></article>""" for m in TEAM)}</div>
 <div class="card gold" style="margin-top:1.4rem;max-width:760px"><h3>Work with us</h3><p>We are always glad to hear from teachers, developers, researchers and trainers who share our goals. See <a href="partners.html#careers">careers</a> or <a href="contact.html#form">write to us</a>.</p></div></div></section>'''
 add("team.html", "Our team | EduSmart Consult", "Meet the people behind EduSmart Consult LTD in Kigali, Rwanda.", "about", team_body, ld=ld_bc([("Home", ""), ("Our team", "team.html")]))
 
