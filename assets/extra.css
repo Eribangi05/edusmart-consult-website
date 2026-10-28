@@ -184,3 +184,15 @@ code{overflow-wrap:anywhere;word-break:break-all}
 .subscribe .msg{width:100%;margin:0;font-size:.85rem;font-weight:600;color:var(--ok);display:none}
 .subscribe .msg.show{display:block}
 @media(max-width:600px){.subscribe{flex-direction:column;align-items:stretch}.sub-form{flex-direction:column}.sub-form input{border-radius:12px;border-right:1.5px solid var(--line)}.sub-form .btn{border-radius:12px}}
+
+/* team: slowly moving strip for 4+ people (see build2.py); pauses on hover/focus or with the button, and stops for reduced-motion users */
+.tm-ctl{display:block;margin:0 0 .6rem auto;padding:.35rem .9rem;border:1px solid var(--line);border-radius:999px;background:var(--card-bg);color:var(--ink);font:600 .85rem/1 var(--font);cursor:pointer}
+.tm-ctl:hover{border-color:var(--cyan)}
+.tm-view{overflow:hidden;padding:.4rem 0 1rem;-webkit-mask-image:linear-gradient(90deg,transparent,#000 3%,#000 97%,transparent);mask-image:linear-gradient(90deg,transparent,#000 3%,#000 97%,transparent);border-radius:12px}
+.tm-track{display:flex;width:max-content;animation:tmScroll var(--tm-secs,80s) linear infinite}
+.tm-set{display:flex;gap:1.2rem;padding-right:1.2rem}
+.tm-set .tcard{width:300px;flex:none}
+@keyframes tmScroll{to{transform:translateX(-50%)}}
+.tmarquee:hover .tm-track,.tm-view:focus .tm-track,.tmarquee.paused .tm-track{animation-play-state:paused}
+@media(max-width:600px){.tm-set .tcard{width:260px}}
+@media(prefers-reduced-motion:reduce){.tm-track{animation:none}.tm-view{overflow-x:auto;-webkit-mask-image:none;mask-image:none}.tm-set[aria-hidden]{display:none}.tm-ctl{display:none}}

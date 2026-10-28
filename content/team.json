@@ -1,5 +1,7 @@
 [
   {"name": "Alexis HAGENIMANA", "role": "Managing Director", "bio": "Leads EduSmart Consult LTD, a company registered in Rwanda for education, research, consulting and digital solutions.", "photo": "assets/team/alexis-hagenimana.jpg"},
+  {"name": "Joas TUYISHIME", "role": "Research Manager", "bio": "Leads our research work, from study design and data collection to analysis and clear findings that clients can act on.", "photo": "assets/team/joas-tuyishime.jpg"},
   {"name": "Aline MUGENI", "role": "Finance Manager", "bio": "Manages the company's finances, budgets and financial reporting, so that every project is run with care and transparency.", "photo": "assets/team/aline-mugeni.jpg"},
-  {"name": "Benigne UWIZEYE", "role": "Monitoring and Evaluation Manager", "bio": "Leads monitoring and evaluation across our projects and apps, and turns the evidence into clear reports that help us and our clients improve.", "photo": "assets/team/benigne-uwizeye.jpg"}
+  {"name": "Benigne UWIZEYE", "role": "Monitoring and Evaluation Manager", "bio": "Leads monitoring and evaluation across our projects and apps, and turns the evidence into clear reports that help us and our clients improve.", "photo": "assets/team/benigne-uwizeye.jpg"},
+  {"name": "Angelique DUSABEMARIYA", "role": "Office Assistant", "bio": "Keeps the office running smoothly and is often the first friendly voice that welcomes our visitors and callers.", "photo": "assets/team/angelique-dusabemariya.jpg"}
 ]
