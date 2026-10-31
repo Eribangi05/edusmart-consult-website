@@ -90,7 +90,7 @@ def make_og(slug, title, sub):
         d.text((70, y), ln, font=f1, fill="#ffffff"); y += 78
     for ln in _wrap(d, sub, f2, 700)[:2]:
         d.text((70, y + 14), ln, font=f2, fill="#cfe0ff"); y += 42
-    d.text((70, H - 70), "www.edusmartconsult.com", font=_font("segoeui.ttf", 26), fill="#8fb1ee")
+    d.text((70, H - 70), "www.edusmartconsult.rw", font=_font("segoeui.ttf", 26), fill="#8fb1ee")
     im.save(out, optimize=True)
 
 if Image:

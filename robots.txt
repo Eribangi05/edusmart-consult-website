@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 Disallow: /editor.html
-Sitemap: https://www.edusmartconsult.com/sitemap.xml
+Sitemap: https://www.edusmartconsult.rw/sitemap.xml

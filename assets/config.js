@@ -4,7 +4,8 @@ window.EDUSMART = {
   company: "EduSmart Consult LTD",
   phone: "+250 782 368 555",
   phoneIntl: "250782368555",          // digits only, used for WhatsApp links
-  email: "hagenalexis2000@gmail.com",
+  email: "ahagenimana@edusmartconsult.rw",
+  email2: "info@edusmartconsult.rw",   // second public address, shown beside the first on Contact and in the footer
   address: "Itetero, Nyagatovu, Kimironko, Gasabo, Kigali, Rwanda",
 
   /* Smart School App downloads. Host the large files (about 2 GB each) on GitHub Releases,

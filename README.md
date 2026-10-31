@@ -14,7 +14,7 @@ A fast static website (no server code, no database). It works on any web host.
    While a link is empty, the button says "Request the download" and opens the contact form.
 2. **Contact form.** Create a free form endpoint at formspree.io (or similar), paste it into `formEndpoint`.
    While empty, the form opens the visitor's email app with the message ready to send.
-3. **Domain.** In `build.py` change `SITE_URL` if the domain is not www.edusmartconsult.com, then run `python build.py`.
+3. **Domain.** In `build.py` change `SITE_URL` if the domain is not www.edusmartconsult.rw, then run `python build.py`.
 
 ## Editing text
 All page copy is in `build.py`. Edit it, then run:

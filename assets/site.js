@@ -72,6 +72,7 @@
 
   // contact details from config
   document.querySelectorAll('[data-phone]').forEach(function (e) { e.textContent = C.phone; if (e.tagName === 'A') e.href = 'tel:+' + C.phoneIntl; });
+  document.querySelectorAll('[data-email2]').forEach(function (e) { if (!C.email2) { e.hidden = true; return; } e.textContent = C.email2; if (e.tagName === 'A') e.href = 'mailto:' + C.email2; });
   document.querySelectorAll('[data-email]').forEach(function (e) { e.textContent = C.email; if (e.tagName === 'A') e.href = 'mailto:' + C.email; });
   document.querySelectorAll('[data-wa]').forEach(function (e) { e.href = 'https://wa.me/' + C.phoneIntl + '?text=' + encodeURIComponent(e.getAttribute('data-wa') || 'Hello EduSmart Consult'); });
   document.querySelectorAll('[data-email-link]').forEach(function (e) { e.href = 'mailto:' + C.email; });

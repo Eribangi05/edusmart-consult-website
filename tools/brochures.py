@@ -139,7 +139,7 @@ def head(kick, title, lead=""):
 
 def cta(title, sub, extra=""):
     return ('<div class="hero-band mk" style="margin-top:5mm"><div class="row"><div style="flex:1"><h2>%s</h2><p>%s</p></div>'
-            '<div class="contact">+250 782 368 555<br>hagenalexis2000@gmail.com<br>Kimironko, Gasabo, Kigali%s</div></div></div>' % (esc(title), esc(sub), extra))
+            '<div class="contact">+250 782 368 555<br>ahagenimana@edusmartconsult.rw<br>Kimironko, Gasabo, Kigali%s</div></div></div>' % (esc(title), esc(sub), extra))
 
 
 class Doc:
@@ -153,7 +153,7 @@ class Doc:
         n = len(self.pages) + 1
         self.pages.append(
             '<div class="pg"><div class="stripe"></div><div class="top"><img src="%slogo-horizontal.png"><span>%s</span></div><div class="body">%s</div>'
-            '<div class="foot"><span><b>EduSmart Consult LTD</b> &nbsp; Kigali, Rwanda &nbsp; +250 782 368 555 &nbsp; hagenalexis2000@gmail.com</span><span class="n">%d</span></div></div>' % (A, esc(self.title), inner, n))
+            '<div class="foot"><span><b>EduSmart Consult LTD</b> &nbsp; Kigali, Rwanda &nbsp; +250 782 368 555 &nbsp; ahagenimana@edusmartconsult.rw</span><span class="n">%d</span></div></div>' % (A, esc(self.title), inner, n))
 
     def build(self):
         tmp = os.environ.get("BRO_KEEP") or tempfile.mkdtemp()
@@ -386,7 +386,7 @@ def company_brochure():
            fc("shield-check", "c5", "ICT and Computer Systems Support", "Set up, repair and support for schools and offices.") +
            fc("globe-hemisphere-east", "c4", "Environmental and Technical Consulting", "Technical advice for projects.") +
            fc("briefcase", "c8", "Administrative, Fundraising and Equipment Support", "Help with proposals, procurement and administration.") + '</div>' +
-           '<div class="hero-band mk" style="margin-top:5mm"><div class="row"><div style="flex:1"><h2>Based in Kigali, working across Rwanda</h2><p>Itetero, Nyagatovu, Kimironko, Gasabo, Kigali. Registered company, Rwanda.</p></div><div class="contact">+250 782 368 555<br>hagenalexis2000@gmail.com</div></div></div>')
+           '<div class="hero-band mk" style="margin-top:5mm"><div class="row"><div style="flex:1"><h2>Based in Kigali, working across Rwanda</h2><p>Itetero, Nyagatovu, Kimironko, Gasabo, Kigali. Registered company, Rwanda.</p></div><div class="contact">+250 782 368 555<br>ahagenimana@edusmartconsult.rw</div></div></div>')
 
     d.page(head("Our products", "Tools that work where the internet does not", "Built and tested with Rwandan schools in mind. Each one runs on ordinary computers and phones.") +
            '<div class="hero-band"><div class="row"><div style="flex:1.05"><h2>Smart School App</h2><p>The complete offline learning and school management suite for Primary 1 to Primary 6, on Windows and Android.</p>' + ck(["Full curriculum library and 62 national exam papers", "REB lesson plans, timetables, marking, gradebook", "Parent reports with an offline QR code"]) + '</div>' +
@@ -434,7 +434,7 @@ def fmis_guide():
            '<table class="tb"><tr><th>Role</th><th>What they do</th><th>What they see</th></tr><tr><td>Admin</td><td>Owns the workspace and the team</td><td>Everything</td></tr><tr><td>Manager</td><td>Runs projects, builds forms, reviews</td><td>Everything except settings</td></tr><tr><td>Supervisor</td><td>Assigns tasks, reviews work</td><td>All field work</td></tr><tr><td>Field agent</td><td>Collects data, checks in, reports</td><td>Own work and published forms</td></tr><tr><td>Viewer</td><td>Read only, for funders and partners</td><td>Projects, tasks, approved data</td></tr></table>' +
            '<h2 class="s" style="margin-top:5mm">Connect your team in five steps</h2>' + steps([("Create", "The Admin creates the workspace."), ("Sync", "Turn on cloud sync in Settings."), ("Invite", "Send each person a one-time code."), ("Join", "They enter the code and their own phone number."), ("Work", "Data flows both ways, offline first.")]) +
            '<div class="g2" style="margin-top:4mm">' + fc("lock-key", "c1", "You stay in control", "Backups in one button. The Admin can remove anyone's access at once.", True) + fc("wifi-high", "c4", "Works with poor networks", "Changes wait on the phone and are sent when it is online.", True) + '</div>' +
-           cta("Start your workspace today", "Open the web app at www.edusmartconsult.com/fmis or ask us to set it up and train your team."))
+           cta("Start your workspace today", "Open the web app at www.edusmartconsult.rw/fmis or ask us to set it up and train your team."))
     d.build()
 
 
@@ -463,7 +463,7 @@ def ikimina_guide():
            '<div class="g2" style="margin-top:4mm">' + fc("lock-key", "c1", "Your data stays yours", "Everything is saved on the device first. Backups take one button.", True) + fc("shield-check", "c2", "Members are protected", "The server sends members only their own records and the group notices.", True) +
            fc("wifi-high", "c4", "Works offline", "Record payments at the meeting with no signal. It syncs later.", True) + fc("translate", "c6", "Three languages", "Kinyarwanda, English and French.", True) + '</div>' +
            '<div class="row" style="margin-top:4mm"><div style="flex:1">' + phone(IMG + "iki-m-menu.jpg", "width:42mm") + '</div><div style="flex:2"><h2 class="s">Good to know</h2>' + ck(["The demo group uses the PIN 1234 for everyone", "Records live on one device until sync is on", "Payments are recorded as cash or mobile money with a reference; the app does not move money", "Save a backup regularly from Reports"]) + '</div></div>' +
-           cta("Try Ikimina now", "Open www.edusmartconsult.com/ikimina, or ask us about the Windows and Android apps."))
+           cta("Try Ikimina now", "Open www.edusmartconsult.rw/ikimina, or ask us about the Windows and Android apps."))
     d.build()
 
 

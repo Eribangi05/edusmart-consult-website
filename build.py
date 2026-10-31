@@ -6,7 +6,7 @@ import os, re, json
 ROOT = os.path.dirname(os.path.abspath(__file__))
 import datetime
 TODAY = datetime.date.today().isoformat()
-SITE_URL = "https://www.edusmartconsult.com"   # change if the final domain differs
+SITE_URL = "https://www.edusmartconsult.rw"
 GOOGLE_VERIFICATION = ""   # paste the token from Google Search Console here (see SEO-SETUP.md)
 
 exec(open(os.path.join(ROOT, "make_og.py"), encoding="utf-8").read())
@@ -174,7 +174,7 @@ FOOTER = f'''<section class="cta"><div class="container"><h2>Talk to us about yo
 <div><h4>Products</h4><a href="smart-school-app.html">Smart School App</a><a href="smart-school-cloud.html">Smart School Cloud</a><a href="apps.html">All web apps</a><a href="road-code.html">Amategeko y'Umuhanda</a><a href="savings-groups.html">Ikimina</a><a href="field-management.html">FMIS</a><a href="tour.html">Take the tour</a><a href="pricing.html">Pricing</a><a href="downloads.html">Downloads</a><a href="products.html">All products</a></div>
 <div><h4>Company</h4><a href="about.html">About us</a><a href="team.html">Our team</a><a href="impact.html">Impact</a><a href="news.html">News and tips</a><a href="stories.html">Success stories</a><a href="partners.html">Partners and careers</a><a href="request.html">Request a demo</a></div>
 </div>
-<div class="foot-contact"><span>Itetero, Nyagatovu, Kimironko, Gasabo, Kigali, Rwanda</span><a data-phone href="#">+250 782 368 555</a><a data-email href="#">email</a></div>
+<div class="foot-contact"><span>Itetero, Nyagatovu, Kimironko, Gasabo, Kigali, Rwanda</span><a data-phone href="#">+250 782 368 555</a><a data-email href="#">email</a><a data-email2 href="#"></a></div>
 <div class="foot-legal"><a href="privacy.html">Privacy</a><a href="terms.html">Terms</a><a href="security.html">Security</a><a href="child-safety.html">Child safety</a><a href="help.html">Help centre</a><a href="status.html">Status</a></div>
 <div class="foot-bottom"><span>&copy; <span data-year></span> EduSmart Consult LTD. All rights reserved.</span>
 <span>Registered company, Rwanda</span></div>
@@ -218,7 +218,7 @@ def page(fname, title, desc, active, body, og=None, ld="", noindex=False):
 <link rel="stylesheet" href="assets/styles.css"><link rel="stylesheet" href="assets/extra.css">
 {"<meta name=\"robots\" content=\"noindex\">" if noindex else ""}<meta name="google-site-verification" content="{GOOGLE_VERIFICATION}">
 <link rel="alternate" type="application/rss+xml" title="EduSmart Consult news" href="feed.xml">
-<script type="application/ld+json">{{"@context":"https://schema.org","@type":"Organization","name":"EduSmart Consult LTD","url":"{SITE_URL}","logo":"{SITE_URL}/assets/emblem-512.png","email":"hagenalexis2000@gmail.com","telephone":"+250782368555","address":{{"@type":"PostalAddress","streetAddress":"Itetero, Nyagatovu, Kimironko, Gasabo","addressLocality":"Kigali","addressCountry":"RW"}}}}</script>{ld}
+<script type="application/ld+json">{{"@context":"https://schema.org","@type":"Organization","name":"EduSmart Consult LTD","url":"{SITE_URL}","logo":"{SITE_URL}/assets/emblem-512.png","email":"ahagenimana@edusmartconsult.rw","telephone":"+250782368555","address":{{"@type":"PostalAddress","streetAddress":"Itetero, Nyagatovu, Kimironko, Gasabo","addressLocality":"Kigali","addressCountry":"RW"}}}}</script>{ld}
 </head><body>
 {header(active)}
 <main id="main">
@@ -850,7 +850,7 @@ contact = hero_page("Contact", "Contact us", "Ask about any of our services, req
 <div class="cinfo">
 <div class="cbox c1"><span class="ico">{ico("call")}</span><div><h3>Phone and WhatsApp</h3><p><span data-phone>+250 782 368 555</span></p>
 <div class="cact"><a class="btn btn-primary btn-sm" href="tel:+250782368555">Call now</a><a class="btn btn-wa btn-sm" data-wa="Hello EduSmart Consult" href="#" rel="noopener">WhatsApp</a></div></div></div>
-<div class="cbox c2"><span class="ico c2">{ico("mail")}</span><div><h3>Email</h3><p><span data-email>email</span></p>
+<div class="cbox c2"><span class="ico c2">{ico("mail")}</span><div><h3>Email</h3><p><span data-email>email</span><br><span data-email2></span></p>
 <div class="cact"><a class="btn btn-sky btn-sm" data-email-link href="#">Write an email</a></div></div></div>
 <div class="cbox c3"><span class="ico c3">{ico("pin")}</span><div><h3>Office</h3><p>Itetero, Nyagatovu, Kimironko<br>Gasabo, Kigali, Rwanda</p>
 <div class="cact"><a class="btn btn-outline btn-sm" href="https://www.google.com/maps/search/?api=1&query=Itetero+Nyagatovu+Kimironko+Gasabo+Kigali+Rwanda" target="_blank" rel="noopener">Open in Maps</a></div></div></div>
