@@ -7,8 +7,14 @@ HERE = os.path.dirname(os.path.abspath(__file__)); ROOT = os.path.dirname(HERE)
 sys.path.insert(0, HERE)
 spec = importlib.util.spec_from_file_location("brochures", os.path.join(HERE, "brochures.py")); B = importlib.util.module_from_spec(spec); spec.loader.exec_module(B)
 B.A = "file://" + ROOT + "/assets/"
-from ikimina_guide_content import SECTIONS, GI
-IMG = "file://" + ROOT + "/" + GI
+from ikimina_guide_content import SECTIONS as SECTIONS_EN, GI
+LANG = sys.argv[1] if len(sys.argv) > 1 else "en"
+if LANG == "en":
+    SECTIONS = SECTIONS_EN; CH = None; GI_DIR = GI; OUTNAME = "Ikimina-guide.pdf"
+else:
+    import ikimina_guide_i18n as I18N
+    SECTIONS = I18N.SECTIONS[LANG]; CH = I18N.CHROME[LANG]; GI_DIR = "assets/ikimina-guide-%s/" % LANG; OUTNAME = CH["pdf"]
+IMG = "file://" + ROOT + "/" + GI_DIR
 esc = B.esc
 
 
@@ -18,7 +24,7 @@ def block(b):
         items = b[1]; ds = [x for x in items if x[0] == "d"]
         if len(ds) == len(items):
             n = len(items)
-            wd = {1: "100%", 2: "58%", 3: "48%"}.get(n, "48%")
+            wd = {1: "100%", 2: "52%", 3: "48%"}.get(n, "48%")
             cells = "".join('<div style="width:%s;margin:0 %s 3mm;min-width:0">%s<p class="cap"><b>%s.</b> %s</p></div>' % (wd, "auto" if n < 3 else "0", B.win(IMG + f + ".jpg", ttl), esc(ttl), esc(cap)) for _, f, ttl, cap in items)
             return '<div style="margin:3mm 0;%s">%s</div>' % ("display:flex;flex-wrap:wrap;justify-content:space-between" if n >= 3 else "", cells)
         w = {1: 68, 2: 58, 3: 54, 4: 43}.get(len(items), 43)
@@ -33,24 +39,26 @@ def block(b):
     raise ValueError(t)
 
 
-d = B.Doc("Ikimina-guide", "Ikimina user guide")
-d.cover(B.cover_block("<em>Ikimina</em><br>User guide", "Everything your savings group needs to know: for members, the Accountant, the Secretary, the President and the EduSmart support team.",
-                      ["Web", "Android", "Kinyarwanda", "English", "Français"], [("6", "roles"), ("18", "guide sections"), ("3", "languages")],
+d = B.Doc("Ikimina-guide", CH["title"] if CH else "Ikimina user guide")
+d.cover(B.cover_block(CH["cover_title"] if CH else "<em>Ikimina</em><br>User guide", CH["cover_tag"] if CH else "Everything your savings group needs to know: for members, the Accountant, the Secretary, the President and the EduSmart support team.",
+                      CH["chips"] if CH else ["Web", "Android", "Kinyarwanda", "English", "Français"], CH["band"] if CH else [("6", "roles"), ("18", "guide sections"), ("3", "languages")],
                       '<div style="position:absolute;left:14mm;right:14mm;top:0"><div style="width:156mm">' + B.win(IMG + "g-d-dashboard.jpg", "Ikimina") + '</div>' +
                       '<div style="position:absolute;right:0;top:18mm">' + B.phone(IMG + "g-m-home.jpg", "width:46mm") + '</div></div>', "ikimina-192.png", 128))
 # contents page
 toc = "".join('<tr><td>%d</td><td>%s</td><td>%s</td></tr>' % (i + 2, esc(s["title"]), esc(s["kick"])) for i, s in enumerate(SECTIONS))
-d.page(B.head("Contents", "What is in this guide", "Use the section for your role. Members start at Getting started; officers read the sections for their own job.") +
-       '<table class="tb"><tr><th style="width:14mm">Page</th><th>Section</th><th>For</th></tr>%s</table>' % toc.replace("<td>%d</td>" % 2, "<td>3</td>", 0))
+_c = CH["toc_cols"] if CH else ["Page", "Section", "For"]
+d.page(B.head(CH["toc_kick"] if CH else "Contents", CH["toc_title"] if CH else "What is in this guide", CH["toc_lead"] if CH else "Use the section for your role. Members start at Getting started; officers read the sections for their own job.") +
+       '<table class="tb"><tr><th style="width:14mm">%s</th><th>%s</th><th>%s</th></tr>%s</table>' % (_c[0], _c[1], _c[2], toc))
 for i, s in enumerate(SECTIONS):
     d.page(B.head(s["kick"], s["title"], s["lead"]) + "".join(block(b) for b in s["blocks"]))
-d.page(B.head("Ready to start", "Set up your group with EduSmart Consult", "Open the demo, look at every screen, then ask us to set up your own group. We create the group, you choose who holds each role.") +
-       '<div class="row" style="margin-top:4mm"><div style="flex:1">' + B.fc("globe-hemisphere-east", "c6", "Try it", "Open the web app at ikimina-demo.onrender.com. The demo has sample data only.", True) + '</div><div style="flex:1">' +
-       B.fc("device-mobile", "c4", "On Android", "Download the app from www.edusmartconsult.rw/savings-groups.html, open the file and allow installs from your browser.", True) + '</div></div>' +
-       B.cta("Talk to us", "We set up your group, train your officers and support you."))
+_e = CH or dict(end_kick="Ready to start", end_title="Set up your group with EduSmart Consult", end_lead="Open the demo, look at every screen, then ask us to set up your own group. We create the group, you choose who holds each role.", end1=("Try it", "Open the web app at ikimina-demo.onrender.com. The demo has sample data only."), end2=("On Android", "Download the app from www.edusmartconsult.rw/savings-groups.html, open the file and allow installs from your browser."), cta=("Talk to us", "We set up your group, train your officers and support you."))
+d.page(B.head(_e["end_kick"], _e["end_title"], _e["end_lead"]) +
+       '<div class="row" style="margin-top:4mm"><div style="flex:1">' + B.fc("globe-hemisphere-east", "c6", _e["end1"][0], _e["end1"][1], True) + '</div><div style="flex:1">' +
+       B.fc("device-mobile", "c4", _e["end2"][0], _e["end2"][1], True) + '</div></div>' +
+       B.cta(_e["cta"][0], _e["cta"][1]))
 html = '<!doctype html><meta charset="utf-8"><title>Ikimina user guide</title><style>%s</style>%s' % (B.CSS, "".join(d.pages))
 tmp = tempfile.mkdtemp(); src = os.path.join(tmp, "guide.html"); open(src, "w", encoding="utf-8").write(html)
-out = os.path.join(ROOT, "assets", "brochures", "Ikimina-guide.pdf"); os.makedirs(os.path.dirname(out), exist_ok=True)
+out = os.path.join(ROOT, "assets", "brochures", OUTNAME); os.makedirs(os.path.dirname(out), exist_ok=True)
 js = "const {chromium}=require('playwright');(async()=>{const b=await chromium.launch();const p=await b.newPage();await p.goto('file://%s');await p.waitForTimeout(1500);await p.pdf({path:'%s',format:'A4',printBackground:true,margin:{top:0,right:0,bottom:0,left:0},preferCSSPageSize:true});await b.close()})()" % (src, out)
 open(os.path.join(tmp, "r.cjs"), "w").write(js)
 subprocess.run(["node", os.path.join(tmp, "r.cjs")], check=True, env=dict(os.environ, NODE_PATH=subprocess.run(["npm", "root", "-g"], capture_output=True, text=True).stdout.strip()))
