@@ -189,3 +189,4 @@ code{overflow-wrap:anywhere;word-break:break-all}
 .tgrid-c{display:flex;flex-wrap:wrap;justify-content:center}
 .tgrid-c .tcard{flex:0 1 calc((100% - 2.4rem)/3);min-width:0}
 @media(max-width:900px){.tgrid-c .tcard{flex-basis:100%}}
+.guide-list{padding-left:1.25rem;margin:.8rem 0}.guide-list li{margin:.4rem 0}.fig figcaption b{display:block}

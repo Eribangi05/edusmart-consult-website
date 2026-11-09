@@ -37,7 +37,7 @@ ik = hero_page("Savings groups", "Ikimina", "Run your savings group with clear r
 <div><div class="kicker">Try it now</div><h2>Open it in your browser</h2>
 <p>The books live online, so the President, Accountant, Secretary and members each use their own phone and see the same group. The demo is a test version with sample data. Look around, and ask us to set up your own group.</p>
 <ol class="next"><li>Press <b>Open the web app</b>.</li><li>Sign in with the demo member phone number and PIN below.</li><li>See a member's savings, loans, attendance and contribution history, and switch between Kinyarwanda, English and French. The first start can take up to a minute while the demo server wakes up.</li></ol>
-<p style="margin-top:1.2rem"><a class="btn btn-gold" href="https://ikimina-demo.onrender.com/">Open the web app</a> <a class="btn btn-outline" href="https://ikimina-apk.onrender.com/">Android app (test version)</a> <a class="btn btn-outline" href="contact.html?topic={_ik_topic}#form">Set up my group</a></p></div>
+<p style="margin-top:1.2rem"><a class="btn btn-gold" href="https://ikimina-demo.onrender.com/">Open the web app</a> <a class="btn btn-outline" href="https://ikimina-apk.onrender.com/">Android app (test version)</a> <a class="btn btn-outline" href="contact.html?topic={_ik_topic}#form">Set up my group</a> <a class="btn btn-outline" href="ikimina-guide.html">User guide</a></p></div>
 <div class="grid" style="gap:1rem">
 <img src="assets/products/ikimina.png" alt="Ikimina logo" width="140" height="140" style="width:min(140px,50%);height:auto;margin:0 auto .4rem;display:block">
 <div class="card">{ico("target")}<h3>Demo group</h3><p>Twiyubake Ikimina, a sample group with 25 fictional members, loans, meetings and six months of history, so you can try every screen.</p>
@@ -87,6 +87,47 @@ ik = hero_page("Savings groups", "Ikimina", "Run your savings group with clear r
 <div class="reach-actions">
 <a class="btn btn-gold" href="https://ikimina-demo.onrender.com/">Open the web app</a>
 <a class="btn btn-ghost-light" href="contact.html?topic={_ik_topic}#form">Set up my group</a>
+<a class="btn btn-ghost-light" href="ikimina-guide.html">Read the user guide</a>
 </div></div></div></section>'''
 add("savings-groups.html", "Ikimina | Savings group manager in your browser", "Manage a savings group (ikimina, VSLA or tontine) in your browser: contributions, loans, rotation, reports and roles for the President, Accountant and members.", "products", ik,
     ld=ld_bc([("Home", ""), ("Products", "products.html"), ("Ikimina", "savings-groups.html")]))
+
+
+# ---- the user guide as a web page (same content as the PDF: tools/ikimina_guide_content.py)
+import sys as _sys
+_sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), "tools"))
+import ikimina_guide_content as _gc
+
+
+def _g_block(b):
+    t = b[0]
+    if t == "shots":
+        items = b[1]
+        if all(x[0] == "d" for x in items):
+            cols = 1 if len(items) == 1 else 2
+            cells = "".join(f'<figure class="fig">{win(_gc.GI.replace("assets/", "assets/") + f + ".jpg", ttl, title="Ikimina", w=1500, h=938, logo="assets/ikimina-192.png")}<figcaption><b>{esc(ttl)}</b>{esc(cap)}</figcaption></figure>' for _, f, ttl, cap in items)
+            return f'<div class="grid" style="grid-template-columns:repeat({cols},1fr);gap:1.2rem;margin:1.2rem 0">{cells}</div>'
+        cells = "".join(f'<figure class="fig" style="text-align:center"><div class="phone"><img src="{_gc.GI}{f}.jpg" alt="{esc(ttl)} on a phone" width="560" height="1170" loading="lazy"></div><figcaption><b>{esc(ttl)}</b>{esc(cap)}</figcaption></figure>' for _, f, ttl, cap in items)
+        return f'<div class="phones" style="grid-template-columns:repeat({len(items)},1fr);max-width:{min(900, 260 * len(items))}px;margin:1.2rem auto">{cells}</div>'
+    if t == "steps":
+        return '<ol class="next">' + "".join(f"<li><b>{esc(a)}.</b> {esc(d)}</li>" for a, d in b[1]) + "</ol>"
+    if t == "bullets":
+        return '<ul class="guide-list">' + "".join(f"<li>{esc(x)}</li>" for x in b[1]) + "</ul>"
+    if t == "call":
+        return f'<div class="callout-box">{esc(b[2])}</div>'
+    if t == "table":
+        return '<div class="scroll-x"><table class="cmp" style="width:100%"><tr>' + "".join(f"<th>{esc(h)}</th>" for h in b[1]) + "</tr>" + "".join("<tr>" + "".join(f"<td>{esc(c)}</td>" for c in r) + "</tr>" for r in b[2]) + "</table></div>"
+    return f"<p>{esc(b[1])}</p>"
+
+
+_g_toc = "".join(f'<a class="tthumb" href="#{s["id"]}"><span>{i + 1}</span>{esc(s["title"])}</a>' for i, s in enumerate(_gc.SECTIONS))
+_g_secs = "".join(f'<section class="section{" soft" if i % 2 else ""}" id="{s["id"]}"><div class="container"><div class="kicker">{esc(s["kick"])}</div><h2>{esc(s["title"])}</h2><p class="lead">{esc(s["lead"])}</p>{"".join(_g_block(b) for b in s["blocks"])}</div></section>' for i, s in enumerate(_gc.SECTIONS))
+ikg = hero_page("Savings groups", "Ikimina user guide", "Everything your group needs to know, for members, the Accountant, the Secretary, the President and the EduSmart support team, with screens from the real app.") + f'''
+<section class="section"><div class="container"><div class="section-head"><div><div class="kicker">In this guide</div><h2>Choose your section</h2></div><p>Members start with Getting started. Officers read the sections for their own job.</p></div>
+<div class="tour-thumbs" style="flex-wrap:wrap">{_g_toc}</div>
+<p style="margin-top:1.2rem"><a class="btn btn-gold" href="assets/brochures/Ikimina-guide.pdf" download>Download the guide (PDF)</a> <a class="btn btn-outline" href="savings-groups.html">About Ikimina</a> <a class="btn btn-outline" href="https://ikimina-demo.onrender.com/">Open the web app</a></p></div></section>
+{_g_secs}
+<section class="section"><div class="container"><div class="reach"><div><div class="kicker">Ready when you are</div><h2>Set up your group with EduSmart Consult</h2><p>We create the group, train your officers and support you.</p></div>
+<div class="reach-actions"><a class="btn btn-gold" href="contact.html?topic={_ik_topic}#form">Set up my group</a><a class="btn btn-ghost-light" href="assets/brochures/Ikimina-guide.pdf" download>Download the guide (PDF)</a></div></div></div></section>'''
+add("ikimina-guide.html", "Ikimina user guide | EduSmart Consult", "Step-by-step guide to Ikimina for members, the Accountant, the Secretary, the President and EduSmart support, with screenshots from the real app.", "products", ikg,
+    ld=ld_bc([("Home", ""), ("Products", "products.html"), ("Ikimina", "savings-groups.html"), ("User guide", "ikimina-guide.html")]))
