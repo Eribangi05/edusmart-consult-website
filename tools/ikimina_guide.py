@@ -46,7 +46,7 @@ for i, s in enumerate(SECTIONS):
     d.page(B.head(s["kick"], s["title"], s["lead"]) + "".join(block(b) for b in s["blocks"]))
 d.page(B.head("Ready to start", "Set up your group with EduSmart Consult", "Open the demo, look at every screen, then ask us to set up your own group. We create the group, you choose who holds each role.") +
        '<div class="row" style="margin-top:4mm"><div style="flex:1">' + B.fc("globe-hemisphere-east", "c6", "Try it", "Open the web app at ikimina-demo.onrender.com. The demo has sample data only.", True) + '</div><div style="flex:1">' +
-       B.fc("device-mobile", "c4", "On Android", "Download the test app from ikimina-apk.onrender.com and allow installs from your browser.", True) + '</div></div>' +
+       B.fc("device-mobile", "c4", "On Android", "Download the app from www.edusmartconsult.rw/savings-groups.html, open the file and allow installs from your browser.", True) + '</div></div>' +
        B.cta("Talk to us", "We set up your group, train your officers and support you."))
 html = '<!doctype html><meta charset="utf-8"><title>Ikimina user guide</title><style>%s</style>%s' % (B.CSS, "".join(d.pages))
 tmp = tempfile.mkdtemp(); src = os.path.join(tmp, "guide.html"); open(src, "w", encoding="utf-8").write(html)
