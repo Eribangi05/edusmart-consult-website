@@ -69,9 +69,9 @@ APP_CARDS = [
  dict(slug="fmis", name="FMIS", tag="Field Management Information System", logo="assets/products/fmis.png", page="field-management.html", web="fmis/",
       blurb="Collect data with smart forms (skip logic, repeat groups, GPS and photos), assign tasks, check in, review and report. For any institution, team or individual.",
       apk="assets/downloads/FMIS-Android-1.0.0.apk", apk_size="4 MB", win=R2_BASE + "/FMIS-Setup-1.0.0.exe", win_size="84 MB", note="Free to try. Cloud sync for teams."),
- dict(slug="ikimina", name="Ikimina", tag="Savings group manager", logo="assets/products/ikimina.png", page="savings-groups.html", web="ikimina/",
-      blurb="Run an ikimina, VSLA or tontine: contributions, loans, rotation, reports and roles for the President, Accountant and members.",
-      apk="assets/downloads/Ikimina-Android-1.1.0.apk", apk_size="2 MB", win=R2_BASE + "/Ikimina-Setup-1.1.0.exe", win_size="82 MB", note="Free to try. Cloud sync between officers and members."),
+ dict(slug="ikimina", name="Ikimina", tag="Savings group manager", logo="assets/products/ikimina.png", page="savings-groups.html", web="https://ikimina-demo.onrender.com/",
+      blurb="Run an ikimina, VSLA or tontine online: contributions, attendance, loans, rotation, reports and roles for the President, Accountant, Secretary and members, with each group setting its own rules.",
+      apk="https://ikimina-apk.onrender.com/", apk_size="Test version", win="", win_size="", note="Test version on a demo server. Open it, look around and ask us to set up your group."),
  dict(slug="amategeko", name="Amategeko y'Umuhanda", tag="Road code theory practice", logo="assets/products/amategeko.png", page="road-code.html", web="amategeko/",
       blurb="Prepare for the Rwanda provisional driving licence theory test in Kinyarwanda, English or French: questions, signs and mock exams.",
       apk=R2_BASE + "/Amategeko-Android-1.1.0.apk", apk_size="26 MB", win=R2_BASE + "/Amategeko-Setup-1.1.0.exe", win_size="105 MB", note="Free sample. Full version with a code. Progress follows your account."),
@@ -263,7 +263,7 @@ PRODUCTS = [
  ("mindgym-mathematics", "MindGym Mathematics", "School and learning", "products/mindgym.svg", None,
   "A mental maths training game that works your number skills like a gym workout.", "Android"),
  ("ikimina", "Ikimina", "Community and finance", "products/ikimina.png", "savings-groups.html",
-  "Savings group manager for Ikimina, VSLA and tontine groups: contributions, loans, rotation and reports, with roles for presidents, accountants and members. Try it in your browser.", "Web, Windows, Android"),
+  "Savings group manager for Ikimina, VSLA and tontine groups: contributions, attendance, loans, rotation and reports, with roles for presidents, accountants, secretaries and members. Try it in your browser.", "Web, Android"),
  ("budgetwise", "BudgetWise", "Community and finance", "products/budgetwise.webp", None,
   "Personal and group budgeting: track transactions, see analytics on a dashboard and share budgets in groups.", "Android"),
  ("jus-champion", "Jus Champion", "Community and finance", "products/juschampion.webp", None,
@@ -477,15 +477,15 @@ home = f'''
       <div class="split">
         <div class="rv">
           <div class="prod-head"><img src="assets/ikimina-192.png" alt="Ikimina logo" width="84" height="84" style="border-radius:50%"><div><span class="badge">Made by EduSmart Consult</span><h2 style="margin:.3rem 0 0;color:#fff">Ikimina</h2></div></div>
-          <p>Run a savings group with clear records: contributions, loans, rotation and reports. The President, the Accountant and members each get the right access, and the books can be shared across phones and computers.</p>
+          <p>Run a savings group with clear records: contributions, attendance, loans, rotation and reports. The President, Accountant, Secretary and members each get the right access, and everyone sees the same books on their own phone.</p>
           <ul class="checklist">
           <li>Contributions, loans with interest and penalties</li>
-          <li>Rotation and pot payouts</li>
-          <li>PDF statements and Excel exports</li>
+          <li>Meeting attendance and who paid each month</li>
+          <li>Rotation, pot payouts and PDF statements</li>
           <li>Members see only their own records</li>
-          <li>Web, Windows and Android with cloud sync</li>
+          <li>Web and Android, one shared set of books</li>
           </ul>
-          <div class="actions"><a class="btn btn-gold" href="ikimina/">Open the web app</a><a class="btn btn-ghost-light" href="savings-groups.html">Learn more</a></div>
+          <div class="actions"><a class="btn btn-gold" href="https://ikimina-demo.onrender.com/">Open the web app</a><a class="btn btn-ghost-light" href="savings-groups.html">Learn more</a></div>
         </div>
         <div class="shots rv">{win("assets/ikimina-shots/iki-d-dashboard.jpg", "Ikimina dashboard", title="Ikimina", logo="assets/ikimina-192.png")}<div class="shot-phone">{phone("assets/ikimina-shots/iki-m-dashboard.jpg", "Ikimina on a phone", "")}</div></div>
       </div>

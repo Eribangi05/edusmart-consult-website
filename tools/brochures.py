@@ -468,6 +468,6 @@ def ikimina_guide():
 
 
 if __name__ == "__main__":
-    which = sys.argv[1:] or ["app", "cloud", "amategeko", "company", "fmis", "ikimina"]
+    which = sys.argv[1:] or ["app", "cloud", "amategeko", "company", "fmis"]
     for w in which:
         {"app": app_guide, "cloud": cloud_guide, "amategeko": amategeko_guide, "company": company_brochure, "fmis": fmis_guide, "ikimina": ikimina_guide}[w]()
