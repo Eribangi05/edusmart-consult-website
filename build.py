@@ -69,9 +69,9 @@ APP_CARDS = [
  dict(slug="fmis", name="FMIS", tag="Field Management Information System", logo="assets/products/fmis.png", page="field-management.html", web="fmis/",
       blurb="Collect data with smart forms (skip logic, repeat groups, GPS and photos), assign tasks, check in, review and report. For any institution, team or individual.",
       apk="assets/downloads/FMIS-Android-1.0.0.apk", apk_size="4 MB", win=R2_BASE + "/FMIS-Setup-1.0.0.exe", win_size="84 MB", note="Free to try. Cloud sync for teams."),
- dict(slug="ikimina", name="Ikimina", tag="Savings group manager", logo="assets/products/ikimina.png", page="savings-groups.html", web="https://ikimina-demo.onrender.com/",
+ dict(slug="ikimina", name="Ikimina", tag="Savings group manager", logo="assets/products/ikimina.png", page="savings-groups.html", web="https://ikimina.edusmartconsult.rw/",
       blurb="Run an ikimina, VSLA or tontine online: contributions, attendance, loans, rotation, reports and roles for the President, Accountant, Secretary and members, with each group setting its own rules.",
-      apk="https://ikimina-apk.onrender.com/", apk_size="Test version", win="", win_size="", note="Test version on a demo server. Open it, look around and ask us to set up your group."),
+      apk="https://ikimina-apk.edusmartconsult.rw/", apk_size="Test version", win="", win_size="", note="Test version on a demo server. Open it, look around and ask us to set up your group."),
  dict(slug="amategeko", name="Amategeko y'Umuhanda", tag="Road code theory practice", logo="assets/products/amategeko.png", page="road-code.html", web="amategeko/",
       blurb="Prepare for the Rwanda provisional driving licence theory test in Kinyarwanda, English or French: questions, signs and mock exams.",
       apk=R2_BASE + "/Amategeko-Android-1.1.0.apk", apk_size="26 MB", win=R2_BASE + "/Amategeko-Setup-1.1.0.exe", win_size="105 MB", note="Free sample. Full version with a code. Progress follows your account."),
@@ -485,7 +485,7 @@ home = f'''
           <li>Members see only their own records</li>
           <li>Web and Android, one shared set of books</li>
           </ul>
-          <div class="actions"><a class="btn btn-gold" href="https://ikimina-demo.onrender.com/">Open the web app</a><a class="btn btn-ghost-light" href="savings-groups.html">Learn more</a></div>
+          <div class="actions"><a class="btn btn-gold" href="https://ikimina.edusmartconsult.rw/">Open the web app</a><a class="btn btn-ghost-light" href="savings-groups.html">Learn more</a></div>
         </div>
         <div class="shots rv">{win("assets/ikimina-shots/iki-d-dashboard.jpg", "Ikimina dashboard", title="Ikimina", logo="assets/ikimina-192.png")}<div class="shot-phone">{phone("assets/ikimina-shots/iki-m-dashboard.jpg", "Ikimina on a phone", "")}</div></div>
       </div>

@@ -37,7 +37,7 @@ ik = hero_page("Savings groups", "Ikimina", "Run your savings group with clear r
 <div><div class="kicker">Try it now</div><h2>Open it in your browser</h2>
 <p>The books live online, so the President, Accountant, Secretary and members each use their own phone and see the same group. The demo is a test version with sample data. Look around, and ask us to set up your own group.</p>
 <ol class="next"><li>Press <b>Open the web app</b>.</li><li>Sign in with the demo member phone number and PIN below.</li><li>See a member's savings, loans, attendance and contribution history, and switch between Kinyarwanda, English and French. The first start can take up to a minute while the demo server wakes up.</li></ol>
-<p style="margin-top:1.2rem"><a class="btn btn-gold" href="https://ikimina-demo.onrender.com/">Open the web app</a> <a class="btn btn-outline" href="https://ikimina-apk.onrender.com/">Android app (test version)</a> <a class="btn btn-outline" href="contact.html?topic={_ik_topic}#form">Set up my group</a> <a class="btn btn-outline" href="ikimina-guide.html">User guide</a></p></div>
+<p style="margin-top:1.2rem"><a class="btn btn-gold" href="https://ikimina.edusmartconsult.rw/">Open the web app</a> <a class="btn btn-outline" href="https://ikimina-apk.edusmartconsult.rw/">Android app (test version)</a> <a class="btn btn-outline" href="contact.html?topic={_ik_topic}#form">Set up my group</a> <a class="btn btn-outline" href="ikimina-guide.html">User guide</a></p></div>
 <div class="grid" style="gap:1rem">
 <img src="assets/products/ikimina.png" alt="Ikimina logo" width="140" height="140" style="width:min(140px,50%);height:auto;margin:0 auto .4rem;display:block">
 <div class="card">{ico("target")}<h3>Demo group</h3><p>Twiyubake Ikimina, a sample group with 25 fictional members, loans, meetings and six months of history, so you can try every screen.</p>
@@ -85,7 +85,7 @@ ik = hero_page("Savings groups", "Ikimina", "Run your savings group with clear r
 <div class="kg">{ico("shield")}<span>Free to try, <b>sample data only</b></span></div>
 </div>
 <div class="reach-actions">
-<a class="btn btn-gold" href="https://ikimina-demo.onrender.com/">Open the web app</a>
+<a class="btn btn-gold" href="https://ikimina.edusmartconsult.rw/">Open the web app</a>
 <a class="btn btn-ghost-light" href="contact.html?topic={_ik_topic}#form">Set up my group</a>
 <a class="btn btn-ghost-light" href="ikimina-guide.html">Read the user guide</a>
 </div></div></div></section>'''
@@ -125,7 +125,7 @@ _g_secs = "".join(f'<section class="section{" soft" if i % 2 else ""}" id="{s["i
 ikg = hero_page("Savings groups", "Ikimina user guide", "Everything your group needs to know, for members, the Accountant, the Secretary, the President and the EduSmart support team, with screens from the real app.") + f'''
 <section class="section"><div class="container"><div class="section-head"><div><div class="kicker">In this guide</div><h2>Choose your section</h2></div><p>Members start with Getting started. Officers read the sections for their own job.</p></div>
 <div class="tour-thumbs" style="flex-wrap:wrap">{_g_toc}</div>
-<p style="margin-top:1.2rem"><a class="btn btn-gold" href="assets/brochures/Ikimina-guide.pdf" download>Download the guide (PDF)</a> <a class="btn btn-outline" href="savings-groups.html">About Ikimina</a> <a class="btn btn-outline" href="https://ikimina-demo.onrender.com/">Open the web app</a></p></div></section>
+<p style="margin-top:1.2rem"><a class="btn btn-gold" href="assets/brochures/Ikimina-guide.pdf" download>Download the guide (PDF)</a> <a class="btn btn-outline" href="savings-groups.html">About Ikimina</a> <a class="btn btn-outline" href="https://ikimina.edusmartconsult.rw/">Open the web app</a></p></div></section>
 {_g_secs}
 <section class="section"><div class="container"><div class="reach"><div><div class="kicker">Ready when you are</div><h2>Set up your group with EduSmart Consult</h2><p>We create the group, train your officers and support you.</p></div>
 <div class="reach-actions"><a class="btn btn-gold" href="contact.html?topic={_ik_topic}#form">Set up my group</a><a class="btn btn-ghost-light" href="assets/brochures/Ikimina-guide.pdf" download>Download the guide (PDF)</a></div></div></div></section>'''
