@@ -12,7 +12,7 @@ SECTIONS = [
     ["Accountant", "The only role that records savings. Also records loan repayments, expenses and income, and pays out loans."],
     ["Auditor", "Reads reports and the audit log to check the books. Cannot change anything."],
     ["Member", "Sees their own savings, loans, attendance and contribution history, and can ask for a loan."]]),
-   ("bullets", ["Only the Accountant records savings, so one person is accountable for the money.", "Nothing is ever erased: a mistake is corrected by a reversal that another officer approves.", "Each group sets its own rules: amounts, interest, fines and who approves what.", "Available in Kinyarwanda, English and French, on the web and on Android."])]),
+   ("bullets", ["Only the Accountant records savings, so one person is accountable for the money.", "Nothing is ever erased: a mistake is corrected by a reversal that another officer approves.", "Each group sets its own rules: amounts, interest, fines and who approves what.", "Available in Kinyarwanda, English and French, on the web, on Windows and on Android."])]),
  dict(id="start", kick="Getting started", title="Sign in for the first time",
   lead="You do not create your own account. An officer adds you to the group, another officer approves it, and you receive a temporary PIN in person.",
   blocks=[("steps", [("Get added", "The President or Secretary adds your name and phone number. Another officer approves."), ("Receive a PIN", "You are given a temporary PIN in person."), ("Sign in", "Enter your phone number and the temporary PIN."), ("Choose your PIN", "You must choose your own PIN before you can continue.")]),

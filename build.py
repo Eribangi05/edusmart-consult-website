@@ -71,7 +71,7 @@ APP_CARDS = [
       apk="assets/downloads/FMIS-Android-1.0.0.apk", apk_size="4 MB", win=R2_BASE + "/FMIS-Setup-1.0.0.exe", win_size="84 MB", note="Free to try. Cloud sync for teams."),
  dict(slug="ikimina", name="Ikimina", tag="Savings group manager", logo="assets/products/ikimina.png", page="savings-groups.html", web="https://ikimina-demo.onrender.com/",
       blurb="Run an ikimina, VSLA or tontine online: contributions, attendance, loans, rotation, reports and roles for the President, Accountant, Secretary and members, with each group setting its own rules.",
-      apk="assets/downloads/Ikimina-Android-1.2.1.apk", apk_size="7 MB", win="", win_size="", note="Test version on a demo server. Open it, look around and ask us to set up your group."),
+      apk="assets/downloads/Ikimina-Android-1.2.1.apk", apk_size="7 MB", win="assets/downloads/Ikimina-Setup-1.2.1.exe", win_size="82 MB", note="Test version on a demo server. Open it, look around and ask us to set up your group."),
  dict(slug="amategeko", name="Amategeko y'Umuhanda", tag="Road code theory practice", logo="assets/products/amategeko.png", page="road-code.html", web="amategeko/",
       blurb="Prepare for the Rwanda provisional driving licence theory test in Kinyarwanda, English or French: questions, signs and mock exams.",
       apk=R2_BASE + "/Amategeko-Android-1.1.0.apk", apk_size="26 MB", win=R2_BASE + "/Amategeko-Setup-1.1.0.exe", win_size="105 MB", note="Free sample. Full version with a code. Progress follows your account."),
